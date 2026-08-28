@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Real-time Pokémon Champions battle analyzer - identify Pokémon, view type matchups, stats, and get strategic recommendations">
+  <title>Pokémon Champions Analyzer</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <!-- App container -->
+  <div id="app">
+    <!-- Header -->
+    <header id="app-header">
+      <div class="header-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <h1>Pokémon Champions Analyzer</h1>
+      </div>
+      <div class="header-actions">
+        <div class="battle-format-toggle">
+          <button id="btn-format-single" class="btn btn-secondary">Single</button>
+          <button id="btn-format-double" class="btn btn-primary active">Double</button>
+        </div>
+        <div class="status-indicator">
+          <span id="status-dot" class="dot"></span>
+          <span id="status-text">Ready</span>
+        </div>
+        <button id="btn-settings" class="btn btn-secondary">Settings</button>
+        <button id="btn-calibrate" class="btn btn-secondary">Calibrate</button>
+        <button id="btn-capture" class="btn btn-primary">Start Capture</button>
+      </div>
+    </header>
+    
+    <!-- Main content: two-column layout -->
+    <main id="main-content">
+      <!-- Left: Screen Preview -->
+      <section id="capture-panel">
+        <div class="section-header">
+          <span class="header-icon">📷</span>
+          <h2>Screen Capture</h2>
+        </div>
+        <div id="video-container" class="video-container placeholder">
+          <div id="video-placeholder" class="placeholder-content">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pulse-icon"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+            <p>Click Start Capture to mirror your screen</p>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Right: Battle Dashboard -->
+      <section id="dashboard-panel">
+        <!-- Opponent Pokémon cards -->
+        <div class="section-header">
+          <span class="header-icon">⚔️</span>
+          <h2>Opponent Team</h2>
+        </div>
+        <div id="opponent-section" class="card-grid">
+          <div id="opponent-card-1" class="pokemon-card empty">Waiting...</div>
+          <div id="opponent-card-2" class="pokemon-card empty">Waiting...</div>
+        </div>
+        
+        <!-- Player Pokémon cards -->
+        <div class="section-header">
+          <span class="header-icon">🛡️</span>
+          <h2>Your Team</h2>
+        </div>
+        <div id="player-section" class="card-grid">
+          <div id="player-card-1" class="pokemon-card empty">Waiting...</div>
+          <div id="player-card-2" class="pokemon-card empty">Waiting...</div>
+        </div>
+        
+        <!-- Matchup Matrix -->
+        <div class="section-header">
+          <span class="header-icon">📊</span>
+          <h2>Matchup Matrix</h2>
+        </div>
+        <div id="matchup-section" class="matrix-container empty">
+          Waiting for battle data...
+        </div>
+        
+        <!-- Battle Tips -->
+        <div class="section-header">
+          <span class="header-icon">💡</span>
+          <h2>Battle Intelligence</h2>
+        </div>
+        <div id="tips-section" class="tips-container empty">
+          Waiting for battle data...
+        </div>
+      </section>
+    </main>
+    
+    <!-- Status Bar -->
+    <footer id="status-bar">
+      <div class="status-item"><span class="status-label">OCR:</span> <span id="status-ocr">Idle</span></div>
+      <div class="status-item"><span class="status-label">Matches:</span> <span id="status-matches">0/0</span></div>
+      <div class="status-item"><span class="status-label">FPS:</span> <span id="status-fps">0</span></div>
+      <div class="status-item"><span class="status-label">Cache:</span> <span id="status-cache">0 items</span></div>
+    </footer>
+    
+    <!-- Calibration Overlay (hidden by default) -->
+    <div id="calibration-overlay" class="hidden">
+      <div class="calibration-container">
+        <div class="calibration-header">
+          <h2>Adjust Detection Regions</h2>
+          <p>Drag the boxes to align with the Pokémon sprites on your screen.</p>
+        </div>
+        <div id="calibration-canvas-container">
+          <!-- Canvas will be injected here -->
+        </div>
+        <div class="calibration-actions">
+          <button id="btn-cal-cancel" class="btn btn-secondary">Cancel</button>
+          <button id="btn-cal-save" class="btn btn-primary">Save Regions</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Welcome/Setup Modal (shown on first visit) -->
+    <div id="welcome-modal" class="modal-backdrop">
+      <div class="modal-content">
+        <div class="modal-icon">⚡</div>
+        <h2>Welcome to PCA</h2>
+        <p>The Pokémon Champions Analyzer gives you a real-time strategic advantage. Mirror your phone screen to see instant type matchups, base stats, and strategic recommendations.</p>
+        <div class="modal-features">
+          <div class="feature-item">
+            <span class="feature-icon">🔍</span>
+            <span class="feature-text">Auto-detects Pokémon</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📊</span>
+            <span class="feature-text">Calculates damage multipliers</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">💡</span>
+            <span class="feature-text">Provides strategic tips</span>
+          </div>
+        </div>
+        <button id="btn-welcome-start" class="btn btn-primary btn-large">Start Analysis</button>
+      </div>
+    </div>
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-backdrop hidden">
+      <div class="modal-content" style="text-align: left;">
+        <h2>Settings</h2>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; margin-bottom: 8px; color: var(--text-secondary);">Gemini API Key</label>
+          <input type="password" id="gemini-api-key" placeholder="AIzaSy..." style="width: 100%; padding: 10px; border-radius: 8px; background: var(--bg-primary); border: 1px solid var(--border-subtle); color: white; font-family: monospace;">
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Used for the Vision Learning System to dynamically learn your specific screen calibration.</p>
+        </div>
+        <div class="calibration-actions">
+          <button id="btn-settings-cancel" class="btn btn-secondary">Cancel</button>
+          <button id="btn-settings-save" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
