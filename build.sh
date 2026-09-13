@@ -35,12 +35,21 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
 EOF
 
 # Compile the swift files into an executable
+# Copy generated reference data (see tools/fetch_pokedex.py) into the bundle
+if [ -d "Resources" ]; then
+    rsync -a --delete Resources/ "$RESOURCES_DIR/"
+    echo "Bundled $(ls Resources/icons 2>/dev/null | wc -l | tr -d ' ') reference icons"
+else
+    echo "WARNING: no Resources/ - run: python3 tools/fetch_pokedex.py"
+fi
+
 swiftc -parse-as-library \
     main.swift \
     CaptureManager.swift \
     CameraPreview.swift \
     BattleGeometry.swift \
     BattleAnalyzer.swift \
+    PokedexStore.swift \
     -o "$MACOS_DIR/$APP_NAME"
 
 echo "Build complete! App bundle created at: $APP_DIR"

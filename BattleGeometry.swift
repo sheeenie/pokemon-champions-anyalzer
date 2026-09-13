@@ -48,25 +48,34 @@ enum BattleSlot: Int, CaseIterable {
         }
     }
 
-    /// The species artwork within the plate, as a fraction of `normalizedPlate`.
-    /// This is the identification target: a static 2D asset, so it renders
-    /// pixel-identically every time regardless of camera, pose or lighting.
-    var normalizedIconInPlate: CGRect {
-        switch side {
-        case .opponent: return CGRect(x: 0.00, y: 0.00, width: 0.24, height: 1.00)
-        case .player:   return CGRect(x: 0.03, y: 0.52, width: 0.28, height: 0.48)
+    /// Where the species artwork is drawn, in normalized frame coordinates.
+    ///
+    /// This is the identification target. The game renders every species at the
+    /// same fixed size — measured at 121px in a 2622x1206 frame, i.e. 10.0% of
+    /// frame height — so a single placement per slot describes all of them, and
+    /// reference sprites can be pre-rendered once at load rather than searched
+    /// for at match time.
+    ///
+    /// Independently fitted on two species (Garchomp on the opponent side,
+    /// Maushold on the player side); both agreed on the 121px size.
+    var normalizedSpriteBox: CGRect {
+        let w = 0.0461, h = 0.1003
+        switch self {
+        case .opponent1: return CGRect(x: 0.5890, y: 0.0423, width: w, height: h)
+        case .opponent2: return CGRect(x: 0.7460, y: 0.0423, width: w, height: h)
+        case .player1:   return CGRect(x: 0.0908, y: 0.8408, width: w, height: h)
+        case .player2:   return CGRect(x: 0.2738, y: 0.8408, width: w, height: h)
         }
     }
 
-    /// Icon rect in pixels for a frame of the given size.
-    func iconRect(in size: CGSize) -> CGRect {
-        let plate = plateRect(in: size)
-        let f = normalizedIconInPlate
+    /// Sprite box in pixels for a frame of the given size.
+    func spriteRect(in size: CGSize) -> CGRect {
+        let n = normalizedSpriteBox
         return CGRect(
-            x: (plate.origin.x + f.origin.x * plate.width).rounded(),
-            y: (plate.origin.y + f.origin.y * plate.height).rounded(),
-            width: (f.size.width * plate.width).rounded(),
-            height: (f.size.height * plate.height).rounded()
+            x: (n.origin.x * size.width).rounded(),
+            y: (n.origin.y * size.height).rounded(),
+            width: (n.size.width * size.width).rounded(),
+            height: (n.size.height * size.height).rounded()
         )
     }
 

@@ -55,8 +55,12 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
             loggedFrameSize = true
             print("[analyzer] capture frame size: \(Int(size.width))x\(Int(size.height))")
             if dumpDir == nil {
-                print("[analyzer] set PKMN_DUMP_DIR to enable calibration dumps")
+                print("[analyzer] set the dumpDir default to enable calibration dumps")
             }
+            // Load the reference data here rather than at init. Touching it
+            // during CaptureManager's construction runs it inside SwiftUI view
+            // setup, which leaves the app running with no window at all.
+            print("[analyzer] pokedex: \(PokedexStore.shared.species.count) species")
         }
 
         if dumpDir != nil, now - lastDump >= dumpInterval, dumpCount < maxDumps {
@@ -104,7 +108,7 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         }
 
         let plates = BattleSlot.allCases.map { ($0, $0.plateRect(in: size)) }
-        let icons = BattleSlot.allCases.map { ($0, $0.iconRect(in: size)) }
+        let icons = BattleSlot.allCases.map { ($0, $0.spriteRect(in: size)) }
 
         if let annotated = annotate(full, rects: (plates + icons).map { $0.1 }) {
             write(annotated, to: dir.appendingPathComponent("frame\(index)-annotated.png"))

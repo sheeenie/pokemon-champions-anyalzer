@@ -1,0 +1,242 @@
+#!/usr/bin/env python3
+"""Build-time generator for the Pokemon Champions reference data.
+
+Produces, into Resources/:
+  pokedex.json   species key -> English name, types, base stats
+  icons/*.png    Champions menu sprite per species/form
+
+The icons come from Bulbagarden's "Champions menu sprites" category, which is
+the art Champions actually renders on battle name plates. This matters: HOME and
+official-artwork use a different pose entirely, and matching against them ranks
+the correct species only 1st-4th of 30. With the Champions art it ranks 1st.
+
+Stats and names come from PokeAPI. Run once; results are cached under .cache/
+so re-runs are cheap.
+"""
+
+import json
+import os
+import re
+import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RESOURCES = os.path.join(ROOT, "Resources")
+ICONS = os.path.join(RESOURCES, "icons")
+CACHE = os.path.join(ROOT, "tools", ".cache")
+
+BULBA_API = "https://archives.bulbagarden.net/w/api.php"
+BULBA_FILE = "https://archives.bulbagarden.net/wiki/Special:FilePath/"
+POKEAPI = "https://pokeapi.co/api/v2"
+UA = {"User-Agent": "iPhoneMirror-pokedex-builder/1.0"}
+
+# Form suffixes whose PokeAPI slug differs from a plain lowercase/hyphenate.
+FORM_OVERRIDES = {
+    "incarnate": "",           # PokeAPI treats Incarnate as the base form
+    "male": "",
+    "ordinary": "",
+    "aria": "",
+    "shield": "",
+    "disguised": "",
+    "full-belly": "",
+    "amped": "",
+    "green-plumage": "",
+    "curly": "",
+    "family-of-three": "",
+    "zero": "",
+    "teal-mask": "",
+    "combat-breed": "",
+}
+
+
+def get(url, binary=False, pause=0.25, attempts=4):
+    """Fetch with a small on-disk cache and polite rate limiting.
+
+    Retries with backoff: under sustained requests PokeAPI returns transient
+    503s and occasional spurious 404s, which would otherwise silently drop
+    species from the library.
+    """
+    key = re.sub(r"[^A-Za-z0-9]+", "_", url)[-180:]
+    path = os.path.join(CACHE, key)
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            data = f.read()
+        return data if binary else data.decode("utf-8")
+
+    last = None
+    for attempt in range(attempts):
+        time.sleep(pause * (1 + attempt * 3))
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=45) as r:
+                data = r.read()
+            break
+        except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+            last = exc
+            code = getattr(exc, "code", None)
+            # A real 404 on the final attempt is meaningful; earlier ones are
+            # usually rate limiting wearing a different hat.
+            if code == 404 and attempt == attempts - 1:
+                raise
+    else:
+        raise last
+
+    os.makedirs(CACHE, exist_ok=True)
+    with open(path, "wb") as f:
+        f.write(data)
+    return data if binary else data.decode("utf-8")
+
+
+def champions_files():
+    """Every Menu_CP_*.png in the Champions menu sprites category."""
+    names, cont = [], None
+    while True:
+        params = {
+            "action": "query", "list": "categorymembers",
+            "cmtitle": "Category:Champions_menu_sprites",
+            "cmlimit": "500", "cmtype": "file", "format": "json",
+        }
+        if cont:
+            params["cmcontinue"] = cont
+        data = json.loads(get(BULBA_API + "?" + urllib.parse.urlencode(params)))
+        names += [m["title"] for m in data["query"]["categorymembers"]]
+        cont = data.get("continue", {}).get("cmcontinue")
+        if not cont:
+            return sorted(names)
+
+
+def parse_title(title):
+    """'File:Menu CP 0006-Mega X.png' -> (6, 'Mega X', 'Menu_CP_0006-Mega X.png')"""
+    stem = title[len("File:"):-len(".png")]
+    m = re.match(r"Menu CP (\d+)(?:-(.+))?$", stem)
+    if not m:
+        return None
+    return int(m.group(1)), (m.group(2) or ""), stem.replace(" ", "_") + ".png"
+
+
+def species_info(dex):
+    """Names plus the concrete pokemon slugs this species resolves to.
+
+    The default variety is not always the species name: Meowstic is
+    'meowstic-male', Aegislash is 'aegislash-shield'. Reading `varieties`
+    avoids guessing and eliminates a round of 404s.
+    """
+    data = json.loads(get(f"{POKEAPI}/pokemon-species/{dex}"))
+    names = {n["language"]["name"]: n["name"] for n in data["names"]}
+    varieties = [v["pokemon"]["name"] for v in data["varieties"]]
+    default = next(
+        (v["pokemon"]["name"] for v in data["varieties"] if v["is_default"]),
+        varieties[0] if varieties else data["name"],
+    )
+    # PokeAPI spells the language code lowercase.
+    return (default, varieties, data["name"],
+            names.get("en", data["name"]), names.get("zh-hant", ""))
+
+
+def variant_slug(species_slug, default_slug, varieties, form):
+    """Pick the variety matching this form, falling back to the default."""
+    if not form:
+        return default_slug
+    slug = re.sub(r"[^a-z0-9]+", "-", form.lower()).strip("-")
+    slug = FORM_OVERRIDES.get(slug, slug)
+    if not slug:
+        return default_slug
+
+    exact = f"{species_slug}-{slug}"
+    if exact in varieties:
+        return exact
+    # Champions and PokeAPI sometimes word a form differently (e.g. "Mega X"
+    # vs "mega-x", "Teal Mask" vs "teal"); accept a variety that contains all
+    # the form's words.
+    parts = slug.split("-")
+    for v in varieties:
+        if all(p in v for p in parts):
+            return v
+    return exact  # let the caller's 404 fallback handle it
+
+
+def pokemon_stats(slug):
+    data = json.loads(get(f"{POKEAPI}/pokemon/{slug}"))
+    stats = {s["stat"]["name"]: s["base_stat"] for s in data["stats"]}
+    return {
+        "types": [t["type"]["name"] for t in data["types"]],
+        "baseStats": {
+            "hp": stats["hp"], "atk": stats["attack"], "def": stats["defense"],
+            "spa": stats["special-attack"], "spd": stats["special-defense"],
+            "spe": stats["speed"],
+        },
+    }
+
+
+def main():
+    os.makedirs(ICONS, exist_ok=True)
+    titles = champions_files()
+    print(f"Champions menu sprites: {len(titles)}")
+
+    entries, failures = [], []
+    for i, title in enumerate(titles, 1):
+        parsed = parse_title(title)
+        if not parsed:
+            failures.append((title, "unparseable filename"))
+            continue
+        dex, form, filename = parsed
+
+        try:
+            base_slug, varieties, species_slug, english, zh = species_info(dex)
+            slug = variant_slug(species_slug, base_slug, varieties, form)
+            try:
+                info = pokemon_stats(slug)
+            except urllib.error.HTTPError as e:
+                if e.code != 404:
+                    raise
+                # Form not in PokeAPI under that slug; fall back to base stats
+                # rather than dropping the icon entirely.
+                info = pokemon_stats(base_slug)
+                failures.append((title, f"no PokeAPI form '{slug}', used base"))
+
+            # Key off the sprite FILE, not the resolved PokeAPI slug: distinct
+            # icons (Vivillon patterns, Tornadus Incarnate vs base) can resolve
+            # to the same slug, and sharing a key would let one overwrite the
+            # other's icon and lose it from the library.
+            species_name = species_slug
+            file_form = re.sub(r"[^a-z0-9]+", "-", form.lower()).strip("-")
+            key = f"{species_name}-{file_form}" if file_form else species_name
+
+            icon = get(BULBA_FILE + urllib.parse.quote(filename), binary=True)
+            with open(os.path.join(ICONS, key + ".png"), "wb") as f:
+                f.write(icon)
+
+            stats = info["baseStats"]
+            entries.append({
+                "key": key,
+                "dex": dex,
+                "name": english + (f" ({form})" if form else ""),
+                "form": form,
+                "zhHant": zh,
+                "types": info["types"],
+                "baseStats": stats,
+                "bst": sum(stats.values()),
+            })
+        except Exception as exc:  # noqa: BLE001 - report and continue
+            failures.append((title, str(exc)))
+
+        if i % 25 == 0:
+            print(f"  {i}/{len(titles)}  ok={len(entries)} failed={len(failures)}")
+
+    entries.sort(key=lambda e: (e["dex"], e["form"]))
+    with open(os.path.join(RESOURCES, "pokedex.json"), "w") as f:
+        json.dump(entries, f, indent=1, ensure_ascii=False)
+
+    print(f"\nwrote {len(entries)} entries and icons to {RESOURCES}")
+    if failures:
+        print(f"\n{len(failures)} issues:")
+        for t, why in failures[:40]:
+            print(f"  {t}: {why}")
+    return 0 if entries else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

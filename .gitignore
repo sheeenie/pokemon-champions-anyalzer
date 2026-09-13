@@ -1,3 +1,10 @@
 iPhoneMirror.app
 *.o
 .DS_Store
+
+# Game sprite artwork - regenerate locally with tools/fetch_pokedex.py rather
+# than redistributing copyrighted assets from this repo.
+Resources/icons/
+
+# HTTP cache for the generator
+tools/.cache/

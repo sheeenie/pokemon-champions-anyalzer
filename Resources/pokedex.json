@@ -1,0 +1,7723 @@
+[
+ {
+  "key": "venusaur",
+  "dex": 3,
+  "name": "Venusaur",
+  "form": "",
+  "zhHant": "妙蛙花",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 82,
+   "def": 83,
+   "spa": 100,
+   "spd": 100,
+   "spe": 80
+  },
+  "bst": 525
+ },
+ {
+  "key": "venusaur-mega",
+  "dex": 3,
+  "name": "Venusaur (Mega)",
+  "form": "Mega",
+  "zhHant": "妙蛙花",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 100,
+   "def": 123,
+   "spa": 122,
+   "spd": 120,
+   "spe": 80
+  },
+  "bst": 625
+ },
+ {
+  "key": "charizard",
+  "dex": 6,
+  "name": "Charizard",
+  "form": "",
+  "zhHant": "噴火龍",
+  "types": [
+   "fire",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 84,
+   "def": 78,
+   "spa": 109,
+   "spd": 85,
+   "spe": 100
+  },
+  "bst": 534
+ },
+ {
+  "key": "charizard-mega-x",
+  "dex": 6,
+  "name": "Charizard (Mega X)",
+  "form": "Mega X",
+  "zhHant": "噴火龍",
+  "types": [
+   "fire",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 130,
+   "def": 111,
+   "spa": 130,
+   "spd": 85,
+   "spe": 100
+  },
+  "bst": 634
+ },
+ {
+  "key": "charizard-mega-y",
+  "dex": 6,
+  "name": "Charizard (Mega Y)",
+  "form": "Mega Y",
+  "zhHant": "噴火龍",
+  "types": [
+   "fire",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 104,
+   "def": 78,
+   "spa": 159,
+   "spd": 115,
+   "spe": 100
+  },
+  "bst": 634
+ },
+ {
+  "key": "blastoise",
+  "dex": 9,
+  "name": "Blastoise",
+  "form": "",
+  "zhHant": "水箭龜",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 79,
+   "atk": 83,
+   "def": 100,
+   "spa": 85,
+   "spd": 105,
+   "spe": 78
+  },
+  "bst": 530
+ },
+ {
+  "key": "blastoise-mega",
+  "dex": 9,
+  "name": "Blastoise (Mega)",
+  "form": "Mega",
+  "zhHant": "水箭龜",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 79,
+   "atk": 103,
+   "def": 120,
+   "spa": 135,
+   "spd": 115,
+   "spe": 78
+  },
+  "bst": 630
+ },
+ {
+  "key": "beedrill",
+  "dex": 15,
+  "name": "Beedrill",
+  "form": "",
+  "zhHant": "大針蜂",
+  "types": [
+   "bug",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 90,
+   "def": 40,
+   "spa": 45,
+   "spd": 80,
+   "spe": 75
+  },
+  "bst": 395
+ },
+ {
+  "key": "beedrill-mega",
+  "dex": 15,
+  "name": "Beedrill (Mega)",
+  "form": "Mega",
+  "zhHant": "大針蜂",
+  "types": [
+   "bug",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 150,
+   "def": 40,
+   "spa": 15,
+   "spd": 80,
+   "spe": 145
+  },
+  "bst": 495
+ },
+ {
+  "key": "pidgeot",
+  "dex": 18,
+  "name": "Pidgeot",
+  "form": "",
+  "zhHant": "大比鳥",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 83,
+   "atk": 80,
+   "def": 75,
+   "spa": 70,
+   "spd": 70,
+   "spe": 101
+  },
+  "bst": 479
+ },
+ {
+  "key": "pidgeot-mega",
+  "dex": 18,
+  "name": "Pidgeot (Mega)",
+  "form": "Mega",
+  "zhHant": "大比鳥",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 83,
+   "atk": 80,
+   "def": 80,
+   "spa": 135,
+   "spd": 80,
+   "spe": 121
+  },
+  "bst": 579
+ },
+ {
+  "key": "arbok",
+  "dex": 24,
+  "name": "Arbok",
+  "form": "",
+  "zhHant": "阿柏怪",
+  "types": [
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 95,
+   "def": 69,
+   "spa": 65,
+   "spd": 79,
+   "spe": 80
+  },
+  "bst": 448
+ },
+ {
+  "key": "pikachu",
+  "dex": 25,
+  "name": "Pikachu",
+  "form": "",
+  "zhHant": "皮卡丘",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 35,
+   "atk": 55,
+   "def": 40,
+   "spa": 50,
+   "spd": 50,
+   "spe": 90
+  },
+  "bst": 320
+ },
+ {
+  "key": "raichu",
+  "dex": 26,
+  "name": "Raichu",
+  "form": "",
+  "zhHant": "雷丘",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 90,
+   "def": 55,
+   "spa": 90,
+   "spd": 80,
+   "spe": 110
+  },
+  "bst": 485
+ },
+ {
+  "key": "raichu-alola",
+  "dex": 26,
+  "name": "Raichu (Alola)",
+  "form": "Alola",
+  "zhHant": "雷丘",
+  "types": [
+   "electric",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 85,
+   "def": 50,
+   "spa": 95,
+   "spd": 85,
+   "spe": 110
+  },
+  "bst": 485
+ },
+ {
+  "key": "raichu-mega-x",
+  "dex": 26,
+  "name": "Raichu (Mega X)",
+  "form": "Mega X",
+  "zhHant": "雷丘",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 135,
+   "def": 95,
+   "spa": 90,
+   "spd": 95,
+   "spe": 110
+  },
+  "bst": 585
+ },
+ {
+  "key": "raichu-mega-y",
+  "dex": 26,
+  "name": "Raichu (Mega Y)",
+  "form": "Mega Y",
+  "zhHant": "雷丘",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 100,
+   "def": 55,
+   "spa": 160,
+   "spd": 80,
+   "spe": 130
+  },
+  "bst": 585
+ },
+ {
+  "key": "clefable",
+  "dex": 36,
+  "name": "Clefable",
+  "form": "",
+  "zhHant": "皮可西",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 70,
+   "def": 73,
+   "spa": 95,
+   "spd": 90,
+   "spe": 60
+  },
+  "bst": 483
+ },
+ {
+  "key": "clefable-mega",
+  "dex": 36,
+  "name": "Clefable (Mega)",
+  "form": "Mega",
+  "zhHant": "皮可西",
+  "types": [
+   "fairy",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 80,
+   "def": 93,
+   "spa": 135,
+   "spd": 110,
+   "spe": 70
+  },
+  "bst": 583
+ },
+ {
+  "key": "ninetales",
+  "dex": 38,
+  "name": "Ninetales",
+  "form": "",
+  "zhHant": "九尾",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 73,
+   "atk": 76,
+   "def": 75,
+   "spa": 81,
+   "spd": 100,
+   "spe": 100
+  },
+  "bst": 505
+ },
+ {
+  "key": "ninetales-alola",
+  "dex": 38,
+  "name": "Ninetales (Alola)",
+  "form": "Alola",
+  "zhHant": "九尾",
+  "types": [
+   "ice",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 73,
+   "atk": 67,
+   "def": 75,
+   "spa": 81,
+   "spd": 100,
+   "spe": 109
+  },
+  "bst": 505
+ },
+ {
+  "key": "wigglytuff",
+  "dex": 40,
+  "name": "Wigglytuff",
+  "form": "",
+  "zhHant": "胖可丁",
+  "types": [
+   "normal",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 140,
+   "atk": 70,
+   "def": 45,
+   "spa": 85,
+   "spd": 50,
+   "spe": 45
+  },
+  "bst": 435
+ },
+ {
+  "key": "vileplume",
+  "dex": 45,
+  "name": "Vileplume",
+  "form": "",
+  "zhHant": "霸王花",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 85,
+   "spa": 110,
+   "spd": 90,
+   "spe": 50
+  },
+  "bst": 490
+ },
+ {
+  "key": "persian",
+  "dex": 53,
+  "name": "Persian",
+  "form": "",
+  "zhHant": "貓老大",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 70,
+   "def": 60,
+   "spa": 65,
+   "spd": 65,
+   "spe": 115
+  },
+  "bst": 440
+ },
+ {
+  "key": "persian-alola",
+  "dex": 53,
+  "name": "Persian (Alola)",
+  "form": "Alola",
+  "zhHant": "貓老大",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 60,
+   "spa": 75,
+   "spd": 65,
+   "spe": 115
+  },
+  "bst": 440
+ },
+ {
+  "key": "arcanine",
+  "dex": 59,
+  "name": "Arcanine",
+  "form": "",
+  "zhHant": "風速狗",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 110,
+   "def": 80,
+   "spa": 100,
+   "spd": 80,
+   "spe": 95
+  },
+  "bst": 555
+ },
+ {
+  "key": "arcanine-hisui",
+  "dex": 59,
+  "name": "Arcanine (Hisui)",
+  "form": "Hisui",
+  "zhHant": "風速狗",
+  "types": [
+   "fire",
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 115,
+   "def": 80,
+   "spa": 95,
+   "spd": 80,
+   "spe": 90
+  },
+  "bst": 555
+ },
+ {
+  "key": "alakazam",
+  "dex": 65,
+  "name": "Alakazam",
+  "form": "",
+  "zhHant": "胡地",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 55,
+   "atk": 50,
+   "def": 45,
+   "spa": 135,
+   "spd": 95,
+   "spe": 120
+  },
+  "bst": 500
+ },
+ {
+  "key": "alakazam-mega",
+  "dex": 65,
+  "name": "Alakazam (Mega)",
+  "form": "Mega",
+  "zhHant": "胡地",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 55,
+   "atk": 50,
+   "def": 65,
+   "spa": 175,
+   "spd": 105,
+   "spe": 150
+  },
+  "bst": 600
+ },
+ {
+  "key": "machamp",
+  "dex": 68,
+  "name": "Machamp",
+  "form": "",
+  "zhHant": "怪力",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 130,
+   "def": 80,
+   "spa": 65,
+   "spd": 85,
+   "spe": 55
+  },
+  "bst": 505
+ },
+ {
+  "key": "victreebel",
+  "dex": 71,
+  "name": "Victreebel",
+  "form": "",
+  "zhHant": "大食花",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 105,
+   "def": 65,
+   "spa": 100,
+   "spd": 70,
+   "spe": 70
+  },
+  "bst": 490
+ },
+ {
+  "key": "victreebel-mega",
+  "dex": 71,
+  "name": "Victreebel (Mega)",
+  "form": "Mega",
+  "zhHant": "大食花",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 125,
+   "def": 85,
+   "spa": 135,
+   "spd": 95,
+   "spe": 70
+  },
+  "bst": 590
+ },
+ {
+  "key": "slowbro",
+  "dex": 80,
+  "name": "Slowbro",
+  "form": "",
+  "zhHant": "呆殼獸",
+  "types": [
+   "water",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 75,
+   "def": 110,
+   "spa": 100,
+   "spd": 80,
+   "spe": 30
+  },
+  "bst": 490
+ },
+ {
+  "key": "slowbro-galar",
+  "dex": 80,
+  "name": "Slowbro (Galar)",
+  "form": "Galar",
+  "zhHant": "呆殼獸",
+  "types": [
+   "poison",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 100,
+   "def": 95,
+   "spa": 100,
+   "spd": 70,
+   "spe": 30
+  },
+  "bst": 490
+ },
+ {
+  "key": "slowbro-mega",
+  "dex": 80,
+  "name": "Slowbro (Mega)",
+  "form": "Mega",
+  "zhHant": "呆殼獸",
+  "types": [
+   "water",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 75,
+   "def": 180,
+   "spa": 130,
+   "spd": 80,
+   "spe": 30
+  },
+  "bst": 590
+ },
+ {
+  "key": "farfetchd",
+  "dex": 83,
+  "name": "Farfetch’d",
+  "form": "",
+  "zhHant": "大蔥鴨",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 52,
+   "atk": 90,
+   "def": 55,
+   "spa": 58,
+   "spd": 62,
+   "spe": 60
+  },
+  "bst": 377
+ },
+ {
+  "key": "gengar",
+  "dex": 94,
+  "name": "Gengar",
+  "form": "",
+  "zhHant": "耿鬼",
+  "types": [
+   "ghost",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 65,
+   "def": 60,
+   "spa": 130,
+   "spd": 75,
+   "spe": 110
+  },
+  "bst": 500
+ },
+ {
+  "key": "gengar-mega",
+  "dex": 94,
+  "name": "Gengar (Mega)",
+  "form": "Mega",
+  "zhHant": "耿鬼",
+  "types": [
+   "ghost",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 65,
+   "def": 80,
+   "spa": 170,
+   "spd": 95,
+   "spe": 130
+  },
+  "bst": 600
+ },
+ {
+  "key": "kangaskhan",
+  "dex": 115,
+  "name": "Kangaskhan",
+  "form": "",
+  "zhHant": "袋獸",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 105,
+   "atk": 95,
+   "def": 80,
+   "spa": 40,
+   "spd": 80,
+   "spe": 90
+  },
+  "bst": 490
+ },
+ {
+  "key": "kangaskhan-mega",
+  "dex": 115,
+  "name": "Kangaskhan (Mega)",
+  "form": "Mega",
+  "zhHant": "袋獸",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 105,
+   "atk": 125,
+   "def": 100,
+   "spa": 60,
+   "spd": 100,
+   "spe": 100
+  },
+  "bst": 590
+ },
+ {
+  "key": "starmie",
+  "dex": 121,
+  "name": "Starmie",
+  "form": "",
+  "zhHant": "寶石海星",
+  "types": [
+   "water",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 75,
+   "def": 85,
+   "spa": 100,
+   "spd": 85,
+   "spe": 115
+  },
+  "bst": 520
+ },
+ {
+  "key": "starmie-mega",
+  "dex": 121,
+  "name": "Starmie (Mega)",
+  "form": "Mega",
+  "zhHant": "寶石海星",
+  "types": [
+   "water",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 100,
+   "def": 105,
+   "spa": 130,
+   "spd": 105,
+   "spe": 120
+  },
+  "bst": 620
+ },
+ {
+  "key": "mr-mime",
+  "dex": 122,
+  "name": "Mr. Mime",
+  "form": "",
+  "zhHant": "魔牆人偶",
+  "types": [
+   "psychic",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 40,
+   "atk": 45,
+   "def": 65,
+   "spa": 100,
+   "spd": 120,
+   "spe": 90
+  },
+  "bst": 460
+ },
+ {
+  "key": "pinsir",
+  "dex": 127,
+  "name": "Pinsir",
+  "form": "",
+  "zhHant": "凱羅斯",
+  "types": [
+   "bug"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 125,
+   "def": 100,
+   "spa": 55,
+   "spd": 70,
+   "spe": 85
+  },
+  "bst": 500
+ },
+ {
+  "key": "pinsir-mega",
+  "dex": 127,
+  "name": "Pinsir (Mega)",
+  "form": "Mega",
+  "zhHant": "凱羅斯",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 155,
+   "def": 120,
+   "spa": 65,
+   "spd": 90,
+   "spe": 105
+  },
+  "bst": 600
+ },
+ {
+  "key": "tauros",
+  "dex": 128,
+  "name": "Tauros",
+  "form": "",
+  "zhHant": "肯泰羅",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 100,
+   "def": 95,
+   "spa": 40,
+   "spd": 70,
+   "spe": 110
+  },
+  "bst": 490
+ },
+ {
+  "key": "tauros-paldea-aqua",
+  "dex": 128,
+  "name": "Tauros (Paldea Aqua)",
+  "form": "Paldea Aqua",
+  "zhHant": "肯泰羅",
+  "types": [
+   "fighting",
+   "water"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 110,
+   "def": 105,
+   "spa": 30,
+   "spd": 70,
+   "spe": 100
+  },
+  "bst": 490
+ },
+ {
+  "key": "tauros-paldea-blaze",
+  "dex": 128,
+  "name": "Tauros (Paldea Blaze)",
+  "form": "Paldea Blaze",
+  "zhHant": "肯泰羅",
+  "types": [
+   "fighting",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 110,
+   "def": 105,
+   "spa": 30,
+   "spd": 70,
+   "spe": 100
+  },
+  "bst": 490
+ },
+ {
+  "key": "tauros-paldea-combat",
+  "dex": 128,
+  "name": "Tauros (Paldea Combat)",
+  "form": "Paldea Combat",
+  "zhHant": "肯泰羅",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 110,
+   "def": 105,
+   "spa": 30,
+   "spd": 70,
+   "spe": 100
+  },
+  "bst": 490
+ },
+ {
+  "key": "gyarados",
+  "dex": 130,
+  "name": "Gyarados",
+  "form": "",
+  "zhHant": "暴鯉龍",
+  "types": [
+   "water",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 125,
+   "def": 79,
+   "spa": 60,
+   "spd": 100,
+   "spe": 81
+  },
+  "bst": 540
+ },
+ {
+  "key": "gyarados-mega",
+  "dex": 130,
+  "name": "Gyarados (Mega)",
+  "form": "Mega",
+  "zhHant": "暴鯉龍",
+  "types": [
+   "water",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 155,
+   "def": 109,
+   "spa": 70,
+   "spd": 130,
+   "spe": 81
+  },
+  "bst": 640
+ },
+ {
+  "key": "ditto",
+  "dex": 132,
+  "name": "Ditto",
+  "form": "",
+  "zhHant": "百變怪",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 48,
+   "atk": 48,
+   "def": 48,
+   "spa": 48,
+   "spd": 48,
+   "spe": 48
+  },
+  "bst": 288
+ },
+ {
+  "key": "vaporeon",
+  "dex": 134,
+  "name": "Vaporeon",
+  "form": "",
+  "zhHant": "水伊布",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 130,
+   "atk": 65,
+   "def": 60,
+   "spa": 110,
+   "spd": 95,
+   "spe": 65
+  },
+  "bst": 525
+ },
+ {
+  "key": "jolteon",
+  "dex": 135,
+  "name": "Jolteon",
+  "form": "",
+  "zhHant": "雷伊布",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 65,
+   "def": 60,
+   "spa": 110,
+   "spd": 95,
+   "spe": 130
+  },
+  "bst": 525
+ },
+ {
+  "key": "flareon",
+  "dex": 136,
+  "name": "Flareon",
+  "form": "",
+  "zhHant": "火伊布",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 130,
+   "def": 60,
+   "spa": 95,
+   "spd": 110,
+   "spe": 65
+  },
+  "bst": 525
+ },
+ {
+  "key": "aerodactyl",
+  "dex": 142,
+  "name": "Aerodactyl",
+  "form": "",
+  "zhHant": "化石翼龍",
+  "types": [
+   "rock",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 105,
+   "def": 65,
+   "spa": 60,
+   "spd": 75,
+   "spe": 130
+  },
+  "bst": 515
+ },
+ {
+  "key": "aerodactyl-mega",
+  "dex": 142,
+  "name": "Aerodactyl (Mega)",
+  "form": "Mega",
+  "zhHant": "化石翼龍",
+  "types": [
+   "rock",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 135,
+   "def": 85,
+   "spa": 70,
+   "spd": 95,
+   "spe": 150
+  },
+  "bst": 615
+ },
+ {
+  "key": "snorlax",
+  "dex": 143,
+  "name": "Snorlax",
+  "form": "",
+  "zhHant": "卡比獸",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 160,
+   "atk": 110,
+   "def": 65,
+   "spa": 65,
+   "spd": 110,
+   "spe": 30
+  },
+  "bst": 540
+ },
+ {
+  "key": "dragonite",
+  "dex": 149,
+  "name": "Dragonite",
+  "form": "",
+  "zhHant": "快龍",
+  "types": [
+   "dragon",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 91,
+   "atk": 134,
+   "def": 95,
+   "spa": 100,
+   "spd": 100,
+   "spe": 80
+  },
+  "bst": 600
+ },
+ {
+  "key": "dragonite-mega",
+  "dex": 149,
+  "name": "Dragonite (Mega)",
+  "form": "Mega",
+  "zhHant": "快龍",
+  "types": [
+   "dragon",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 91,
+   "atk": 124,
+   "def": 115,
+   "spa": 145,
+   "spd": 125,
+   "spe": 100
+  },
+  "bst": 700
+ },
+ {
+  "key": "meganium",
+  "dex": 154,
+  "name": "Meganium",
+  "form": "",
+  "zhHant": "大竺葵",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 82,
+   "def": 100,
+   "spa": 83,
+   "spd": 100,
+   "spe": 80
+  },
+  "bst": 525
+ },
+ {
+  "key": "meganium-mega",
+  "dex": 154,
+  "name": "Meganium (Mega)",
+  "form": "Mega",
+  "zhHant": "大竺葵",
+  "types": [
+   "grass",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 92,
+   "def": 115,
+   "spa": 143,
+   "spd": 115,
+   "spe": 80
+  },
+  "bst": 625
+ },
+ {
+  "key": "typhlosion",
+  "dex": 157,
+  "name": "Typhlosion",
+  "form": "",
+  "zhHant": "火爆獸",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 84,
+   "def": 78,
+   "spa": 109,
+   "spd": 85,
+   "spe": 100
+  },
+  "bst": 534
+ },
+ {
+  "key": "typhlosion-hisui",
+  "dex": 157,
+  "name": "Typhlosion (Hisui)",
+  "form": "Hisui",
+  "zhHant": "火爆獸",
+  "types": [
+   "fire",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 73,
+   "atk": 84,
+   "def": 78,
+   "spa": 119,
+   "spd": 85,
+   "spe": 95
+  },
+  "bst": 534
+ },
+ {
+  "key": "feraligatr",
+  "dex": 160,
+  "name": "Feraligatr",
+  "form": "",
+  "zhHant": "大力鱷",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 105,
+   "def": 100,
+   "spa": 79,
+   "spd": 83,
+   "spe": 78
+  },
+  "bst": 530
+ },
+ {
+  "key": "feraligatr-mega",
+  "dex": 160,
+  "name": "Feraligatr (Mega)",
+  "form": "Mega",
+  "zhHant": "大力鱷",
+  "types": [
+   "water",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 160,
+   "def": 125,
+   "spa": 89,
+   "spd": 93,
+   "spe": 78
+  },
+  "bst": 630
+ },
+ {
+  "key": "ariados",
+  "dex": 168,
+  "name": "Ariados",
+  "form": "",
+  "zhHant": "阿利多斯",
+  "types": [
+   "bug",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 90,
+   "def": 70,
+   "spa": 60,
+   "spd": 70,
+   "spe": 40
+  },
+  "bst": 400
+ },
+ {
+  "key": "ampharos",
+  "dex": 181,
+  "name": "Ampharos",
+  "form": "",
+  "zhHant": "電龍",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 75,
+   "def": 85,
+   "spa": 115,
+   "spd": 90,
+   "spe": 55
+  },
+  "bst": 510
+ },
+ {
+  "key": "ampharos-mega",
+  "dex": 181,
+  "name": "Ampharos (Mega)",
+  "form": "Mega",
+  "zhHant": "電龍",
+  "types": [
+   "electric",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 95,
+   "def": 105,
+   "spa": 165,
+   "spd": 110,
+   "spe": 45
+  },
+  "bst": 610
+ },
+ {
+  "key": "azumarill",
+  "dex": 184,
+  "name": "Azumarill",
+  "form": "",
+  "zhHant": "瑪力露麗",
+  "types": [
+   "water",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 50,
+   "def": 80,
+   "spa": 60,
+   "spd": 80,
+   "spe": 50
+  },
+  "bst": 420
+ },
+ {
+  "key": "politoed",
+  "dex": 186,
+  "name": "Politoed",
+  "form": "",
+  "zhHant": "蚊香蛙皇",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 75,
+   "def": 75,
+   "spa": 90,
+   "spd": 100,
+   "spe": 70
+  },
+  "bst": 500
+ },
+ {
+  "key": "espeon",
+  "dex": 196,
+  "name": "Espeon",
+  "form": "",
+  "zhHant": "太陽伊布",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 65,
+   "def": 60,
+   "spa": 130,
+   "spd": 95,
+   "spe": 110
+  },
+  "bst": 525
+ },
+ {
+  "key": "umbreon",
+  "dex": 197,
+  "name": "Umbreon",
+  "form": "",
+  "zhHant": "月亮伊布",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 65,
+   "def": 110,
+   "spa": 60,
+   "spd": 130,
+   "spe": 65
+  },
+  "bst": 525
+ },
+ {
+  "key": "slowking",
+  "dex": 199,
+  "name": "Slowking",
+  "form": "",
+  "zhHant": "呆呆王",
+  "types": [
+   "water",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 75,
+   "def": 80,
+   "spa": 100,
+   "spd": 110,
+   "spe": 30
+  },
+  "bst": 490
+ },
+ {
+  "key": "slowking-galar",
+  "dex": 199,
+  "name": "Slowking (Galar)",
+  "form": "Galar",
+  "zhHant": "呆呆王",
+  "types": [
+   "poison",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 65,
+   "def": 80,
+   "spa": 110,
+   "spd": 110,
+   "spe": 30
+  },
+  "bst": 490
+ },
+ {
+  "key": "forretress",
+  "dex": 205,
+  "name": "Forretress",
+  "form": "",
+  "zhHant": "佛烈托斯",
+  "types": [
+   "bug",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 90,
+   "def": 140,
+   "spa": 60,
+   "spd": 60,
+   "spe": 40
+  },
+  "bst": 465
+ },
+ {
+  "key": "steelix",
+  "dex": 208,
+  "name": "Steelix",
+  "form": "",
+  "zhHant": "大鋼蛇",
+  "types": [
+   "steel",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 85,
+   "def": 200,
+   "spa": 55,
+   "spd": 65,
+   "spe": 30
+  },
+  "bst": 510
+ },
+ {
+  "key": "steelix-mega",
+  "dex": 208,
+  "name": "Steelix (Mega)",
+  "form": "Mega",
+  "zhHant": "大鋼蛇",
+  "types": [
+   "steel",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 125,
+   "def": 230,
+   "spa": 55,
+   "spd": 95,
+   "spe": 30
+  },
+  "bst": 610
+ },
+ {
+  "key": "qwilfish",
+  "dex": 211,
+  "name": "Qwilfish",
+  "form": "",
+  "zhHant": "千針魚",
+  "types": [
+   "water",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 95,
+   "def": 85,
+   "spa": 55,
+   "spd": 55,
+   "spe": 85
+  },
+  "bst": 440
+ },
+ {
+  "key": "scizor",
+  "dex": 212,
+  "name": "Scizor",
+  "form": "",
+  "zhHant": "巨鉗螳螂",
+  "types": [
+   "bug",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 130,
+   "def": 100,
+   "spa": 55,
+   "spd": 80,
+   "spe": 65
+  },
+  "bst": 500
+ },
+ {
+  "key": "scizor-mega",
+  "dex": 212,
+  "name": "Scizor (Mega)",
+  "form": "Mega",
+  "zhHant": "巨鉗螳螂",
+  "types": [
+   "bug",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 150,
+   "def": 140,
+   "spa": 65,
+   "spd": 100,
+   "spe": 75
+  },
+  "bst": 600
+ },
+ {
+  "key": "heracross",
+  "dex": 214,
+  "name": "Heracross",
+  "form": "",
+  "zhHant": "赫拉克羅斯",
+  "types": [
+   "bug",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 125,
+   "def": 75,
+   "spa": 40,
+   "spd": 95,
+   "spe": 85
+  },
+  "bst": 500
+ },
+ {
+  "key": "heracross-mega",
+  "dex": 214,
+  "name": "Heracross (Mega)",
+  "form": "Mega",
+  "zhHant": "赫拉克羅斯",
+  "types": [
+   "bug",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 185,
+   "def": 115,
+   "spa": 40,
+   "spd": 105,
+   "spe": 75
+  },
+  "bst": 600
+ },
+ {
+  "key": "skarmory",
+  "dex": 227,
+  "name": "Skarmory",
+  "form": "",
+  "zhHant": "盔甲鳥",
+  "types": [
+   "steel",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 80,
+   "def": 140,
+   "spa": 40,
+   "spd": 70,
+   "spe": 70
+  },
+  "bst": 465
+ },
+ {
+  "key": "skarmory-mega",
+  "dex": 227,
+  "name": "Skarmory (Mega)",
+  "form": "Mega",
+  "zhHant": "盔甲鳥",
+  "types": [
+   "steel",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 140,
+   "def": 110,
+   "spa": 40,
+   "spd": 100,
+   "spe": 110
+  },
+  "bst": 565
+ },
+ {
+  "key": "houndoom",
+  "dex": 229,
+  "name": "Houndoom",
+  "form": "",
+  "zhHant": "黑魯加",
+  "types": [
+   "dark",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 90,
+   "def": 50,
+   "spa": 110,
+   "spd": 80,
+   "spe": 95
+  },
+  "bst": 500
+ },
+ {
+  "key": "houndoom-mega",
+  "dex": 229,
+  "name": "Houndoom (Mega)",
+  "form": "Mega",
+  "zhHant": "黑魯加",
+  "types": [
+   "dark",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 90,
+   "def": 90,
+   "spa": 140,
+   "spd": 90,
+   "spe": 115
+  },
+  "bst": 600
+ },
+ {
+  "key": "tyranitar",
+  "dex": 248,
+  "name": "Tyranitar",
+  "form": "",
+  "zhHant": "班基拉斯",
+  "types": [
+   "rock",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 134,
+   "def": 110,
+   "spa": 95,
+   "spd": 100,
+   "spe": 61
+  },
+  "bst": 600
+ },
+ {
+  "key": "tyranitar-mega",
+  "dex": 248,
+  "name": "Tyranitar (Mega)",
+  "form": "Mega",
+  "zhHant": "班基拉斯",
+  "types": [
+   "rock",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 164,
+   "def": 150,
+   "spa": 95,
+   "spd": 120,
+   "spe": 71
+  },
+  "bst": 700
+ },
+ {
+  "key": "sceptile",
+  "dex": 254,
+  "name": "Sceptile",
+  "form": "",
+  "zhHant": "蜥蜴王",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 85,
+   "def": 65,
+   "spa": 105,
+   "spd": 85,
+   "spe": 120
+  },
+  "bst": 530
+ },
+ {
+  "key": "sceptile-mega",
+  "dex": 254,
+  "name": "Sceptile (Mega)",
+  "form": "Mega",
+  "zhHant": "蜥蜴王",
+  "types": [
+   "grass",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 110,
+   "def": 75,
+   "spa": 145,
+   "spd": 85,
+   "spe": 145
+  },
+  "bst": 630
+ },
+ {
+  "key": "blaziken",
+  "dex": 257,
+  "name": "Blaziken",
+  "form": "",
+  "zhHant": "火焰雞",
+  "types": [
+   "fire",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 120,
+   "def": 70,
+   "spa": 110,
+   "spd": 70,
+   "spe": 80
+  },
+  "bst": 530
+ },
+ {
+  "key": "blaziken-mega",
+  "dex": 257,
+  "name": "Blaziken (Mega)",
+  "form": "Mega",
+  "zhHant": "火焰雞",
+  "types": [
+   "fire",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 160,
+   "def": 80,
+   "spa": 130,
+   "spd": 80,
+   "spe": 100
+  },
+  "bst": 630
+ },
+ {
+  "key": "swampert",
+  "dex": 260,
+  "name": "Swampert",
+  "form": "",
+  "zhHant": "巨沼怪",
+  "types": [
+   "water",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 110,
+   "def": 90,
+   "spa": 85,
+   "spd": 90,
+   "spe": 60
+  },
+  "bst": 535
+ },
+ {
+  "key": "swampert-mega",
+  "dex": 260,
+  "name": "Swampert (Mega)",
+  "form": "Mega",
+  "zhHant": "巨沼怪",
+  "types": [
+   "water",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 150,
+   "def": 110,
+   "spa": 95,
+   "spd": 110,
+   "spe": 70
+  },
+  "bst": 635
+ },
+ {
+  "key": "pelipper",
+  "dex": 279,
+  "name": "Pelipper",
+  "form": "",
+  "zhHant": "大嘴鷗",
+  "types": [
+   "water",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 50,
+   "def": 100,
+   "spa": 95,
+   "spd": 70,
+   "spe": 65
+  },
+  "bst": 440
+ },
+ {
+  "key": "gardevoir",
+  "dex": 282,
+  "name": "Gardevoir",
+  "form": "",
+  "zhHant": "沙奈朵",
+  "types": [
+   "psychic",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 68,
+   "atk": 65,
+   "def": 65,
+   "spa": 125,
+   "spd": 115,
+   "spe": 80
+  },
+  "bst": 518
+ },
+ {
+  "key": "gardevoir-mega",
+  "dex": 282,
+  "name": "Gardevoir (Mega)",
+  "form": "Mega",
+  "zhHant": "沙奈朵",
+  "types": [
+   "psychic",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 68,
+   "atk": 85,
+   "def": 65,
+   "spa": 165,
+   "spd": 135,
+   "spe": 100
+  },
+  "bst": 618
+ },
+ {
+  "key": "sableye",
+  "dex": 302,
+  "name": "Sableye",
+  "form": "",
+  "zhHant": "勾魂眼",
+  "types": [
+   "dark",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 75,
+   "def": 75,
+   "spa": 65,
+   "spd": 65,
+   "spe": 50
+  },
+  "bst": 380
+ },
+ {
+  "key": "sableye-mega",
+  "dex": 302,
+  "name": "Sableye (Mega)",
+  "form": "Mega",
+  "zhHant": "勾魂眼",
+  "types": [
+   "dark",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 85,
+   "def": 125,
+   "spa": 85,
+   "spd": 115,
+   "spe": 20
+  },
+  "bst": 480
+ },
+ {
+  "key": "mawile",
+  "dex": 303,
+  "name": "Mawile",
+  "form": "",
+  "zhHant": "大嘴娃",
+  "types": [
+   "steel",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 85,
+   "def": 85,
+   "spa": 55,
+   "spd": 55,
+   "spe": 50
+  },
+  "bst": 380
+ },
+ {
+  "key": "mawile-mega",
+  "dex": 303,
+  "name": "Mawile (Mega)",
+  "form": "Mega",
+  "zhHant": "大嘴娃",
+  "types": [
+   "steel",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 105,
+   "def": 125,
+   "spa": 55,
+   "spd": 95,
+   "spe": 50
+  },
+  "bst": 480
+ },
+ {
+  "key": "aggron",
+  "dex": 306,
+  "name": "Aggron",
+  "form": "",
+  "zhHant": "波士可多拉",
+  "types": [
+   "steel",
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 110,
+   "def": 180,
+   "spa": 60,
+   "spd": 60,
+   "spe": 50
+  },
+  "bst": 530
+ },
+ {
+  "key": "aggron-mega",
+  "dex": 306,
+  "name": "Aggron (Mega)",
+  "form": "Mega",
+  "zhHant": "波士可多拉",
+  "types": [
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 140,
+   "def": 230,
+   "spa": 60,
+   "spd": 80,
+   "spe": 50
+  },
+  "bst": 630
+ },
+ {
+  "key": "medicham",
+  "dex": 308,
+  "name": "Medicham",
+  "form": "",
+  "zhHant": "恰雷姆",
+  "types": [
+   "fighting",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 60,
+   "def": 75,
+   "spa": 60,
+   "spd": 75,
+   "spe": 80
+  },
+  "bst": 410
+ },
+ {
+  "key": "medicham-mega",
+  "dex": 308,
+  "name": "Medicham (Mega)",
+  "form": "Mega",
+  "zhHant": "恰雷姆",
+  "types": [
+   "fighting",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 100,
+   "def": 85,
+   "spa": 80,
+   "spd": 85,
+   "spe": 100
+  },
+  "bst": 510
+ },
+ {
+  "key": "manectric",
+  "dex": 310,
+  "name": "Manectric",
+  "form": "",
+  "zhHant": "雷電獸",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 75,
+   "def": 60,
+   "spa": 105,
+   "spd": 60,
+   "spe": 105
+  },
+  "bst": 475
+ },
+ {
+  "key": "manectric-mega",
+  "dex": 310,
+  "name": "Manectric (Mega)",
+  "form": "Mega",
+  "zhHant": "雷電獸",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 75,
+   "def": 80,
+   "spa": 135,
+   "spd": 80,
+   "spe": 135
+  },
+  "bst": 575
+ },
+ {
+  "key": "swalot",
+  "dex": 317,
+  "name": "Swalot",
+  "form": "",
+  "zhHant": "吞食獸",
+  "types": [
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 73,
+   "def": 83,
+   "spa": 73,
+   "spd": 83,
+   "spe": 55
+  },
+  "bst": 467
+ },
+ {
+  "key": "sharpedo",
+  "dex": 319,
+  "name": "Sharpedo",
+  "form": "",
+  "zhHant": "巨牙鯊",
+  "types": [
+   "water",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 120,
+   "def": 40,
+   "spa": 95,
+   "spd": 40,
+   "spe": 95
+  },
+  "bst": 460
+ },
+ {
+  "key": "sharpedo-mega",
+  "dex": 319,
+  "name": "Sharpedo (Mega)",
+  "form": "Mega",
+  "zhHant": "巨牙鯊",
+  "types": [
+   "water",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 140,
+   "def": 70,
+   "spa": 110,
+   "spd": 65,
+   "spe": 105
+  },
+  "bst": 560
+ },
+ {
+  "key": "camerupt",
+  "dex": 323,
+  "name": "Camerupt",
+  "form": "",
+  "zhHant": "噴火駝",
+  "types": [
+   "fire",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 100,
+   "def": 70,
+   "spa": 105,
+   "spd": 75,
+   "spe": 40
+  },
+  "bst": 460
+ },
+ {
+  "key": "camerupt-mega",
+  "dex": 323,
+  "name": "Camerupt (Mega)",
+  "form": "Mega",
+  "zhHant": "噴火駝",
+  "types": [
+   "fire",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 120,
+   "def": 100,
+   "spa": 145,
+   "spd": 105,
+   "spe": 20
+  },
+  "bst": 560
+ },
+ {
+  "key": "torkoal",
+  "dex": 324,
+  "name": "Torkoal",
+  "form": "",
+  "zhHant": "煤炭龜",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 85,
+   "def": 140,
+   "spa": 85,
+   "spd": 70,
+   "spe": 20
+  },
+  "bst": 470
+ },
+ {
+  "key": "altaria",
+  "dex": 334,
+  "name": "Altaria",
+  "form": "",
+  "zhHant": "七夕青鳥",
+  "types": [
+   "dragon",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 70,
+   "def": 90,
+   "spa": 70,
+   "spd": 105,
+   "spe": 80
+  },
+  "bst": 490
+ },
+ {
+  "key": "altaria-mega",
+  "dex": 334,
+  "name": "Altaria (Mega)",
+  "form": "Mega",
+  "zhHant": "七夕青鳥",
+  "types": [
+   "dragon",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 110,
+   "def": 110,
+   "spa": 110,
+   "spd": 105,
+   "spe": 80
+  },
+  "bst": 590
+ },
+ {
+  "key": "milotic",
+  "dex": 350,
+  "name": "Milotic",
+  "form": "",
+  "zhHant": "美納斯",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 60,
+   "def": 79,
+   "spa": 100,
+   "spd": 125,
+   "spe": 81
+  },
+  "bst": 540
+ },
+ {
+  "key": "castform",
+  "dex": 351,
+  "name": "Castform",
+  "form": "",
+  "zhHant": "飄浮泡泡",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 70,
+   "def": 70,
+   "spa": 70,
+   "spd": 70,
+   "spe": 70
+  },
+  "bst": 420
+ },
+ {
+  "key": "castform-rainy",
+  "dex": 351,
+  "name": "Castform (Rainy)",
+  "form": "Rainy",
+  "zhHant": "飄浮泡泡",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 70,
+   "def": 70,
+   "spa": 70,
+   "spd": 70,
+   "spe": 70
+  },
+  "bst": 420
+ },
+ {
+  "key": "castform-snowy",
+  "dex": 351,
+  "name": "Castform (Snowy)",
+  "form": "Snowy",
+  "zhHant": "飄浮泡泡",
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 70,
+   "def": 70,
+   "spa": 70,
+   "spd": 70,
+   "spe": 70
+  },
+  "bst": 420
+ },
+ {
+  "key": "castform-sunny",
+  "dex": 351,
+  "name": "Castform (Sunny)",
+  "form": "Sunny",
+  "zhHant": "飄浮泡泡",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 70,
+   "def": 70,
+   "spa": 70,
+   "spd": 70,
+   "spe": 70
+  },
+  "bst": 420
+ },
+ {
+  "key": "banette",
+  "dex": 354,
+  "name": "Banette",
+  "form": "",
+  "zhHant": "詛咒娃娃",
+  "types": [
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 64,
+   "atk": 115,
+   "def": 65,
+   "spa": 83,
+   "spd": 63,
+   "spe": 65
+  },
+  "bst": 455
+ },
+ {
+  "key": "banette-mega",
+  "dex": 354,
+  "name": "Banette (Mega)",
+  "form": "Mega",
+  "zhHant": "詛咒娃娃",
+  "types": [
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 64,
+   "atk": 165,
+   "def": 75,
+   "spa": 93,
+   "spd": 83,
+   "spe": 75
+  },
+  "bst": 555
+ },
+ {
+  "key": "chimecho",
+  "dex": 358,
+  "name": "Chimecho",
+  "form": "",
+  "zhHant": "風鈴鈴",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 50,
+   "def": 80,
+   "spa": 95,
+   "spd": 90,
+   "spe": 65
+  },
+  "bst": 455
+ },
+ {
+  "key": "chimecho-mega",
+  "dex": 358,
+  "name": "Chimecho (Mega)",
+  "form": "Mega",
+  "zhHant": "風鈴鈴",
+  "types": [
+   "psychic",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 50,
+   "def": 110,
+   "spa": 135,
+   "spd": 120,
+   "spe": 65
+  },
+  "bst": 555
+ },
+ {
+  "key": "absol",
+  "dex": 359,
+  "name": "Absol",
+  "form": "",
+  "zhHant": "阿勃梭魯",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 130,
+   "def": 60,
+   "spa": 75,
+   "spd": 60,
+   "spe": 75
+  },
+  "bst": 465
+ },
+ {
+  "key": "absol-mega",
+  "dex": 359,
+  "name": "Absol (Mega)",
+  "form": "Mega",
+  "zhHant": "阿勃梭魯",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 150,
+   "def": 60,
+   "spa": 115,
+   "spd": 60,
+   "spe": 115
+  },
+  "bst": 565
+ },
+ {
+  "key": "absol-mega-z",
+  "dex": 359,
+  "name": "Absol (Mega Z)",
+  "form": "Mega Z",
+  "zhHant": "阿勃梭魯",
+  "types": [
+   "dark",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 154,
+   "def": 60,
+   "spa": 75,
+   "spd": 60,
+   "spe": 151
+  },
+  "bst": 565
+ },
+ {
+  "key": "glalie",
+  "dex": 362,
+  "name": "Glalie",
+  "form": "",
+  "zhHant": "冰鬼護",
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 80,
+   "def": 80,
+   "spa": 80,
+   "spd": 80,
+   "spe": 80
+  },
+  "bst": 480
+ },
+ {
+  "key": "glalie-mega",
+  "dex": 362,
+  "name": "Glalie (Mega)",
+  "form": "Mega",
+  "zhHant": "冰鬼護",
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 120,
+   "def": 80,
+   "spa": 120,
+   "spd": 80,
+   "spe": 100
+  },
+  "bst": 580
+ },
+ {
+  "key": "salamence",
+  "dex": 373,
+  "name": "Salamence",
+  "form": "",
+  "zhHant": "暴飛龍",
+  "types": [
+   "dragon",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 135,
+   "def": 80,
+   "spa": 110,
+   "spd": 80,
+   "spe": 100
+  },
+  "bst": 600
+ },
+ {
+  "key": "salamence-mega",
+  "dex": 373,
+  "name": "Salamence (Mega)",
+  "form": "Mega",
+  "zhHant": "暴飛龍",
+  "types": [
+   "dragon",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 145,
+   "def": 130,
+   "spa": 120,
+   "spd": 90,
+   "spe": 120
+  },
+  "bst": 700
+ },
+ {
+  "key": "metagross",
+  "dex": 376,
+  "name": "Metagross",
+  "form": "",
+  "zhHant": "巨金怪",
+  "types": [
+   "steel",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 135,
+   "def": 130,
+   "spa": 95,
+   "spd": 90,
+   "spe": 70
+  },
+  "bst": 600
+ },
+ {
+  "key": "metagross-mega",
+  "dex": 376,
+  "name": "Metagross (Mega)",
+  "form": "Mega",
+  "zhHant": "巨金怪",
+  "types": [
+   "steel",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 145,
+   "def": 150,
+   "spa": 105,
+   "spd": 110,
+   "spe": 110
+  },
+  "bst": 700
+ },
+ {
+  "key": "torterra",
+  "dex": 389,
+  "name": "Torterra",
+  "form": "",
+  "zhHant": "土台龜",
+  "types": [
+   "grass",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 109,
+   "def": 105,
+   "spa": 75,
+   "spd": 85,
+   "spe": 56
+  },
+  "bst": 525
+ },
+ {
+  "key": "infernape",
+  "dex": 392,
+  "name": "Infernape",
+  "form": "",
+  "zhHant": "烈焰猴",
+  "types": [
+   "fire",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 76,
+   "atk": 104,
+   "def": 71,
+   "spa": 104,
+   "spd": 71,
+   "spe": 108
+  },
+  "bst": 534
+ },
+ {
+  "key": "empoleon",
+  "dex": 395,
+  "name": "Empoleon",
+  "form": "",
+  "zhHant": "帝王拿波",
+  "types": [
+   "water",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 84,
+   "atk": 86,
+   "def": 88,
+   "spa": 111,
+   "spd": 101,
+   "spe": 60
+  },
+  "bst": 530
+ },
+ {
+  "key": "staraptor",
+  "dex": 398,
+  "name": "Staraptor",
+  "form": "",
+  "zhHant": "姆克鷹",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 120,
+   "def": 70,
+   "spa": 50,
+   "spd": 60,
+   "spe": 100
+  },
+  "bst": 485
+ },
+ {
+  "key": "staraptor-mega",
+  "dex": 398,
+  "name": "Staraptor (Mega)",
+  "form": "Mega",
+  "zhHant": "姆克鷹",
+  "types": [
+   "fighting",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 140,
+   "def": 100,
+   "spa": 60,
+   "spd": 90,
+   "spe": 110
+  },
+  "bst": 585
+ },
+ {
+  "key": "luxray",
+  "dex": 405,
+  "name": "Luxray",
+  "form": "",
+  "zhHant": "倫琴貓",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 120,
+   "def": 79,
+   "spa": 95,
+   "spd": 79,
+   "spe": 70
+  },
+  "bst": 523
+ },
+ {
+  "key": "roserade",
+  "dex": 407,
+  "name": "Roserade",
+  "form": "",
+  "zhHant": "羅絲雷朵",
+  "types": [
+   "grass",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 70,
+   "def": 65,
+   "spa": 125,
+   "spd": 105,
+   "spe": 90
+  },
+  "bst": 515
+ },
+ {
+  "key": "rampardos",
+  "dex": 409,
+  "name": "Rampardos",
+  "form": "",
+  "zhHant": "戰槌龍",
+  "types": [
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 97,
+   "atk": 165,
+   "def": 60,
+   "spa": 65,
+   "spd": 50,
+   "spe": 58
+  },
+  "bst": 495
+ },
+ {
+  "key": "bastiodon",
+  "dex": 411,
+  "name": "Bastiodon",
+  "form": "",
+  "zhHant": "護城龍",
+  "types": [
+   "rock",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 52,
+   "def": 168,
+   "spa": 47,
+   "spd": 138,
+   "spe": 30
+  },
+  "bst": 495
+ },
+ {
+  "key": "lopunny",
+  "dex": 428,
+  "name": "Lopunny",
+  "form": "",
+  "zhHant": "長耳兔",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 76,
+   "def": 84,
+   "spa": 54,
+   "spd": 96,
+   "spe": 105
+  },
+  "bst": 480
+ },
+ {
+  "key": "lopunny-mega",
+  "dex": 428,
+  "name": "Lopunny (Mega)",
+  "form": "Mega",
+  "zhHant": "長耳兔",
+  "types": [
+   "normal",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 136,
+   "def": 94,
+   "spa": 54,
+   "spd": 96,
+   "spe": 135
+  },
+  "bst": 580
+ },
+ {
+  "key": "spiritomb",
+  "dex": 442,
+  "name": "Spiritomb",
+  "form": "",
+  "zhHant": "花岩怪",
+  "types": [
+   "ghost",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 92,
+   "def": 108,
+   "spa": 92,
+   "spd": 108,
+   "spe": 35
+  },
+  "bst": 485
+ },
+ {
+  "key": "garchomp",
+  "dex": 445,
+  "name": "Garchomp",
+  "form": "",
+  "zhHant": "烈咬陸鯊",
+  "types": [
+   "dragon",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 108,
+   "atk": 130,
+   "def": 95,
+   "spa": 80,
+   "spd": 85,
+   "spe": 102
+  },
+  "bst": 600
+ },
+ {
+  "key": "garchomp-mega",
+  "dex": 445,
+  "name": "Garchomp (Mega)",
+  "form": "Mega",
+  "zhHant": "烈咬陸鯊",
+  "types": [
+   "dragon",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 108,
+   "atk": 170,
+   "def": 115,
+   "spa": 120,
+   "spd": 95,
+   "spe": 92
+  },
+  "bst": 700
+ },
+ {
+  "key": "garchomp-mega-z",
+  "dex": 445,
+  "name": "Garchomp (Mega Z)",
+  "form": "Mega Z",
+  "zhHant": "烈咬陸鯊",
+  "types": [
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 108,
+   "atk": 130,
+   "def": 85,
+   "spa": 141,
+   "spd": 85,
+   "spe": 151
+  },
+  "bst": 700
+ },
+ {
+  "key": "lucario",
+  "dex": 448,
+  "name": "Lucario",
+  "form": "",
+  "zhHant": "路卡利歐",
+  "types": [
+   "fighting",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 110,
+   "def": 70,
+   "spa": 115,
+   "spd": 70,
+   "spe": 90
+  },
+  "bst": 525
+ },
+ {
+  "key": "lucario-mega",
+  "dex": 448,
+  "name": "Lucario (Mega)",
+  "form": "Mega",
+  "zhHant": "路卡利歐",
+  "types": [
+   "fighting",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 145,
+   "def": 88,
+   "spa": 140,
+   "spd": 70,
+   "spe": 112
+  },
+  "bst": 625
+ },
+ {
+  "key": "lucario-mega-z",
+  "dex": 448,
+  "name": "Lucario (Mega Z)",
+  "form": "Mega Z",
+  "zhHant": "路卡利歐",
+  "types": [
+   "fighting",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 100,
+   "def": 70,
+   "spa": 164,
+   "spd": 70,
+   "spe": 151
+  },
+  "bst": 625
+ },
+ {
+  "key": "hippowdon",
+  "dex": 450,
+  "name": "Hippowdon",
+  "form": "",
+  "zhHant": "河馬獸",
+  "types": [
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 108,
+   "atk": 112,
+   "def": 118,
+   "spa": 68,
+   "spd": 72,
+   "spe": 47
+  },
+  "bst": 525
+ },
+ {
+  "key": "toxicroak",
+  "dex": 454,
+  "name": "Toxicroak",
+  "form": "",
+  "zhHant": "毒骷蛙",
+  "types": [
+   "poison",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 83,
+   "atk": 106,
+   "def": 65,
+   "spa": 86,
+   "spd": 65,
+   "spe": 85
+  },
+  "bst": 490
+ },
+ {
+  "key": "abomasnow",
+  "dex": 460,
+  "name": "Abomasnow",
+  "form": "",
+  "zhHant": "暴雪王",
+  "types": [
+   "grass",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 92,
+   "def": 75,
+   "spa": 92,
+   "spd": 85,
+   "spe": 60
+  },
+  "bst": 494
+ },
+ {
+  "key": "abomasnow-mega",
+  "dex": 460,
+  "name": "Abomasnow (Mega)",
+  "form": "Mega",
+  "zhHant": "暴雪王",
+  "types": [
+   "grass",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 132,
+   "def": 105,
+   "spa": 132,
+   "spd": 105,
+   "spe": 30
+  },
+  "bst": 594
+ },
+ {
+  "key": "weavile",
+  "dex": 461,
+  "name": "Weavile",
+  "form": "",
+  "zhHant": "瑪狃拉",
+  "types": [
+   "dark",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 120,
+   "def": 65,
+   "spa": 45,
+   "spd": 85,
+   "spe": 125
+  },
+  "bst": 510
+ },
+ {
+  "key": "rhyperior",
+  "dex": 464,
+  "name": "Rhyperior",
+  "form": "",
+  "zhHant": "超甲狂犀",
+  "types": [
+   "ground",
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 115,
+   "atk": 140,
+   "def": 130,
+   "spa": 55,
+   "spd": 55,
+   "spe": 40
+  },
+  "bst": 535
+ },
+ {
+  "key": "leafeon",
+  "dex": 470,
+  "name": "Leafeon",
+  "form": "",
+  "zhHant": "葉伊布",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 110,
+   "def": 130,
+   "spa": 60,
+   "spd": 65,
+   "spe": 95
+  },
+  "bst": 525
+ },
+ {
+  "key": "glaceon",
+  "dex": 471,
+  "name": "Glaceon",
+  "form": "",
+  "zhHant": "冰伊布",
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 110,
+   "spa": 130,
+   "spd": 95,
+   "spe": 65
+  },
+  "bst": 525
+ },
+ {
+  "key": "gliscor",
+  "dex": 472,
+  "name": "Gliscor",
+  "form": "",
+  "zhHant": "天蠍王",
+  "types": [
+   "ground",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 95,
+   "def": 125,
+   "spa": 45,
+   "spd": 75,
+   "spe": 95
+  },
+  "bst": 510
+ },
+ {
+  "key": "mamoswine",
+  "dex": 473,
+  "name": "Mamoswine",
+  "form": "",
+  "zhHant": "象牙豬",
+  "types": [
+   "ice",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 130,
+   "def": 80,
+   "spa": 70,
+   "spd": 60,
+   "spe": 80
+  },
+  "bst": 530
+ },
+ {
+  "key": "gallade",
+  "dex": 475,
+  "name": "Gallade",
+  "form": "",
+  "zhHant": "艾路雷朵",
+  "types": [
+   "psychic",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 68,
+   "atk": 125,
+   "def": 65,
+   "spa": 65,
+   "spd": 115,
+   "spe": 80
+  },
+  "bst": 518
+ },
+ {
+  "key": "gallade-mega",
+  "dex": 475,
+  "name": "Gallade (Mega)",
+  "form": "Mega",
+  "zhHant": "艾路雷朵",
+  "types": [
+   "psychic",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 68,
+   "atk": 165,
+   "def": 95,
+   "spa": 65,
+   "spd": 115,
+   "spe": 110
+  },
+  "bst": 618
+ },
+ {
+  "key": "froslass",
+  "dex": 478,
+  "name": "Froslass",
+  "form": "",
+  "zhHant": "雪妖女",
+  "types": [
+   "ice",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 80,
+   "def": 70,
+   "spa": 80,
+   "spd": 70,
+   "spe": 110
+  },
+  "bst": 480
+ },
+ {
+  "key": "froslass-mega",
+  "dex": 478,
+  "name": "Froslass (Mega)",
+  "form": "Mega",
+  "zhHant": "雪妖女",
+  "types": [
+   "ice",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 80,
+   "def": 70,
+   "spa": 140,
+   "spd": 100,
+   "spe": 120
+  },
+  "bst": 580
+ },
+ {
+  "key": "rotom",
+  "dex": 479,
+  "name": "Rotom",
+  "form": "",
+  "zhHant": "洛托姆",
+  "types": [
+   "electric",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 50,
+   "def": 77,
+   "spa": 95,
+   "spd": 77,
+   "spe": 91
+  },
+  "bst": 440
+ },
+ {
+  "key": "rotom-fan",
+  "dex": 479,
+  "name": "Rotom (Fan)",
+  "form": "Fan",
+  "zhHant": "洛托姆",
+  "types": [
+   "electric",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 65,
+   "def": 107,
+   "spa": 105,
+   "spd": 107,
+   "spe": 86
+  },
+  "bst": 520
+ },
+ {
+  "key": "rotom-frost",
+  "dex": 479,
+  "name": "Rotom (Frost)",
+  "form": "Frost",
+  "zhHant": "洛托姆",
+  "types": [
+   "electric",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 65,
+   "def": 107,
+   "spa": 105,
+   "spd": 107,
+   "spe": 86
+  },
+  "bst": 520
+ },
+ {
+  "key": "rotom-heat",
+  "dex": 479,
+  "name": "Rotom (Heat)",
+  "form": "Heat",
+  "zhHant": "洛托姆",
+  "types": [
+   "electric",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 65,
+   "def": 107,
+   "spa": 105,
+   "spd": 107,
+   "spe": 86
+  },
+  "bst": 520
+ },
+ {
+  "key": "rotom-mow",
+  "dex": 479,
+  "name": "Rotom (Mow)",
+  "form": "Mow",
+  "zhHant": "洛托姆",
+  "types": [
+   "electric",
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 65,
+   "def": 107,
+   "spa": 105,
+   "spd": 107,
+   "spe": 86
+  },
+  "bst": 520
+ },
+ {
+  "key": "rotom-wash",
+  "dex": 479,
+  "name": "Rotom (Wash)",
+  "form": "Wash",
+  "zhHant": "洛托姆",
+  "types": [
+   "electric",
+   "water"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 65,
+   "def": 107,
+   "spa": 105,
+   "spd": 107,
+   "spe": 86
+  },
+  "bst": 520
+ },
+ {
+  "key": "serperior",
+  "dex": 497,
+  "name": "Serperior",
+  "form": "",
+  "zhHant": "君主蛇",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 75,
+   "def": 95,
+   "spa": 75,
+   "spd": 95,
+   "spe": 113
+  },
+  "bst": 528
+ },
+ {
+  "key": "emboar",
+  "dex": 500,
+  "name": "Emboar",
+  "form": "",
+  "zhHant": "炎武王",
+  "types": [
+   "fire",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 123,
+   "def": 65,
+   "spa": 100,
+   "spd": 65,
+   "spe": 65
+  },
+  "bst": 528
+ },
+ {
+  "key": "emboar-mega",
+  "dex": 500,
+  "name": "Emboar (Mega)",
+  "form": "Mega",
+  "zhHant": "炎武王",
+  "types": [
+   "fire",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 148,
+   "def": 75,
+   "spa": 110,
+   "spd": 110,
+   "spe": 75
+  },
+  "bst": 628
+ },
+ {
+  "key": "samurott",
+  "dex": 503,
+  "name": "Samurott",
+  "form": "",
+  "zhHant": "大劍鬼",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 100,
+   "def": 85,
+   "spa": 108,
+   "spd": 70,
+   "spe": 70
+  },
+  "bst": 528
+ },
+ {
+  "key": "samurott-hisui",
+  "dex": 503,
+  "name": "Samurott (Hisui)",
+  "form": "Hisui",
+  "zhHant": "大劍鬼",
+  "types": [
+   "water",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 108,
+   "def": 80,
+   "spa": 100,
+   "spd": 65,
+   "spe": 85
+  },
+  "bst": 528
+ },
+ {
+  "key": "watchog",
+  "dex": 505,
+  "name": "Watchog",
+  "form": "",
+  "zhHant": "步哨鼠",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 85,
+   "def": 69,
+   "spa": 60,
+   "spd": 69,
+   "spe": 77
+  },
+  "bst": 420
+ },
+ {
+  "key": "liepard",
+  "dex": 510,
+  "name": "Liepard",
+  "form": "",
+  "zhHant": "酷豹",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 64,
+   "atk": 88,
+   "def": 50,
+   "spa": 88,
+   "spd": 50,
+   "spe": 106
+  },
+  "bst": 446
+ },
+ {
+  "key": "simisage",
+  "dex": 512,
+  "name": "Simisage",
+  "form": "",
+  "zhHant": "花椰猿",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 98,
+   "def": 63,
+   "spa": 98,
+   "spd": 63,
+   "spe": 101
+  },
+  "bst": 498
+ },
+ {
+  "key": "simisear",
+  "dex": 514,
+  "name": "Simisear",
+  "form": "",
+  "zhHant": "爆香猿",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 98,
+   "def": 63,
+   "spa": 98,
+   "spd": 63,
+   "spe": 101
+  },
+  "bst": 498
+ },
+ {
+  "key": "simipour",
+  "dex": 516,
+  "name": "Simipour",
+  "form": "",
+  "zhHant": "冷水猿",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 98,
+   "def": 63,
+   "spa": 98,
+   "spd": 63,
+   "spe": 101
+  },
+  "bst": 498
+ },
+ {
+  "key": "musharna",
+  "dex": 518,
+  "name": "Musharna",
+  "form": "",
+  "zhHant": "夢夢蝕",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 116,
+   "atk": 55,
+   "def": 85,
+   "spa": 107,
+   "spd": 95,
+   "spe": 29
+  },
+  "bst": 487
+ },
+ {
+  "key": "excadrill",
+  "dex": 530,
+  "name": "Excadrill",
+  "form": "",
+  "zhHant": "龍頭地鼠",
+  "types": [
+   "ground",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 135,
+   "def": 60,
+   "spa": 50,
+   "spd": 65,
+   "spe": 88
+  },
+  "bst": 508
+ },
+ {
+  "key": "excadrill-mega",
+  "dex": 530,
+  "name": "Excadrill (Mega)",
+  "form": "Mega",
+  "zhHant": "龍頭地鼠",
+  "types": [
+   "ground",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 165,
+   "def": 100,
+   "spa": 65,
+   "spd": 65,
+   "spe": 103
+  },
+  "bst": 608
+ },
+ {
+  "key": "audino",
+  "dex": 531,
+  "name": "Audino",
+  "form": "",
+  "zhHant": "差不多娃娃",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 103,
+   "atk": 60,
+   "def": 86,
+   "spa": 60,
+   "spd": 86,
+   "spe": 50
+  },
+  "bst": 445
+ },
+ {
+  "key": "audino-mega",
+  "dex": 531,
+  "name": "Audino (Mega)",
+  "form": "Mega",
+  "zhHant": "差不多娃娃",
+  "types": [
+   "normal",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 103,
+   "atk": 60,
+   "def": 126,
+   "spa": 80,
+   "spd": 126,
+   "spe": 50
+  },
+  "bst": 545
+ },
+ {
+  "key": "conkeldurr",
+  "dex": 534,
+  "name": "Conkeldurr",
+  "form": "",
+  "zhHant": "修建老匠",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 105,
+   "atk": 140,
+   "def": 95,
+   "spa": 55,
+   "spd": 65,
+   "spe": 45
+  },
+  "bst": 505
+ },
+ {
+  "key": "scolipede",
+  "dex": 545,
+  "name": "Scolipede",
+  "form": "",
+  "zhHant": "蜈蚣王",
+  "types": [
+   "bug",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 100,
+   "def": 89,
+   "spa": 55,
+   "spd": 69,
+   "spe": 112
+  },
+  "bst": 485
+ },
+ {
+  "key": "scolipede-mega",
+  "dex": 545,
+  "name": "Scolipede (Mega)",
+  "form": "Mega",
+  "zhHant": "蜈蚣王",
+  "types": [
+   "bug",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 140,
+   "def": 149,
+   "spa": 75,
+   "spd": 99,
+   "spe": 62
+  },
+  "bst": 585
+ },
+ {
+  "key": "whimsicott",
+  "dex": 547,
+  "name": "Whimsicott",
+  "form": "",
+  "zhHant": "風妖精",
+  "types": [
+   "grass",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 67,
+   "def": 85,
+   "spa": 77,
+   "spd": 75,
+   "spe": 116
+  },
+  "bst": 480
+ },
+ {
+  "key": "krookodile",
+  "dex": 553,
+  "name": "Krookodile",
+  "form": "",
+  "zhHant": "流氓鱷",
+  "types": [
+   "ground",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 117,
+   "def": 80,
+   "spa": 65,
+   "spd": 70,
+   "spe": 92
+  },
+  "bst": 519
+ },
+ {
+  "key": "scrafty",
+  "dex": 560,
+  "name": "Scrafty",
+  "form": "",
+  "zhHant": "頭巾混混",
+  "types": [
+   "dark",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 90,
+   "def": 115,
+   "spa": 45,
+   "spd": 115,
+   "spe": 58
+  },
+  "bst": 488
+ },
+ {
+  "key": "scrafty-mega",
+  "dex": 560,
+  "name": "Scrafty (Mega)",
+  "form": "Mega",
+  "zhHant": "頭巾混混",
+  "types": [
+   "dark",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 130,
+   "def": 135,
+   "spa": 55,
+   "spd": 135,
+   "spe": 68
+  },
+  "bst": 588
+ },
+ {
+  "key": "cofagrigus",
+  "dex": 563,
+  "name": "Cofagrigus",
+  "form": "",
+  "zhHant": "死神棺",
+  "types": [
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 58,
+   "atk": 50,
+   "def": 145,
+   "spa": 95,
+   "spd": 105,
+   "spe": 30
+  },
+  "bst": 483
+ },
+ {
+  "key": "garbodor",
+  "dex": 569,
+  "name": "Garbodor",
+  "form": "",
+  "zhHant": "灰塵山",
+  "types": [
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 95,
+   "def": 82,
+   "spa": 60,
+   "spd": 82,
+   "spe": 75
+  },
+  "bst": 474
+ },
+ {
+  "key": "zoroark",
+  "dex": 571,
+  "name": "Zoroark",
+  "form": "",
+  "zhHant": "索羅亞克",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 105,
+   "def": 60,
+   "spa": 120,
+   "spd": 60,
+   "spe": 105
+  },
+  "bst": 510
+ },
+ {
+  "key": "zoroark-hisui",
+  "dex": 571,
+  "name": "Zoroark (Hisui)",
+  "form": "Hisui",
+  "zhHant": "索羅亞克",
+  "types": [
+   "normal",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 55,
+   "atk": 100,
+   "def": 60,
+   "spa": 125,
+   "spd": 60,
+   "spe": 110
+  },
+  "bst": 510
+ },
+ {
+  "key": "reuniclus",
+  "dex": 579,
+  "name": "Reuniclus",
+  "form": "",
+  "zhHant": "人造細胞卵",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 65,
+   "def": 75,
+   "spa": 125,
+   "spd": 85,
+   "spe": 30
+  },
+  "bst": 490
+ },
+ {
+  "key": "vanilluxe",
+  "dex": 584,
+  "name": "Vanilluxe",
+  "form": "",
+  "zhHant": "雙倍多多冰",
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 71,
+   "atk": 95,
+   "def": 85,
+   "spa": 110,
+   "spd": 95,
+   "spe": 79
+  },
+  "bst": 535
+ },
+ {
+  "key": "emolga",
+  "dex": 587,
+  "name": "Emolga",
+  "form": "",
+  "zhHant": "電飛鼠",
+  "types": [
+   "electric",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 55,
+   "atk": 75,
+   "def": 60,
+   "spa": 75,
+   "spd": 60,
+   "spe": 103
+  },
+  "bst": 428
+ },
+ {
+  "key": "eelektross",
+  "dex": 604,
+  "name": "Eelektross",
+  "form": "",
+  "zhHant": "麻麻鰻魚王",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 115,
+   "def": 80,
+   "spa": 105,
+   "spd": 80,
+   "spe": 50
+  },
+  "bst": 515
+ },
+ {
+  "key": "eelektross-mega",
+  "dex": 604,
+  "name": "Eelektross (Mega)",
+  "form": "Mega",
+  "zhHant": "麻麻鰻魚王",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 145,
+   "def": 80,
+   "spa": 135,
+   "spd": 90,
+   "spe": 80
+  },
+  "bst": 615
+ },
+ {
+  "key": "chandelure",
+  "dex": 609,
+  "name": "Chandelure",
+  "form": "",
+  "zhHant": "水晶燈火靈",
+  "types": [
+   "ghost",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 55,
+   "def": 90,
+   "spa": 145,
+   "spd": 90,
+   "spe": 80
+  },
+  "bst": 520
+ },
+ {
+  "key": "chandelure-mega",
+  "dex": 609,
+  "name": "Chandelure (Mega)",
+  "form": "Mega",
+  "zhHant": "水晶燈火靈",
+  "types": [
+   "ghost",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 75,
+   "def": 110,
+   "spa": 175,
+   "spd": 110,
+   "spe": 90
+  },
+  "bst": 620
+ },
+ {
+  "key": "beartic",
+  "dex": 614,
+  "name": "Beartic",
+  "form": "",
+  "zhHant": "凍原熊",
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 130,
+   "def": 80,
+   "spa": 70,
+   "spd": 80,
+   "spe": 50
+  },
+  "bst": 505
+ },
+ {
+  "key": "stunfisk",
+  "dex": 618,
+  "name": "Stunfisk",
+  "form": "",
+  "zhHant": "泥巴魚",
+  "types": [
+   "ground",
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 109,
+   "atk": 66,
+   "def": 84,
+   "spa": 81,
+   "spd": 99,
+   "spe": 32
+  },
+  "bst": 471
+ },
+ {
+  "key": "stunfisk-galar",
+  "dex": 618,
+  "name": "Stunfisk (Galar)",
+  "form": "Galar",
+  "zhHant": "泥巴魚",
+  "types": [
+   "ground",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 109,
+   "atk": 81,
+   "def": 99,
+   "spa": 66,
+   "spd": 84,
+   "spe": 32
+  },
+  "bst": 471
+ },
+ {
+  "key": "golurk",
+  "dex": 623,
+  "name": "Golurk",
+  "form": "",
+  "zhHant": "泥偶巨人",
+  "types": [
+   "ground",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 89,
+   "atk": 124,
+   "def": 80,
+   "spa": 55,
+   "spd": 80,
+   "spe": 55
+  },
+  "bst": 483
+ },
+ {
+  "key": "golurk-mega",
+  "dex": 623,
+  "name": "Golurk (Mega)",
+  "form": "Mega",
+  "zhHant": "泥偶巨人",
+  "types": [
+   "ground",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 89,
+   "atk": 159,
+   "def": 105,
+   "spa": 70,
+   "spd": 105,
+   "spe": 55
+  },
+  "bst": 583
+ },
+ {
+  "key": "hydreigon",
+  "dex": 635,
+  "name": "Hydreigon",
+  "form": "",
+  "zhHant": "三首惡龍",
+  "types": [
+   "dark",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 92,
+   "atk": 105,
+   "def": 90,
+   "spa": 125,
+   "spd": 90,
+   "spe": 98
+  },
+  "bst": 600
+ },
+ {
+  "key": "volcarona",
+  "dex": 637,
+  "name": "Volcarona",
+  "form": "",
+  "zhHant": "火神蛾",
+  "types": [
+   "bug",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 60,
+   "def": 65,
+   "spa": 135,
+   "spd": 105,
+   "spe": 100
+  },
+  "bst": 550
+ },
+ {
+  "key": "chesnaught",
+  "dex": 652,
+  "name": "Chesnaught",
+  "form": "",
+  "zhHant": "布里卡隆",
+  "types": [
+   "grass",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 88,
+   "atk": 107,
+   "def": 122,
+   "spa": 74,
+   "spd": 75,
+   "spe": 64
+  },
+  "bst": 530
+ },
+ {
+  "key": "chesnaught-mega",
+  "dex": 652,
+  "name": "Chesnaught (Mega)",
+  "form": "Mega",
+  "zhHant": "布里卡隆",
+  "types": [
+   "grass",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 88,
+   "atk": 137,
+   "def": 172,
+   "spa": 74,
+   "spd": 115,
+   "spe": 44
+  },
+  "bst": 630
+ },
+ {
+  "key": "delphox",
+  "dex": 655,
+  "name": "Delphox",
+  "form": "",
+  "zhHant": "妖火紅狐",
+  "types": [
+   "fire",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 69,
+   "def": 72,
+   "spa": 114,
+   "spd": 100,
+   "spe": 104
+  },
+  "bst": 534
+ },
+ {
+  "key": "delphox-mega",
+  "dex": 655,
+  "name": "Delphox (Mega)",
+  "form": "Mega",
+  "zhHant": "妖火紅狐",
+  "types": [
+   "fire",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 69,
+   "def": 72,
+   "spa": 159,
+   "spd": 125,
+   "spe": 134
+  },
+  "bst": 634
+ },
+ {
+  "key": "greninja",
+  "dex": 658,
+  "name": "Greninja",
+  "form": "",
+  "zhHant": "甲賀忍蛙",
+  "types": [
+   "water",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 72,
+   "atk": 95,
+   "def": 67,
+   "spa": 103,
+   "spd": 71,
+   "spe": 122
+  },
+  "bst": 530
+ },
+ {
+  "key": "greninja-mega",
+  "dex": 658,
+  "name": "Greninja (Mega)",
+  "form": "Mega",
+  "zhHant": "甲賀忍蛙",
+  "types": [
+   "water",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 72,
+   "atk": 125,
+   "def": 77,
+   "spa": 133,
+   "spd": 81,
+   "spe": 142
+  },
+  "bst": 630
+ },
+ {
+  "key": "diggersby",
+  "dex": 660,
+  "name": "Diggersby",
+  "form": "",
+  "zhHant": "掘地兔",
+  "types": [
+   "normal",
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 56,
+   "def": 77,
+   "spa": 50,
+   "spd": 77,
+   "spe": 78
+  },
+  "bst": 423
+ },
+ {
+  "key": "talonflame",
+  "dex": 663,
+  "name": "Talonflame",
+  "form": "",
+  "zhHant": "烈箭鷹",
+  "types": [
+   "fire",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 81,
+   "def": 71,
+   "spa": 74,
+   "spd": 69,
+   "spe": 126
+  },
+  "bst": 499
+ },
+ {
+  "key": "vivillon",
+  "dex": 666,
+  "name": "Vivillon",
+  "form": "",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-archipelago",
+  "dex": 666,
+  "name": "Vivillon (Archipelago)",
+  "form": "Archipelago",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-continental",
+  "dex": 666,
+  "name": "Vivillon (Continental)",
+  "form": "Continental",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-elegant",
+  "dex": 666,
+  "name": "Vivillon (Elegant)",
+  "form": "Elegant",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-fancy",
+  "dex": 666,
+  "name": "Vivillon (Fancy)",
+  "form": "Fancy",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-garden",
+  "dex": 666,
+  "name": "Vivillon (Garden)",
+  "form": "Garden",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-high-plains",
+  "dex": 666,
+  "name": "Vivillon (High Plains)",
+  "form": "High Plains",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-icy-snow",
+  "dex": 666,
+  "name": "Vivillon (Icy Snow)",
+  "form": "Icy Snow",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-jungle",
+  "dex": 666,
+  "name": "Vivillon (Jungle)",
+  "form": "Jungle",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-marine",
+  "dex": 666,
+  "name": "Vivillon (Marine)",
+  "form": "Marine",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-modern",
+  "dex": 666,
+  "name": "Vivillon (Modern)",
+  "form": "Modern",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-monsoon",
+  "dex": 666,
+  "name": "Vivillon (Monsoon)",
+  "form": "Monsoon",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-ocean",
+  "dex": 666,
+  "name": "Vivillon (Ocean)",
+  "form": "Ocean",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-pok-ball",
+  "dex": 666,
+  "name": "Vivillon (Poké Ball)",
+  "form": "Poké Ball",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-polar",
+  "dex": 666,
+  "name": "Vivillon (Polar)",
+  "form": "Polar",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-river",
+  "dex": 666,
+  "name": "Vivillon (River)",
+  "form": "River",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-sandstorm",
+  "dex": 666,
+  "name": "Vivillon (Sandstorm)",
+  "form": "Sandstorm",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-savanna",
+  "dex": 666,
+  "name": "Vivillon (Savanna)",
+  "form": "Savanna",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-sun",
+  "dex": 666,
+  "name": "Vivillon (Sun)",
+  "form": "Sun",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "vivillon-tundra",
+  "dex": 666,
+  "name": "Vivillon (Tundra)",
+  "form": "Tundra",
+  "zhHant": "彩粉蝶",
+  "types": [
+   "bug",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 52,
+   "def": 50,
+   "spa": 90,
+   "spd": 50,
+   "spe": 89
+  },
+  "bst": 411
+ },
+ {
+  "key": "pyroar",
+  "dex": 668,
+  "name": "Pyroar",
+  "form": "",
+  "zhHant": "火炎獅",
+  "types": [
+   "fire",
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 86,
+   "atk": 68,
+   "def": 72,
+   "spa": 109,
+   "spd": 66,
+   "spe": 106
+  },
+  "bst": 507
+ },
+ {
+  "key": "pyroar-female",
+  "dex": 668,
+  "name": "Pyroar (Female)",
+  "form": "Female",
+  "zhHant": "火炎獅",
+  "types": [
+   "fire",
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 86,
+   "atk": 68,
+   "def": 72,
+   "spa": 109,
+   "spd": 66,
+   "spe": 106
+  },
+  "bst": 507
+ },
+ {
+  "key": "pyroar-mega",
+  "dex": 668,
+  "name": "Pyroar (Mega)",
+  "form": "Mega",
+  "zhHant": "火炎獅",
+  "types": [
+   "fire",
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 86,
+   "atk": 88,
+   "def": 92,
+   "spa": 129,
+   "spd": 86,
+   "spe": 126
+  },
+  "bst": 607
+ },
+ {
+  "key": "floette-eternal",
+  "dex": 670,
+  "name": "Floette (Eternal)",
+  "form": "Eternal",
+  "zhHant": "花葉蒂",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 74,
+   "atk": 65,
+   "def": 67,
+   "spa": 125,
+   "spd": 128,
+   "spe": 92
+  },
+  "bst": 551
+ },
+ {
+  "key": "floette-mega",
+  "dex": 670,
+  "name": "Floette (Mega)",
+  "form": "Mega",
+  "zhHant": "花葉蒂",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 74,
+   "atk": 85,
+   "def": 87,
+   "spa": 155,
+   "spd": 148,
+   "spe": 102
+  },
+  "bst": 651
+ },
+ {
+  "key": "florges",
+  "dex": 671,
+  "name": "Florges",
+  "form": "",
+  "zhHant": "花潔夫人",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 65,
+   "def": 68,
+   "spa": 112,
+   "spd": 154,
+   "spe": 75
+  },
+  "bst": 552
+ },
+ {
+  "key": "florges-blue",
+  "dex": 671,
+  "name": "Florges (Blue)",
+  "form": "Blue",
+  "zhHant": "花潔夫人",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 65,
+   "def": 68,
+   "spa": 112,
+   "spd": 154,
+   "spe": 75
+  },
+  "bst": 552
+ },
+ {
+  "key": "florges-orange",
+  "dex": 671,
+  "name": "Florges (Orange)",
+  "form": "Orange",
+  "zhHant": "花潔夫人",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 65,
+   "def": 68,
+   "spa": 112,
+   "spd": 154,
+   "spe": 75
+  },
+  "bst": 552
+ },
+ {
+  "key": "florges-white",
+  "dex": 671,
+  "name": "Florges (White)",
+  "form": "White",
+  "zhHant": "花潔夫人",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 65,
+   "def": 68,
+   "spa": 112,
+   "spd": 154,
+   "spe": 75
+  },
+  "bst": 552
+ },
+ {
+  "key": "florges-yellow",
+  "dex": 671,
+  "name": "Florges (Yellow)",
+  "form": "Yellow",
+  "zhHant": "花潔夫人",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 65,
+   "def": 68,
+   "spa": 112,
+   "spd": 154,
+   "spe": 75
+  },
+  "bst": 552
+ },
+ {
+  "key": "gogoat",
+  "dex": 673,
+  "name": "Gogoat",
+  "form": "",
+  "zhHant": "坐騎山羊",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 123,
+   "atk": 100,
+   "def": 62,
+   "spa": 97,
+   "spd": 81,
+   "spe": 68
+  },
+  "bst": 531
+ },
+ {
+  "key": "pangoro",
+  "dex": 675,
+  "name": "Pangoro",
+  "form": "",
+  "zhHant": "流氓熊貓",
+  "types": [
+   "fighting",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 124,
+   "def": 78,
+   "spa": 69,
+   "spd": 71,
+   "spe": 58
+  },
+  "bst": 495
+ },
+ {
+  "key": "furfrou",
+  "dex": 676,
+  "name": "Furfrou",
+  "form": "",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-dandy",
+  "dex": 676,
+  "name": "Furfrou (Dandy)",
+  "form": "Dandy",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-debutante",
+  "dex": 676,
+  "name": "Furfrou (Debutante)",
+  "form": "Debutante",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-diamond",
+  "dex": 676,
+  "name": "Furfrou (Diamond)",
+  "form": "Diamond",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-heart",
+  "dex": 676,
+  "name": "Furfrou (Heart)",
+  "form": "Heart",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-kabuki",
+  "dex": 676,
+  "name": "Furfrou (Kabuki)",
+  "form": "Kabuki",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-la-reine",
+  "dex": 676,
+  "name": "Furfrou (La Reine)",
+  "form": "La Reine",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-matron",
+  "dex": 676,
+  "name": "Furfrou (Matron)",
+  "form": "Matron",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-pharaoh",
+  "dex": 676,
+  "name": "Furfrou (Pharaoh)",
+  "form": "Pharaoh",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "furfrou-star",
+  "dex": 676,
+  "name": "Furfrou (Star)",
+  "form": "Star",
+  "zhHant": "多麗米亞",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 80,
+   "def": 60,
+   "spa": 65,
+   "spd": 90,
+   "spe": 102
+  },
+  "bst": 472
+ },
+ {
+  "key": "meowstic",
+  "dex": 678,
+  "name": "Meowstic",
+  "form": "",
+  "zhHant": "超能妙喵",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 74,
+   "atk": 48,
+   "def": 76,
+   "spa": 83,
+   "spd": 81,
+   "spe": 104
+  },
+  "bst": 466
+ },
+ {
+  "key": "meowstic-female",
+  "dex": 678,
+  "name": "Meowstic (Female)",
+  "form": "Female",
+  "zhHant": "超能妙喵",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 74,
+   "atk": 48,
+   "def": 76,
+   "spa": 83,
+   "spd": 81,
+   "spe": 104
+  },
+  "bst": 466
+ },
+ {
+  "key": "meowstic-mega",
+  "dex": 678,
+  "name": "Meowstic (Mega)",
+  "form": "Mega",
+  "zhHant": "超能妙喵",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 74,
+   "atk": 48,
+   "def": 76,
+   "spa": 143,
+   "spd": 101,
+   "spe": 124
+  },
+  "bst": 566
+ },
+ {
+  "key": "aegislash",
+  "dex": 681,
+  "name": "Aegislash",
+  "form": "",
+  "zhHant": "堅盾劍怪",
+  "types": [
+   "steel",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 50,
+   "def": 140,
+   "spa": 50,
+   "spd": 140,
+   "spe": 60
+  },
+  "bst": 500
+ },
+ {
+  "key": "aegislash-blade",
+  "dex": 681,
+  "name": "Aegislash (Blade)",
+  "form": "Blade",
+  "zhHant": "堅盾劍怪",
+  "types": [
+   "steel",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 140,
+   "def": 50,
+   "spa": 140,
+   "spd": 50,
+   "spe": 60
+  },
+  "bst": 500
+ },
+ {
+  "key": "aromatisse",
+  "dex": 683,
+  "name": "Aromatisse",
+  "form": "",
+  "zhHant": "芳香精",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 101,
+   "atk": 72,
+   "def": 72,
+   "spa": 99,
+   "spd": 89,
+   "spe": 29
+  },
+  "bst": 462
+ },
+ {
+  "key": "slurpuff",
+  "dex": 685,
+  "name": "Slurpuff",
+  "form": "",
+  "zhHant": "胖甜妮",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 82,
+   "atk": 80,
+   "def": 86,
+   "spa": 85,
+   "spd": 75,
+   "spe": 72
+  },
+  "bst": 480
+ },
+ {
+  "key": "malamar",
+  "dex": 687,
+  "name": "Malamar",
+  "form": "",
+  "zhHant": "烏賊王",
+  "types": [
+   "dark",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 86,
+   "atk": 92,
+   "def": 88,
+   "spa": 68,
+   "spd": 75,
+   "spe": 73
+  },
+  "bst": 482
+ },
+ {
+  "key": "malamar-mega",
+  "dex": 687,
+  "name": "Malamar (Mega)",
+  "form": "Mega",
+  "zhHant": "烏賊王",
+  "types": [
+   "dark",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 86,
+   "atk": 102,
+   "def": 88,
+   "spa": 98,
+   "spd": 120,
+   "spe": 88
+  },
+  "bst": 582
+ },
+ {
+  "key": "barbaracle",
+  "dex": 689,
+  "name": "Barbaracle",
+  "form": "",
+  "zhHant": "龜足巨鎧",
+  "types": [
+   "rock",
+   "water"
+  ],
+  "baseStats": {
+   "hp": 72,
+   "atk": 105,
+   "def": 115,
+   "spa": 54,
+   "spd": 86,
+   "spe": 68
+  },
+  "bst": 500
+ },
+ {
+  "key": "barbaracle-mega",
+  "dex": 689,
+  "name": "Barbaracle (Mega)",
+  "form": "Mega",
+  "zhHant": "龜足巨鎧",
+  "types": [
+   "rock",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 72,
+   "atk": 140,
+   "def": 130,
+   "spa": 64,
+   "spd": 106,
+   "spe": 88
+  },
+  "bst": 600
+ },
+ {
+  "key": "dragalge",
+  "dex": 691,
+  "name": "Dragalge",
+  "form": "",
+  "zhHant": "毒藻龍",
+  "types": [
+   "poison",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 75,
+   "def": 90,
+   "spa": 97,
+   "spd": 123,
+   "spe": 44
+  },
+  "bst": 494
+ },
+ {
+  "key": "dragalge-mega",
+  "dex": 691,
+  "name": "Dragalge (Mega)",
+  "form": "Mega",
+  "zhHant": "毒藻龍",
+  "types": [
+   "poison",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 85,
+   "def": 105,
+   "spa": 132,
+   "spd": 163,
+   "spe": 44
+  },
+  "bst": 594
+ },
+ {
+  "key": "clawitzer",
+  "dex": 693,
+  "name": "Clawitzer",
+  "form": "",
+  "zhHant": "鋼炮臂蝦",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 71,
+   "atk": 73,
+   "def": 88,
+   "spa": 120,
+   "spd": 89,
+   "spe": 59
+  },
+  "bst": 500
+ },
+ {
+  "key": "heliolisk",
+  "dex": 695,
+  "name": "Heliolisk",
+  "form": "",
+  "zhHant": "光電傘蜥",
+  "types": [
+   "electric",
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 62,
+   "atk": 55,
+   "def": 52,
+   "spa": 109,
+   "spd": 94,
+   "spe": 109
+  },
+  "bst": 481
+ },
+ {
+  "key": "tyrantrum",
+  "dex": 697,
+  "name": "Tyrantrum",
+  "form": "",
+  "zhHant": "怪顎龍",
+  "types": [
+   "rock",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 82,
+   "atk": 121,
+   "def": 119,
+   "spa": 69,
+   "spd": 59,
+   "spe": 71
+  },
+  "bst": 521
+ },
+ {
+  "key": "aurorus",
+  "dex": 699,
+  "name": "Aurorus",
+  "form": "",
+  "zhHant": "冰雪巨龍",
+  "types": [
+   "rock",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 123,
+   "atk": 77,
+   "def": 72,
+   "spa": 99,
+   "spd": 92,
+   "spe": 58
+  },
+  "bst": 521
+ },
+ {
+  "key": "sylveon",
+  "dex": 700,
+  "name": "Sylveon",
+  "form": "",
+  "zhHant": "仙子伊布",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 65,
+   "def": 65,
+   "spa": 110,
+   "spd": 130,
+   "spe": 60
+  },
+  "bst": 525
+ },
+ {
+  "key": "hawlucha",
+  "dex": 701,
+  "name": "Hawlucha",
+  "form": "",
+  "zhHant": "摔角鷹人",
+  "types": [
+   "fighting",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 92,
+   "def": 75,
+   "spa": 74,
+   "spd": 63,
+   "spe": 118
+  },
+  "bst": 500
+ },
+ {
+  "key": "hawlucha-mega",
+  "dex": 701,
+  "name": "Hawlucha (Mega)",
+  "form": "Mega",
+  "zhHant": "摔角鷹人",
+  "types": [
+   "fighting",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 137,
+   "def": 100,
+   "spa": 74,
+   "spd": 93,
+   "spe": 118
+  },
+  "bst": 600
+ },
+ {
+  "key": "dedenne",
+  "dex": 702,
+  "name": "Dedenne",
+  "form": "",
+  "zhHant": "咚咚鼠",
+  "types": [
+   "electric",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 67,
+   "atk": 58,
+   "def": 57,
+   "spa": 81,
+   "spd": 67,
+   "spe": 101
+  },
+  "bst": 431
+ },
+ {
+  "key": "goodra",
+  "dex": 706,
+  "name": "Goodra",
+  "form": "",
+  "zhHant": "黏美龍",
+  "types": [
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 100,
+   "def": 70,
+   "spa": 110,
+   "spd": 150,
+   "spe": 80
+  },
+  "bst": 600
+ },
+ {
+  "key": "goodra-hisui",
+  "dex": 706,
+  "name": "Goodra (Hisui)",
+  "form": "Hisui",
+  "zhHant": "黏美龍",
+  "types": [
+   "steel",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 100,
+   "def": 100,
+   "spa": 110,
+   "spd": 150,
+   "spe": 60
+  },
+  "bst": 600
+ },
+ {
+  "key": "klefki",
+  "dex": 707,
+  "name": "Klefki",
+  "form": "",
+  "zhHant": "鑰圈兒",
+  "types": [
+   "steel",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 57,
+   "atk": 80,
+   "def": 91,
+   "spa": 80,
+   "spd": 87,
+   "spe": 75
+  },
+  "bst": 470
+ },
+ {
+  "key": "trevenant",
+  "dex": 709,
+  "name": "Trevenant",
+  "form": "",
+  "zhHant": "朽木妖",
+  "types": [
+   "ghost",
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 110,
+   "def": 76,
+   "spa": 65,
+   "spd": 82,
+   "spe": 56
+  },
+  "bst": 474
+ },
+ {
+  "key": "gourgeist",
+  "dex": 711,
+  "name": "Gourgeist",
+  "form": "",
+  "zhHant": "南瓜怪人",
+  "types": [
+   "ghost",
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 90,
+   "def": 122,
+   "spa": 58,
+   "spd": 75,
+   "spe": 84
+  },
+  "bst": 494
+ },
+ {
+  "key": "gourgeist-jumbo",
+  "dex": 711,
+  "name": "Gourgeist (Jumbo)",
+  "form": "Jumbo",
+  "zhHant": "南瓜怪人",
+  "types": [
+   "ghost",
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 90,
+   "def": 122,
+   "spa": 58,
+   "spd": 75,
+   "spe": 84
+  },
+  "bst": 494
+ },
+ {
+  "key": "gourgeist-large",
+  "dex": 711,
+  "name": "Gourgeist (Large)",
+  "form": "Large",
+  "zhHant": "南瓜怪人",
+  "types": [
+   "ghost",
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 95,
+   "def": 122,
+   "spa": 58,
+   "spd": 75,
+   "spe": 69
+  },
+  "bst": 494
+ },
+ {
+  "key": "gourgeist-small",
+  "dex": 711,
+  "name": "Gourgeist (Small)",
+  "form": "Small",
+  "zhHant": "南瓜怪人",
+  "types": [
+   "ghost",
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 55,
+   "atk": 85,
+   "def": 122,
+   "spa": 58,
+   "spd": 75,
+   "spe": 99
+  },
+  "bst": 494
+ },
+ {
+  "key": "avalugg",
+  "dex": 713,
+  "name": "Avalugg",
+  "form": "",
+  "zhHant": "冰岩怪",
+  "types": [
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 117,
+   "def": 184,
+   "spa": 44,
+   "spd": 46,
+   "spe": 28
+  },
+  "bst": 514
+ },
+ {
+  "key": "avalugg-hisui",
+  "dex": 713,
+  "name": "Avalugg (Hisui)",
+  "form": "Hisui",
+  "zhHant": "冰岩怪",
+  "types": [
+   "ice",
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 127,
+   "def": 184,
+   "spa": 34,
+   "spd": 36,
+   "spe": 38
+  },
+  "bst": 514
+ },
+ {
+  "key": "noivern",
+  "dex": 715,
+  "name": "Noivern",
+  "form": "",
+  "zhHant": "音波龍",
+  "types": [
+   "flying",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 70,
+   "def": 80,
+   "spa": 97,
+   "spd": 80,
+   "spe": 123
+  },
+  "bst": 535
+ },
+ {
+  "key": "decidueye",
+  "dex": 724,
+  "name": "Decidueye",
+  "form": "",
+  "zhHant": "狙射樹梟",
+  "types": [
+   "grass",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 107,
+   "def": 75,
+   "spa": 100,
+   "spd": 100,
+   "spe": 70
+  },
+  "bst": 530
+ },
+ {
+  "key": "decidueye-hisui",
+  "dex": 724,
+  "name": "Decidueye (Hisui)",
+  "form": "Hisui",
+  "zhHant": "狙射樹梟",
+  "types": [
+   "grass",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 88,
+   "atk": 112,
+   "def": 80,
+   "spa": 95,
+   "spd": 95,
+   "spe": 60
+  },
+  "bst": 530
+ },
+ {
+  "key": "incineroar",
+  "dex": 727,
+  "name": "Incineroar",
+  "form": "",
+  "zhHant": "熾焰咆哮虎",
+  "types": [
+   "fire",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 115,
+   "def": 90,
+   "spa": 80,
+   "spd": 90,
+   "spe": 60
+  },
+  "bst": 530
+ },
+ {
+  "key": "primarina",
+  "dex": 730,
+  "name": "Primarina",
+  "form": "",
+  "zhHant": "西獅海壬",
+  "types": [
+   "water",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 74,
+   "def": 74,
+   "spa": 126,
+   "spd": 116,
+   "spe": 60
+  },
+  "bst": 530
+ },
+ {
+  "key": "toucannon",
+  "dex": 733,
+  "name": "Toucannon",
+  "form": "",
+  "zhHant": "銃嘴大鳥",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 120,
+   "def": 75,
+   "spa": 75,
+   "spd": 75,
+   "spe": 60
+  },
+  "bst": 485
+ },
+ {
+  "key": "crabominable",
+  "dex": 740,
+  "name": "Crabominable",
+  "form": "",
+  "zhHant": "好勝毛蟹",
+  "types": [
+   "fighting",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 97,
+   "atk": 132,
+   "def": 77,
+   "spa": 62,
+   "spd": 67,
+   "spe": 43
+  },
+  "bst": 478
+ },
+ {
+  "key": "crabominable-mega",
+  "dex": 740,
+  "name": "Crabominable (Mega)",
+  "form": "Mega",
+  "zhHant": "好勝毛蟹",
+  "types": [
+   "fighting",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 97,
+   "atk": 157,
+   "def": 122,
+   "spa": 62,
+   "spd": 107,
+   "spe": 33
+  },
+  "bst": 578
+ },
+ {
+  "key": "lycanroc",
+  "dex": 745,
+  "name": "Lycanroc",
+  "form": "",
+  "zhHant": "鬃岩狼人",
+  "types": [
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 115,
+   "def": 65,
+   "spa": 55,
+   "spd": 65,
+   "spe": 112
+  },
+  "bst": 487
+ },
+ {
+  "key": "lycanroc-dusk",
+  "dex": 745,
+  "name": "Lycanroc (Dusk)",
+  "form": "Dusk",
+  "zhHant": "鬃岩狼人",
+  "types": [
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 117,
+   "def": 65,
+   "spa": 55,
+   "spd": 65,
+   "spe": 110
+  },
+  "bst": 487
+ },
+ {
+  "key": "lycanroc-midnight",
+  "dex": 745,
+  "name": "Lycanroc (Midnight)",
+  "form": "Midnight",
+  "zhHant": "鬃岩狼人",
+  "types": [
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 115,
+   "def": 75,
+   "spa": 55,
+   "spd": 75,
+   "spe": 82
+  },
+  "bst": 487
+ },
+ {
+  "key": "toxapex",
+  "dex": 748,
+  "name": "Toxapex",
+  "form": "",
+  "zhHant": "超壞星",
+  "types": [
+   "poison",
+   "water"
+  ],
+  "baseStats": {
+   "hp": 50,
+   "atk": 63,
+   "def": 152,
+   "spa": 53,
+   "spd": 142,
+   "spe": 35
+  },
+  "bst": 495
+ },
+ {
+  "key": "mudsdale",
+  "dex": 750,
+  "name": "Mudsdale",
+  "form": "",
+  "zhHant": "重泥挽馬",
+  "types": [
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 125,
+   "def": 100,
+   "spa": 55,
+   "spd": 85,
+   "spe": 35
+  },
+  "bst": 500
+ },
+ {
+  "key": "araquanid",
+  "dex": 752,
+  "name": "Araquanid",
+  "form": "",
+  "zhHant": "滴蛛霸",
+  "types": [
+   "water",
+   "bug"
+  ],
+  "baseStats": {
+   "hp": 68,
+   "atk": 70,
+   "def": 92,
+   "spa": 50,
+   "spd": 132,
+   "spe": 42
+  },
+  "bst": 454
+ },
+ {
+  "key": "salazzle",
+  "dex": 758,
+  "name": "Salazzle",
+  "form": "",
+  "zhHant": "焰后蜥",
+  "types": [
+   "poison",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 68,
+   "atk": 64,
+   "def": 60,
+   "spa": 111,
+   "spd": 60,
+   "spe": 117
+  },
+  "bst": 480
+ },
+ {
+  "key": "tsareena",
+  "dex": 763,
+  "name": "Tsareena",
+  "form": "",
+  "zhHant": "甜冷美后",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 72,
+   "atk": 120,
+   "def": 98,
+   "spa": 50,
+   "spd": 98,
+   "spe": 72
+  },
+  "bst": 510
+ },
+ {
+  "key": "oranguru",
+  "dex": 765,
+  "name": "Oranguru",
+  "form": "",
+  "zhHant": "智揮猩",
+  "types": [
+   "normal",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 60,
+   "def": 80,
+   "spa": 90,
+   "spd": 110,
+   "spe": 60
+  },
+  "bst": 490
+ },
+ {
+  "key": "passimian",
+  "dex": 766,
+  "name": "Passimian",
+  "form": "",
+  "zhHant": "投擲猴",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 120,
+   "def": 90,
+   "spa": 40,
+   "spd": 60,
+   "spe": 80
+  },
+  "bst": 490
+ },
+ {
+  "key": "golisopod",
+  "dex": 768,
+  "name": "Golisopod",
+  "form": "",
+  "zhHant": "具甲武者",
+  "types": [
+   "bug",
+   "water"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 125,
+   "def": 140,
+   "spa": 60,
+   "spd": 90,
+   "spe": 40
+  },
+  "bst": 530
+ },
+ {
+  "key": "golisopod-mega",
+  "dex": 768,
+  "name": "Golisopod (Mega)",
+  "form": "Mega",
+  "zhHant": "具甲武者",
+  "types": [
+   "bug",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 150,
+   "def": 175,
+   "spa": 70,
+   "spd": 120,
+   "spe": 40
+  },
+  "bst": 630
+ },
+ {
+  "key": "mimikyu",
+  "dex": 778,
+  "name": "Mimikyu",
+  "form": "",
+  "zhHant": "謎擬Ｑ",
+  "types": [
+   "ghost",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 55,
+   "atk": 90,
+   "def": 80,
+   "spa": 50,
+   "spd": 105,
+   "spe": 96
+  },
+  "bst": 476
+ },
+ {
+  "key": "drampa",
+  "dex": 780,
+  "name": "Drampa",
+  "form": "",
+  "zhHant": "老翁龍",
+  "types": [
+   "normal",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 60,
+   "def": 85,
+   "spa": 135,
+   "spd": 91,
+   "spe": 36
+  },
+  "bst": 485
+ },
+ {
+  "key": "drampa-mega",
+  "dex": 780,
+  "name": "Drampa (Mega)",
+  "form": "Mega",
+  "zhHant": "老翁龍",
+  "types": [
+   "normal",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 85,
+   "def": 110,
+   "spa": 160,
+   "spd": 116,
+   "spe": 36
+  },
+  "bst": 585
+ },
+ {
+  "key": "kommo-o",
+  "dex": 784,
+  "name": "Kommo-o",
+  "form": "",
+  "zhHant": "杖尾鱗甲龍",
+  "types": [
+   "dragon",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 110,
+   "def": 125,
+   "spa": 100,
+   "spd": 105,
+   "spe": 85
+  },
+  "bst": 600
+ },
+ {
+  "key": "rillaboom",
+  "dex": 812,
+  "name": "Rillaboom",
+  "form": "",
+  "zhHant": "轟擂金剛猩",
+  "types": [
+   "grass"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 125,
+   "def": 90,
+   "spa": 60,
+   "spd": 70,
+   "spe": 85
+  },
+  "bst": 530
+ },
+ {
+  "key": "cinderace",
+  "dex": 815,
+  "name": "Cinderace",
+  "form": "",
+  "zhHant": "閃焰王牌",
+  "types": [
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 116,
+   "def": 75,
+   "spa": 65,
+   "spd": 75,
+   "spe": 119
+  },
+  "bst": 530
+ },
+ {
+  "key": "inteleon",
+  "dex": 818,
+  "name": "Inteleon",
+  "form": "",
+  "zhHant": "千面避役",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 85,
+   "def": 65,
+   "spa": 125,
+   "spd": 65,
+   "spe": 120
+  },
+  "bst": 530
+ },
+ {
+  "key": "corviknight",
+  "dex": 823,
+  "name": "Corviknight",
+  "form": "",
+  "zhHant": "鋼鎧鴉",
+  "types": [
+   "flying",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 98,
+   "atk": 87,
+   "def": 105,
+   "spa": 53,
+   "spd": 85,
+   "spe": 67
+  },
+  "bst": 495
+ },
+ {
+  "key": "thievul",
+  "dex": 828,
+  "name": "Thievul",
+  "form": "",
+  "zhHant": "狐大盜",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 58,
+   "def": 58,
+   "spa": 87,
+   "spd": 92,
+   "spe": 90
+  },
+  "bst": 455
+ },
+ {
+  "key": "flapple",
+  "dex": 841,
+  "name": "Flapple",
+  "form": "",
+  "zhHant": "蘋裹龍",
+  "types": [
+   "grass",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 110,
+   "def": 80,
+   "spa": 95,
+   "spd": 60,
+   "spe": 70
+  },
+  "bst": 485
+ },
+ {
+  "key": "appletun",
+  "dex": 842,
+  "name": "Appletun",
+  "form": "",
+  "zhHant": "豐蜜龍",
+  "types": [
+   "grass",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 85,
+   "def": 80,
+   "spa": 100,
+   "spd": 80,
+   "spe": 30
+  },
+  "bst": 485
+ },
+ {
+  "key": "sandaconda",
+  "dex": 844,
+  "name": "Sandaconda",
+  "form": "",
+  "zhHant": "沙螺蟒",
+  "types": [
+   "ground"
+  ],
+  "baseStats": {
+   "hp": 72,
+   "atk": 107,
+   "def": 125,
+   "spa": 65,
+   "spd": 70,
+   "spe": 71
+  },
+  "bst": 510
+ },
+ {
+  "key": "toxtricity",
+  "dex": 849,
+  "name": "Toxtricity",
+  "form": "",
+  "zhHant": "顫弦蠑螈",
+  "types": [
+   "electric",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 98,
+   "def": 70,
+   "spa": 114,
+   "spd": 70,
+   "spe": 75
+  },
+  "bst": 502
+ },
+ {
+  "key": "toxtricity-low-key",
+  "dex": 849,
+  "name": "Toxtricity (Low Key)",
+  "form": "Low Key",
+  "zhHant": "顫弦蠑螈",
+  "types": [
+   "electric",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 98,
+   "def": 70,
+   "spa": 114,
+   "spd": 70,
+   "spe": 75
+  },
+  "bst": 502
+ },
+ {
+  "key": "grapploct",
+  "dex": 853,
+  "name": "Grapploct",
+  "form": "",
+  "zhHant": "八爪武師",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 118,
+   "def": 90,
+   "spa": 70,
+   "spd": 80,
+   "spe": 42
+  },
+  "bst": 480
+ },
+ {
+  "key": "polteageist",
+  "dex": 855,
+  "name": "Polteageist",
+  "form": "",
+  "zhHant": "怖思壺",
+  "types": [
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 65,
+   "def": 65,
+   "spa": 134,
+   "spd": 114,
+   "spe": 70
+  },
+  "bst": 508
+ },
+ {
+  "key": "hatterene",
+  "dex": 858,
+  "name": "Hatterene",
+  "form": "",
+  "zhHant": "布莉姆溫",
+  "types": [
+   "psychic",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 57,
+   "atk": 90,
+   "def": 95,
+   "spa": 136,
+   "spd": 103,
+   "spe": 29
+  },
+  "bst": 510
+ },
+ {
+  "key": "grimmsnarl",
+  "dex": 861,
+  "name": "Grimmsnarl",
+  "form": "",
+  "zhHant": "長毛巨魔",
+  "types": [
+   "dark",
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 120,
+   "def": 65,
+   "spa": 95,
+   "spd": 75,
+   "spe": 60
+  },
+  "bst": 510
+ },
+ {
+  "key": "perrserker",
+  "dex": 863,
+  "name": "Perrserker",
+  "form": "",
+  "zhHant": "喵頭目",
+  "types": [
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 110,
+   "def": 100,
+   "spa": 50,
+   "spd": 60,
+   "spe": 50
+  },
+  "bst": 440
+ },
+ {
+  "key": "sirfetchd",
+  "dex": 865,
+  "name": "Sirfetch’d",
+  "form": "",
+  "zhHant": "蔥遊兵",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 62,
+   "atk": 135,
+   "def": 95,
+   "spa": 68,
+   "spd": 82,
+   "spe": 65
+  },
+  "bst": 507
+ },
+ {
+  "key": "mr-rime",
+  "dex": 866,
+  "name": "Mr. Rime",
+  "form": "",
+  "zhHant": "踏冰人偶",
+  "types": [
+   "ice",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 85,
+   "def": 75,
+   "spa": 110,
+   "spd": 100,
+   "spe": 70
+  },
+  "bst": 520
+ },
+ {
+  "key": "runerigus",
+  "dex": 867,
+  "name": "Runerigus",
+  "form": "",
+  "zhHant": "死神板",
+  "types": [
+   "ground",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 58,
+   "atk": 95,
+   "def": 145,
+   "spa": 50,
+   "spd": 105,
+   "spe": 30
+  },
+  "bst": 483
+ },
+ {
+  "key": "alcremie",
+  "dex": 869,
+  "name": "Alcremie",
+  "form": "",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-caramel-swirl",
+  "dex": 869,
+  "name": "Alcremie (Caramel Swirl)",
+  "form": "Caramel Swirl",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-lemon-cream",
+  "dex": 869,
+  "name": "Alcremie (Lemon Cream)",
+  "form": "Lemon Cream",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-matcha-cream",
+  "dex": 869,
+  "name": "Alcremie (Matcha Cream)",
+  "form": "Matcha Cream",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-mint-cream",
+  "dex": 869,
+  "name": "Alcremie (Mint Cream)",
+  "form": "Mint Cream",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-rainbow-swirl",
+  "dex": 869,
+  "name": "Alcremie (Rainbow Swirl)",
+  "form": "Rainbow Swirl",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-ruby-cream",
+  "dex": 869,
+  "name": "Alcremie (Ruby Cream)",
+  "form": "Ruby Cream",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-ruby-swirl",
+  "dex": 869,
+  "name": "Alcremie (Ruby Swirl)",
+  "form": "Ruby Swirl",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "alcremie-salted-cream",
+  "dex": 869,
+  "name": "Alcremie (Salted Cream)",
+  "form": "Salted Cream",
+  "zhHant": "霜奶仙",
+  "types": [
+   "fairy"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 60,
+   "def": 75,
+   "spa": 110,
+   "spd": 121,
+   "spe": 64
+  },
+  "bst": 495
+ },
+ {
+  "key": "falinks",
+  "dex": 870,
+  "name": "Falinks",
+  "form": "",
+  "zhHant": "列陣兵",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 100,
+   "def": 100,
+   "spa": 70,
+   "spd": 60,
+   "spe": 75
+  },
+  "bst": 470
+ },
+ {
+  "key": "falinks-mega",
+  "dex": 870,
+  "name": "Falinks (Mega)",
+  "form": "Mega",
+  "zhHant": "列陣兵",
+  "types": [
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 135,
+   "def": 135,
+   "spa": 70,
+   "spd": 65,
+   "spe": 100
+  },
+  "bst": 570
+ },
+ {
+  "key": "pincurchin",
+  "dex": 871,
+  "name": "Pincurchin",
+  "form": "",
+  "zhHant": "啪嚓海膽",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 48,
+   "atk": 101,
+   "def": 95,
+   "spa": 91,
+   "spd": 85,
+   "spe": 15
+  },
+  "bst": 435
+ },
+ {
+  "key": "indeedee",
+  "dex": 876,
+  "name": "Indeedee",
+  "form": "",
+  "zhHant": "愛管侍",
+  "types": [
+   "psychic",
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 60,
+   "atk": 65,
+   "def": 55,
+   "spa": 105,
+   "spd": 95,
+   "spe": 95
+  },
+  "bst": 475
+ },
+ {
+  "key": "indeedee-female",
+  "dex": 876,
+  "name": "Indeedee (Female)",
+  "form": "Female",
+  "zhHant": "愛管侍",
+  "types": [
+   "psychic",
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 55,
+   "def": 65,
+   "spa": 95,
+   "spd": 105,
+   "spe": 85
+  },
+  "bst": 475
+ },
+ {
+  "key": "morpeko",
+  "dex": 877,
+  "name": "Morpeko",
+  "form": "",
+  "zhHant": "莫魯貝可",
+  "types": [
+   "electric",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 58,
+   "atk": 95,
+   "def": 58,
+   "spa": 70,
+   "spd": 58,
+   "spe": 97
+  },
+  "bst": 436
+ },
+ {
+  "key": "morpeko-hangry",
+  "dex": 877,
+  "name": "Morpeko (Hangry)",
+  "form": "Hangry",
+  "zhHant": "莫魯貝可",
+  "types": [
+   "electric",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 58,
+   "atk": 95,
+   "def": 58,
+   "spa": 70,
+   "spd": 58,
+   "spe": 97
+  },
+  "bst": 436
+ },
+ {
+  "key": "dragapult",
+  "dex": 887,
+  "name": "Dragapult",
+  "form": "",
+  "zhHant": "多龍巴魯托",
+  "types": [
+   "dragon",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 88,
+   "atk": 120,
+   "def": 75,
+   "spa": 100,
+   "spd": 75,
+   "spe": 142
+  },
+  "bst": 600
+ },
+ {
+  "key": "wyrdeer",
+  "dex": 899,
+  "name": "Wyrdeer",
+  "form": "",
+  "zhHant": "詭角鹿",
+  "types": [
+   "normal",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 103,
+   "atk": 105,
+   "def": 72,
+   "spa": 105,
+   "spd": 75,
+   "spe": 65
+  },
+  "bst": 525
+ },
+ {
+  "key": "kleavor",
+  "dex": 900,
+  "name": "Kleavor",
+  "form": "",
+  "zhHant": "劈斧螳螂",
+  "types": [
+   "bug",
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 135,
+   "def": 95,
+   "spa": 45,
+   "spd": 70,
+   "spe": 85
+  },
+  "bst": 500
+ },
+ {
+  "key": "basculegion",
+  "dex": 902,
+  "name": "Basculegion",
+  "form": "",
+  "zhHant": "幽尾玄魚",
+  "types": [
+   "water",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 120,
+   "atk": 112,
+   "def": 65,
+   "spa": 80,
+   "spd": 75,
+   "spe": 78
+  },
+  "bst": 530
+ },
+ {
+  "key": "basculegion-female",
+  "dex": 902,
+  "name": "Basculegion (Female)",
+  "form": "Female",
+  "zhHant": "幽尾玄魚",
+  "types": [
+   "water",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 120,
+   "atk": 92,
+   "def": 65,
+   "spa": 100,
+   "spd": 75,
+   "spe": 78
+  },
+  "bst": 530
+ },
+ {
+  "key": "sneasler",
+  "dex": 903,
+  "name": "Sneasler",
+  "form": "",
+  "zhHant": "大狃拉",
+  "types": [
+   "fighting",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 130,
+   "def": 60,
+   "spa": 40,
+   "spd": 80,
+   "spe": 120
+  },
+  "bst": 510
+ },
+ {
+  "key": "overqwil",
+  "dex": 904,
+  "name": "Overqwil",
+  "form": "",
+  "zhHant": "萬針魚",
+  "types": [
+   "dark",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 115,
+   "def": 95,
+   "spa": 65,
+   "spd": 65,
+   "spe": 85
+  },
+  "bst": 510
+ },
+ {
+  "key": "meowscarada",
+  "dex": 908,
+  "name": "Meowscarada",
+  "form": "",
+  "zhHant": "魔幻假面喵",
+  "types": [
+   "grass",
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 76,
+   "atk": 110,
+   "def": 70,
+   "spa": 81,
+   "spd": 70,
+   "spe": 123
+  },
+  "bst": 530
+ },
+ {
+  "key": "skeledirge",
+  "dex": 911,
+  "name": "Skeledirge",
+  "form": "",
+  "zhHant": "骨紋巨聲鱷",
+  "types": [
+   "fire",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 104,
+   "atk": 75,
+   "def": 100,
+   "spa": 110,
+   "spd": 75,
+   "spe": 66
+  },
+  "bst": 530
+ },
+ {
+  "key": "quaquaval",
+  "dex": 914,
+  "name": "Quaquaval",
+  "form": "",
+  "zhHant": "狂歡浪舞鴨",
+  "types": [
+   "water",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 120,
+   "def": 80,
+   "spa": 85,
+   "spd": 75,
+   "spe": 85
+  },
+  "bst": 530
+ },
+ {
+  "key": "pawmot",
+  "dex": 923,
+  "name": "Pawmot",
+  "form": "",
+  "zhHant": "巴布土撥",
+  "types": [
+   "electric",
+   "fighting"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 115,
+   "def": 70,
+   "spa": 70,
+   "spd": 60,
+   "spe": 105
+  },
+  "bst": 490
+ },
+ {
+  "key": "maushold",
+  "dex": 925,
+  "name": "Maushold",
+  "form": "",
+  "zhHant": "一家鼠",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 74,
+   "atk": 75,
+   "def": 70,
+   "spa": 65,
+   "spd": 75,
+   "spe": 111
+  },
+  "bst": 470
+ },
+ {
+  "key": "maushold-three",
+  "dex": 925,
+  "name": "Maushold (Three)",
+  "form": "Three",
+  "zhHant": "一家鼠",
+  "types": [
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 74,
+   "atk": 75,
+   "def": 70,
+   "spa": 65,
+   "spd": 75,
+   "spe": 111
+  },
+  "bst": 470
+ },
+ {
+  "key": "arboliva",
+  "dex": 930,
+  "name": "Arboliva",
+  "form": "",
+  "zhHant": "奧利瓦",
+  "types": [
+   "grass",
+   "normal"
+  ],
+  "baseStats": {
+   "hp": 78,
+   "atk": 69,
+   "def": 90,
+   "spa": 125,
+   "spd": 109,
+   "spe": 39
+  },
+  "bst": 510
+ },
+ {
+  "key": "squawkabilly",
+  "dex": 931,
+  "name": "Squawkabilly",
+  "form": "",
+  "zhHant": "怒鸚哥",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 82,
+   "atk": 96,
+   "def": 51,
+   "spa": 45,
+   "spd": 51,
+   "spe": 92
+  },
+  "bst": 417
+ },
+ {
+  "key": "squawkabilly-blue",
+  "dex": 931,
+  "name": "Squawkabilly (Blue)",
+  "form": "Blue",
+  "zhHant": "怒鸚哥",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 82,
+   "atk": 96,
+   "def": 51,
+   "spa": 45,
+   "spd": 51,
+   "spe": 92
+  },
+  "bst": 417
+ },
+ {
+  "key": "squawkabilly-white",
+  "dex": 931,
+  "name": "Squawkabilly (White)",
+  "form": "White",
+  "zhHant": "怒鸚哥",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 82,
+   "atk": 96,
+   "def": 51,
+   "spa": 45,
+   "spd": 51,
+   "spe": 92
+  },
+  "bst": 417
+ },
+ {
+  "key": "squawkabilly-yellow",
+  "dex": 931,
+  "name": "Squawkabilly (Yellow)",
+  "form": "Yellow",
+  "zhHant": "怒鸚哥",
+  "types": [
+   "normal",
+   "flying"
+  ],
+  "baseStats": {
+   "hp": 82,
+   "atk": 96,
+   "def": 51,
+   "spa": 45,
+   "spd": 51,
+   "spe": 92
+  },
+  "bst": 417
+ },
+ {
+  "key": "garganacl",
+  "dex": 934,
+  "name": "Garganacl",
+  "form": "",
+  "zhHant": "鹽石巨靈",
+  "types": [
+   "rock"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 100,
+   "def": 130,
+   "spa": 45,
+   "spd": 90,
+   "spe": 35
+  },
+  "bst": 500
+ },
+ {
+  "key": "armarouge",
+  "dex": 936,
+  "name": "Armarouge",
+  "form": "",
+  "zhHant": "紅蓮鎧騎",
+  "types": [
+   "fire",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 60,
+   "def": 100,
+   "spa": 125,
+   "spd": 80,
+   "spe": 75
+  },
+  "bst": 525
+ },
+ {
+  "key": "ceruledge",
+  "dex": 937,
+  "name": "Ceruledge",
+  "form": "",
+  "zhHant": "蒼炎刃鬼",
+  "types": [
+   "fire",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 75,
+   "atk": 125,
+   "def": 80,
+   "spa": 60,
+   "spd": 100,
+   "spe": 85
+  },
+  "bst": 525
+ },
+ {
+  "key": "bellibolt",
+  "dex": 939,
+  "name": "Bellibolt",
+  "form": "",
+  "zhHant": "電肚蛙",
+  "types": [
+   "electric"
+  ],
+  "baseStats": {
+   "hp": 109,
+   "atk": 64,
+   "def": 91,
+   "spa": 103,
+   "spd": 83,
+   "spe": 45
+  },
+  "bst": 495
+ },
+ {
+  "key": "mabosstiff",
+  "dex": 943,
+  "name": "Mabosstiff",
+  "form": "",
+  "zhHant": "獒教父",
+  "types": [
+   "dark"
+  ],
+  "baseStats": {
+   "hp": 80,
+   "atk": 120,
+   "def": 90,
+   "spa": 60,
+   "spd": 70,
+   "spe": 85
+  },
+  "bst": 505
+ },
+ {
+  "key": "scovillain",
+  "dex": 952,
+  "name": "Scovillain",
+  "form": "",
+  "zhHant": "狠辣椒",
+  "types": [
+   "grass",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 108,
+   "def": 65,
+   "spa": 108,
+   "spd": 65,
+   "spe": 75
+  },
+  "bst": 486
+ },
+ {
+  "key": "scovillain-mega",
+  "dex": 952,
+  "name": "Scovillain (Mega)",
+  "form": "Mega",
+  "zhHant": "狠辣椒",
+  "types": [
+   "grass",
+   "fire"
+  ],
+  "baseStats": {
+   "hp": 65,
+   "atk": 138,
+   "def": 85,
+   "spa": 138,
+   "spd": 85,
+   "spe": 75
+  },
+  "bst": 586
+ },
+ {
+  "key": "espathra",
+  "dex": 956,
+  "name": "Espathra",
+  "form": "",
+  "zhHant": "超能艷鴕",
+  "types": [
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 95,
+   "atk": 60,
+   "def": 60,
+   "spa": 101,
+   "spd": 60,
+   "spe": 105
+  },
+  "bst": 481
+ },
+ {
+  "key": "tinkaton",
+  "dex": 959,
+  "name": "Tinkaton",
+  "form": "",
+  "zhHant": "巨鍛匠",
+  "types": [
+   "fairy",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 85,
+   "atk": 75,
+   "def": 77,
+   "spa": 70,
+   "spd": 105,
+   "spe": 94
+  },
+  "bst": 506
+ },
+ {
+  "key": "palafin",
+  "dex": 964,
+  "name": "Palafin",
+  "form": "",
+  "zhHant": "海豚俠",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 70,
+   "def": 72,
+   "spa": 53,
+   "spd": 62,
+   "spe": 100
+  },
+  "bst": 457
+ },
+ {
+  "key": "palafin-hero",
+  "dex": 964,
+  "name": "Palafin (Hero)",
+  "form": "Hero",
+  "zhHant": "海豚俠",
+  "types": [
+   "water"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 160,
+   "def": 97,
+   "spa": 106,
+   "spd": 87,
+   "spe": 100
+  },
+  "bst": 650
+ },
+ {
+  "key": "orthworm",
+  "dex": 968,
+  "name": "Orthworm",
+  "form": "",
+  "zhHant": "拖拖蚓",
+  "types": [
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 70,
+   "atk": 85,
+   "def": 145,
+   "spa": 60,
+   "spd": 55,
+   "spe": 65
+  },
+  "bst": 480
+ },
+ {
+  "key": "glimmora",
+  "dex": 970,
+  "name": "Glimmora",
+  "form": "",
+  "zhHant": "晶光花",
+  "types": [
+   "rock",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 83,
+   "atk": 55,
+   "def": 90,
+   "spa": 130,
+   "spd": 81,
+   "spe": 86
+  },
+  "bst": 525
+ },
+ {
+  "key": "glimmora-mega",
+  "dex": 970,
+  "name": "Glimmora (Mega)",
+  "form": "Mega",
+  "zhHant": "晶光花",
+  "types": [
+   "rock",
+   "poison"
+  ],
+  "baseStats": {
+   "hp": 83,
+   "atk": 90,
+   "def": 105,
+   "spa": 150,
+   "spd": 96,
+   "spe": 101
+  },
+  "bst": 625
+ },
+ {
+  "key": "houndstone",
+  "dex": 972,
+  "name": "Houndstone",
+  "form": "",
+  "zhHant": "墓揚犬",
+  "types": [
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 72,
+   "atk": 101,
+   "def": 100,
+   "spa": 50,
+   "spd": 97,
+   "spe": 68
+  },
+  "bst": 488
+ },
+ {
+  "key": "annihilape",
+  "dex": 979,
+  "name": "Annihilape",
+  "form": "",
+  "zhHant": "棄世猴",
+  "types": [
+   "fighting",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 110,
+   "atk": 115,
+   "def": 80,
+   "spa": 50,
+   "spd": 90,
+   "spe": 90
+  },
+  "bst": 535
+ },
+ {
+  "key": "farigiraf",
+  "dex": 981,
+  "name": "Farigiraf",
+  "form": "",
+  "zhHant": "奇麒麟",
+  "types": [
+   "normal",
+   "psychic"
+  ],
+  "baseStats": {
+   "hp": 120,
+   "atk": 90,
+   "def": 70,
+   "spa": 110,
+   "spd": 70,
+   "spe": 60
+  },
+  "bst": 520
+ },
+ {
+  "key": "kingambit",
+  "dex": 983,
+  "name": "Kingambit",
+  "form": "",
+  "zhHant": "仆刀將軍",
+  "types": [
+   "dark",
+   "steel"
+  ],
+  "baseStats": {
+   "hp": 100,
+   "atk": 135,
+   "def": 120,
+   "spa": 60,
+   "spd": 85,
+   "spe": 50
+  },
+  "bst": 550
+ },
+ {
+  "key": "baxcalibur",
+  "dex": 998,
+  "name": "Baxcalibur",
+  "form": "",
+  "zhHant": "戟脊龍",
+  "types": [
+   "dragon",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 115,
+   "atk": 145,
+   "def": 92,
+   "spa": 75,
+   "spd": 86,
+   "spe": 87
+  },
+  "bst": 600
+ },
+ {
+  "key": "baxcalibur-mega",
+  "dex": 998,
+  "name": "Baxcalibur (Mega)",
+  "form": "Mega",
+  "zhHant": "戟脊龍",
+  "types": [
+   "dragon",
+   "ice"
+  ],
+  "baseStats": {
+   "hp": 115,
+   "atk": 175,
+   "def": 117,
+   "spa": 105,
+   "spd": 101,
+   "spe": 87
+  },
+  "bst": 700
+ },
+ {
+  "key": "gholdengo",
+  "dex": 1000,
+  "name": "Gholdengo",
+  "form": "",
+  "zhHant": "賽富豪",
+  "types": [
+   "steel",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 87,
+   "atk": 60,
+   "def": 95,
+   "spa": 133,
+   "spd": 91,
+   "spe": 84
+  },
+  "bst": 550
+ },
+ {
+  "key": "sinistcha",
+  "dex": 1013,
+  "name": "Sinistcha",
+  "form": "",
+  "zhHant": "來悲粗茶",
+  "types": [
+   "grass",
+   "ghost"
+  ],
+  "baseStats": {
+   "hp": 71,
+   "atk": 60,
+   "def": 106,
+   "spa": 121,
+   "spd": 80,
+   "spe": 70
+  },
+  "bst": 508
+ },
+ {
+  "key": "archaludon",
+  "dex": 1018,
+  "name": "Archaludon",
+  "form": "",
+  "zhHant": "鋁鋼橋龍",
+  "types": [
+   "steel",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 90,
+   "atk": 105,
+   "def": 130,
+   "spa": 125,
+   "spd": 65,
+   "spe": 85
+  },
+  "bst": 600
+ },
+ {
+  "key": "hydrapple",
+  "dex": 1019,
+  "name": "Hydrapple",
+  "form": "",
+  "zhHant": "蜜集大蛇",
+  "types": [
+   "grass",
+   "dragon"
+  ],
+  "baseStats": {
+   "hp": 106,
+   "atk": 80,
+   "def": 110,
+   "spa": 120,
+   "spd": 80,
+   "spe": 44
+  },
+  "bst": 540
+ }
+]
