@@ -107,6 +107,20 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
 
     /// Identify each slot's occupant, skipping slots whose artwork is unchanged.
     private func identify(in pixelBuffer: CVPixelBuffer, size: CGSize) {
+        // The game only runs landscape. A portrait frame is the lock screen,
+        // home screen, or a rotation - not a battle - and every calibrated box
+        // would be pointing at unrelated pixels, which can produce confident
+        // nonsense. Report the field as empty instead.
+        guard size.width > size.height else {
+            if !lastSignature.isEmpty {
+                lastSignature.removeAll()
+                lastResult.removeAll()
+                log("[analyzer] portrait frame (\(Int(size.width))x\(Int(size.height))): not a battle")
+            }
+            for slot in BattleSlot.allCases { tracker.observe(slot, nil) }
+            return
+        }
+
         guard let frame = makeCGImage(from: pixelBuffer) else { return }
 
         for slot in BattleSlot.allCases {

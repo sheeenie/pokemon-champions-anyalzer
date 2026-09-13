@@ -14,7 +14,7 @@ struct iPhoneMirrorApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 700, minHeight: 400)
+                .frame(minWidth: 900, minHeight: 620)
                 .background(Color.black)
         }
         .windowStyle(.hiddenTitleBar)

@@ -22,17 +22,102 @@ private let typeColors: [String: Color] = [
     "fairy": Color(red: 0.93, green: 0.60, blue: 0.67),
 ]
 
+private func typeColor(_ type: String) -> Color { typeColors[type] ?? .gray }
+
+/// Three-letter abbreviations keep matchup chips scannable at a glance.
+private let typeAbbrev: [String: String] = [
+    "normal": "NRM", "fire": "FIR", "water": "WAT", "electric": "ELE",
+    "grass": "GRS", "ice": "ICE", "fighting": "FGT", "poison": "PSN",
+    "ground": "GRD", "flying": "FLY", "psychic": "PSY", "bug": "BUG",
+    "rock": "RCK", "ghost": "GHO", "dragon": "DRA", "dark": "DRK",
+    "steel": "STL", "fairy": "FAI",
+]
+
 private struct TypeChip: View {
     let type: String
 
     var body: some View {
         Text(type.uppercased())
-            .font(.system(size: 9, weight: .bold))
+            .font(.system(size: 11, weight: .bold))
             .foregroundColor(.white)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background((typeColors[type] ?? .gray).opacity(0.95))
-            .cornerRadius(3)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(typeColor(type))
+            .cornerRadius(4)
+    }
+}
+
+/// Compact chip used in the matchup rows, optionally badged with a multiplier.
+private struct MatchupChip: View {
+    let type: String
+    var badge: String? = nil
+    var dimmed: Bool = false
+
+    var body: some View {
+        HStack(spacing: 3) {
+            Text(typeAbbrev[type] ?? type.prefix(3).uppercased())
+                .font(.system(size: 10, weight: .bold))
+            if let badge {
+                Text(badge).font(.system(size: 9, weight: .heavy))
+            }
+        }
+        .foregroundColor(.white)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 2)
+        .background(typeColor(type).opacity(dimmed ? 0.45 : 1.0))
+        .cornerRadius(3)
+    }
+}
+
+/// Wraps chips onto fixed-width rows. There are at most a handful per band,
+/// so simple chunking beats a full flow layout here.
+private struct ChipRow<Content: View>: View {
+    let label: String
+    let labelColor: Color
+    let count: Int
+    @ViewBuilder let content: () -> Content
+
+    var body: some View {
+        if count > 0 {
+            HStack(alignment: .top, spacing: 6) {
+                Text(label)
+                    .font(.system(size: 9, weight: .heavy))
+                    .foregroundColor(labelColor)
+                    .lineLimit(1)
+                    .fixedSize()
+                    .frame(width: 46, alignment: .leading)
+                    .padding(.top, 2)
+                HStack(spacing: 3) { content() }
+                Spacer(minLength: 0)
+            }
+        }
+    }
+}
+
+private struct MatchupSection: View {
+    let types: [String]
+
+    var body: some View {
+        let m = TypeChart.grouped(defending: types)
+        VStack(alignment: .leading, spacing: 3) {
+            ChipRow(label: "WEAK",
+                    labelColor: Color(red: 0.95, green: 0.42, blue: 0.42),
+                    count: m.quadWeak.count + m.weak.count) {
+                ForEach(m.quadWeak, id: \.self) { MatchupChip(type: $0, badge: "4") }
+                ForEach(m.weak, id: \.self) { MatchupChip(type: $0) }
+            }
+            ChipRow(label: "RESIST",
+                    labelColor: Color(red: 0.45, green: 0.78, blue: 0.60),
+                    count: m.resist.count + m.quadResist.count) {
+                ForEach(m.quadResist, id: \.self) { MatchupChip(type: $0, badge: "¼", dimmed: true) }
+                ForEach(m.resist, id: \.self) { MatchupChip(type: $0, dimmed: true) }
+            }
+            ChipRow(label: "IMMUNE",
+                    labelColor: Color(red: 0.62, green: 0.62, blue: 0.70),
+                    count: m.immune.count) {
+                ForEach(m.immune, id: \.self) { MatchupChip(type: $0, badge: "0", dimmed: true) }
+            }
+        }
     }
 }
 
@@ -54,25 +139,25 @@ private struct StatRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 7) {
             Text(label)
-                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .font(.system(size: 12, weight: .medium, design: .monospaced))
                 .foregroundColor(.white.opacity(0.55))
-                .frame(width: 26, alignment: .leading)
+                .frame(width: 30, alignment: .leading)
             Text("\(value)")
-                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                .font(.system(size: 13, weight: .semibold, design: .monospaced))
                 .foregroundColor(.white)
-                .frame(width: 26, alignment: .trailing)
+                .frame(width: 30, alignment: .trailing)
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: 2.5)
                         .fill(Color.white.opacity(0.10))
-                    RoundedRectangle(cornerRadius: 2)
+                    RoundedRectangle(cornerRadius: 2.5)
                         .fill(barColor)
                         .frame(width: max(2, geo.size.width * fraction))
                 }
             }
-            .frame(height: 5)
+            .frame(height: 7)
         }
     }
 }
@@ -81,46 +166,53 @@ private struct PokemonCard: View {
     let occupant: SlotOccupant
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(occupant.species.name)
-                .font(.system(size: 13, weight: .bold))
-                .foregroundColor(.white)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-
-            HStack(spacing: 4) {
-                ForEach(occupant.species.types, id: \.self) { TypeChip(type: $0) }
+        VStack(alignment: .leading, spacing: 7) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(occupant.species.name)
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
                 Spacer(minLength: 0)
-                Text("BST \(occupant.species.bst)")
-                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                    .foregroundColor(.white.opacity(0.45))
+                Text("\(occupant.species.bst)")
+                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.4))
             }
 
-            VStack(spacing: 3) {
+            HStack(spacing: 5) {
+                ForEach(occupant.species.types, id: \.self) { TypeChip(type: $0) }
+                Spacer(minLength: 0)
+            }
+
+            VStack(spacing: 4) {
                 ForEach(occupant.species.baseStats.ordered, id: \.0) { stat in
                     StatRow(label: stat.0, value: stat.1)
                 }
             }
+
+            Divider().overlay(Color.white.opacity(0.12))
+
+            MatchupSection(types: occupant.species.types)
         }
-        .padding(9)
+        .padding(11)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.white.opacity(0.06))
-        .cornerRadius(7)
+        .cornerRadius(8)
     }
 }
 
 private struct EmptyCard: View {
     var body: some View {
         Text("Unidentified")
-            .font(.system(size: 11))
+            .font(.system(size: 12))
             .foregroundColor(.white.opacity(0.3))
-            .frame(maxWidth: .infinity, minHeight: 60)
+            .frame(maxWidth: .infinity, minHeight: 70)
             .background(Color.white.opacity(0.03))
-            .cornerRadius(7)
+            .cornerRadius(8)
     }
 }
 
-private struct SideSection: View {
+private struct SideColumn: View {
     let title: String
     let accent: Color
     let slots: [BattleSlot]
@@ -134,13 +226,13 @@ private struct SideSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
+        VStack(alignment: .leading, spacing: 7) {
             HStack(spacing: 5) {
-                Circle().fill(accent).frame(width: 6, height: 6)
+                Circle().fill(accent).frame(width: 7, height: 7)
                 Text(title)
-                    .font(.system(size: 10, weight: .heavy))
-                    .foregroundColor(.white.opacity(0.5))
-                    .tracking(0.8)
+                    .font(.system(size: 11, weight: .heavy))
+                    .foregroundColor(.white.opacity(0.55))
+                    .tracking(0.9)
             }
             ForEach(visible, id: \.self) { slot in
                 if let occupant = occupants[slot] {
@@ -149,7 +241,9 @@ private struct SideSection: View {
                     EmptyCard()
                 }
             }
+            Spacer(minLength: 0)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -157,25 +251,26 @@ struct StatsPanel: View {
     @ObservedObject var battle: BattleStateTracker
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(battle.format.label)
-                .font(.system(size: 11, weight: .bold))
+                .font(.system(size: 12, weight: .bold))
                 .foregroundColor(.white.opacity(0.75))
 
-            SideSection(title: "OPPONENT",
-                        accent: Color(red: 0.93, green: 0.31, blue: 0.45),
-                        slots: [.opponent1, .opponent2],
-                        occupants: battle.slots)
-
-            SideSection(title: "YOUR SIDE",
-                        accent: Color(red: 0.36, green: 0.71, blue: 0.95),
-                        slots: [.player1, .player2],
-                        occupants: battle.slots)
-
-            Spacer(minLength: 0)
+            ScrollView(.vertical, showsIndicators: false) {
+                HStack(alignment: .top, spacing: 12) {
+                    SideColumn(title: "OPPONENT",
+                               accent: Color(red: 0.93, green: 0.31, blue: 0.45),
+                               slots: [.opponent1, .opponent2],
+                               occupants: battle.slots)
+                    SideColumn(title: "YOUR SIDE",
+                               accent: Color(red: 0.36, green: 0.71, blue: 0.95),
+                               slots: [.player1, .player2],
+                               occupants: battle.slots)
+                }
+            }
         }
-        .padding(11)
-        .frame(width: 210)
+        .padding(12)
+        .frame(width: 500)
         .background(Color(red: 0.07, green: 0.07, blue: 0.09))
     }
 }
