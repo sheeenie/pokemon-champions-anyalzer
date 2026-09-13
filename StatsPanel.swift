@@ -65,15 +65,17 @@ private struct ChipRow<Content: View>: View {
 
     var body: some View {
         if count > 0 {
-            HStack(alignment: .center, spacing: 6) {
+            HStack(alignment: .top, spacing: 6) {
                 Text(label)
                     .font(.system(size: 11, weight: .heavy))
                     .foregroundColor(labelColor)
                     .lineLimit(1)
                     .fixedSize()
                     .frame(width: 56, alignment: .leading)
-                HStack(spacing: 3) { content() }
-                Spacer(minLength: 0)
+                    .padding(.top, 5)
+                // Wraps: in the four-column doubles layout a card is too narrow
+                // for a long weakness or resist row on one line.
+                FlowLayout(spacing: 3, lineSpacing: 4) { content() }
             }
         }
     }
@@ -398,6 +400,9 @@ private struct SideColumn: View {
     let accent: Color
     let slots: [BattleSlot]
     let occupants: [BattleSlot: SlotOccupant]
+    /// Doubles: one column per slot, so four cards sit side by side instead of
+    /// two tall cards stacked per side, which ran off the bottom of the window.
+    let sideBySide: Bool
 
     /// In singles only the outer slot is used, so an inner slot with no
     /// occupant is hidden rather than shown as unidentified.
@@ -415,16 +420,30 @@ private struct SideColumn: View {
                     .foregroundColor(.white.opacity(0.55))
                     .tracking(0.9)
             }
-            ForEach(visible, id: \.self) { slot in
-                if let occupant = occupants[slot] {
-                    PokemonCard(occupant: occupant)
-                } else {
-                    EmptyCard()
+            if sideBySide {
+                // Every slot keeps its column, empty or not, in the same
+                // left-to-right order as the name plates in the game.
+                HStack(alignment: .top, spacing: 10) {
+                    ForEach(slots, id: \.self) { slot in
+                        card(for: slot)
+                            .frame(maxWidth: .infinity, alignment: .top)
+                    }
                 }
+            } else {
+                ForEach(visible, id: \.self) { card(for: $0) }
             }
             Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private func card(for slot: BattleSlot) -> some View {
+        if let occupant = occupants[slot] {
+            PokemonCard(occupant: occupant)
+        } else {
+            EmptyCard()
+        }
     }
 }
 
@@ -597,11 +616,13 @@ struct StatsPanel: View {
                 SideColumn(title: L10n.text(.opponent, lang),
                            accent: sideAccent(.opponent),
                            slots: [.opponent1, .opponent2],
-                           occupants: battle.slots)
+                           occupants: battle.slots,
+                           sideBySide: battle.format == .doubles)
                 SideColumn(title: L10n.text(.yourSide, lang),
                            accent: sideAccent(.player),
                            slots: [.player1, .player2],
-                           occupants: battle.slots)
+                           occupants: battle.slots,
+                           sideBySide: battle.format == .doubles)
             }
             Spacer(minLength: 0)
         }
