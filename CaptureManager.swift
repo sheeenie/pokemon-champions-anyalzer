@@ -11,10 +11,16 @@ class CaptureManager: ObservableObject {
     private var currentInput: AVCaptureDeviceInput?
     private var currentDeviceID: String?
 
-    private let analyzer = BattleAnalyzer()
+    /// What the analyzer currently believes is on the field.
+    let battle: BattleStateTracker
+    private let analyzer: BattleAnalyzer
     private let videoOutput = AVCaptureVideoDataOutput()
 
     init() {
+        let tracker = BattleStateTracker()
+        battle = tracker
+        analyzer = BattleAnalyzer(tracker: tracker)
+
         // Enable iOS Screen Capture explicitly in CoreMediaIO
         var prop = CMIOObjectPropertyAddress(
             mSelector: CMIOObjectPropertySelector(kCMIOHardwarePropertyAllowScreenCaptureDevices),

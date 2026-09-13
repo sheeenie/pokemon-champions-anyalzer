@@ -14,7 +14,7 @@ struct iPhoneMirrorApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 200, minHeight: 400)
+                .frame(minWidth: 700, minHeight: 400)
                 .background(Color.black)
         }
         .windowStyle(.hiddenTitleBar)
@@ -25,19 +25,23 @@ struct ContentView: View {
     @StateObject private var captureManager = CaptureManager()
     
     var body: some View {
-        ZStack {
-            CameraPreview(session: captureManager.session)
-                .edgesIgnoringSafeArea(.all)
-            
-            VStack {
+        HStack(spacing: 0) {
+            ZStack(alignment: .top) {
+                CameraPreview(session: captureManager.session)
+                    .edgesIgnoringSafeArea(.all)
+
                 Text(captureManager.deviceName)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.black.opacity(0.7))
-                    .cornerRadius(8)
-                    .padding()
-                Spacer()
+                    .font(.system(size: 11))
+                    .foregroundColor(.white.opacity(0.8))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.black.opacity(0.6))
+                    .cornerRadius(6)
+                    .padding(8)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            StatsPanel(battle: captureManager.battle)
         }
     }
 }

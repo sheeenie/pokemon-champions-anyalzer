@@ -14,7 +14,17 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
     let queue = DispatchQueue(label: "com.example.iPhoneMirror.analysis")
 
     private let ciContext = CIContext()
+    private let tracker: BattleStateTracker
+    private let matcher = IconMatcher()
     private var loggedFrameSize = false
+
+    /// Last fingerprint per slot, so the library search runs only on change.
+    private var lastSignature: [BattleSlot: [UInt8]] = [:]
+
+    init(tracker: BattleStateTracker) {
+        self.tracker = tracker
+        super.init()
+    }
 
     /// Analysis cadence. Capture runs at display rate; we only need a few Hz.
     private let analysisInterval: TimeInterval = 0.25
@@ -53,19 +63,67 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
                           height: CVPixelBufferGetHeight(pixelBuffer))
         if !loggedFrameSize {
             loggedFrameSize = true
-            print("[analyzer] capture frame size: \(Int(size.width))x\(Int(size.height))")
+            log("[analyzer] capture frame size: \(Int(size.width))x\(Int(size.height))")
             if dumpDir == nil {
                 print("[analyzer] set the dumpDir default to enable calibration dumps")
             }
-            // Load the reference data here rather than at init. Touching it
-            // during CaptureManager's construction runs it inside SwiftUI view
-            // setup, which leaves the app running with no window at all.
-            print("[analyzer] pokedex: \(PokedexStore.shared.species.count) species")
         }
+
+        // Built on first frame, on this queue: it decodes 393 icons, which has
+        // no business running during SwiftUI view construction.
+        if !matcher.isReady {
+            matcher.prepare(from: PokedexStore.shared)
+            log("[analyzer] matcher ready")
+        }
+        identify(in: pixelBuffer, size: size)
 
         if dumpDir != nil, now - lastDump >= dumpInterval, dumpCount < maxDumps {
             lastDump = now
             dump(pixelBuffer: pixelBuffer, size: size)
+        }
+    }
+
+    /// Print, and also append to a file when dumping is on. The app has to be
+    /// launched via `open` to keep its screen-capture permission, and that
+    /// discards stdout, so a file is the only way to see diagnostics.
+    private func log(_ message: String) {
+        print(message)
+        guard let dir = dumpDir else { return }
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let line = message + "\n"
+        let url = dir.appendingPathComponent("analyzer.log")
+        if let handle = try? FileHandle(forWritingTo: url) {
+            handle.seekToEndOfFile()
+            handle.write(Data(line.utf8))
+            try? handle.close()
+        } else {
+            try? line.write(to: url, atomically: true, encoding: .utf8)
+        }
+    }
+
+    /// Identify each slot's occupant, skipping slots whose artwork is unchanged.
+    private func identify(in pixelBuffer: CVPixelBuffer, size: CGSize) {
+        guard let frame = makeCGImage(from: pixelBuffer) else { return }
+
+        for slot in BattleSlot.allCases {
+            guard let crop = frame.cropping(to: slot.spriteRect(in: size)),
+                  let signature = IconMatcher.signature(crop)
+            else { continue }
+
+            if let previous = lastSignature[slot],
+               !IconMatcher.differs(previous, signature) {
+                continue
+            }
+            lastSignature[slot] = signature
+
+            let result = matcher.match(crop)
+            tracker.observe(slot, result)
+            if let result {
+                log(String(format: "[match] %@ -> %@ (d %.4f, margin %.2fx)",
+                           slot.label, result.species.name, result.distance, result.margin))
+            } else {
+                log("[match] \(slot.label) -> unidentified")
+            }
         }
     }
 

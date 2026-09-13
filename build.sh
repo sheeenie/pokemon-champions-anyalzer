@@ -49,7 +49,10 @@ swiftc -parse-as-library \
     CameraPreview.swift \
     BattleGeometry.swift \
     BattleAnalyzer.swift \
+    BattleState.swift \
+    IconMatcher.swift \
     PokedexStore.swift \
+    StatsPanel.swift \
     -o "$MACOS_DIR/$APP_NAME"
 
 echo "Build complete! App bundle created at: $APP_DIR"
