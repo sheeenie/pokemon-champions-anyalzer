@@ -493,6 +493,11 @@ private struct FlowLayout: Layout {
     }
 }
 
+/// Identity of a speed list entry: per side, ignoring shininess.
+private func speedID(_ side: BattleSide, _ species: Species) -> String {
+    "\(side)-\(species.dex)-\(species.form)"
+}
+
 private struct SpeedEntry: Identifiable {
     let id: String
     let species: Species
@@ -503,6 +508,8 @@ private struct SpeedEntry: Identifiable {
 /// first, for reading turn order at a glance.
 private struct SpeedList: View {
     let seen: [String: SeenPokemon]
+    /// IDs of the Pokemon currently showing on a card, which the list highlights.
+    let onField: Set<String>
     @Environment(\.lang) private var lang
 
     private var entries: [SpeedEntry] {
@@ -512,7 +519,7 @@ private struct SpeedList: View {
                 // Keyed without shininess, and per side: a Pokemon seen both as
                 // itself and already Mega Evolved must not list that Mega twice,
                 // while a mirror match keeps one entry for each side.
-                let id = "\(pokemon.side)-\(species.dex)-\(species.form)"
+                let id = speedID(pokemon.side, species)
                 if byID[id] == nil {
                     byID[id] = SpeedEntry(id: id, species: species, side: pokemon.side)
                 }
@@ -535,7 +542,7 @@ private struct SpeedList: View {
                 FlowLayout(spacing: 4, lineSpacing: 6) {
                     ForEach(Array(list.enumerated()), id: \.element.id) { index, entry in
                         HStack(spacing: 4) {
-                            SpeedChip(entry: entry)
+                            SpeedChip(entry: entry, onField: onField.contains(entry.id))
                             // Kept with its chip so a wrap never starts a line
                             // with a dangling separator.
                             if index < list.count - 1 {
@@ -559,9 +566,10 @@ private struct SpeedList: View {
 
 private struct SpeedChip: View {
     let entry: SpeedEntry
+    /// On the field right now, as opposed to switched out or a Mega it could
+    /// still become. These stand out so current turn order reads at a glance.
+    let onField: Bool
     @Environment(\.lang) private var lang
-
-    private var isMega: Bool { entry.species.form.contains("Mega") }
 
     var body: some View {
         HStack(spacing: 5) {
@@ -572,20 +580,22 @@ private struct SpeedChip: View {
                     .interpolation(.high)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 22, height: 22)
+                    .opacity(onField ? 1 : 0.7)
             }
             Text(entry.species.displayName(lang))
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(isMega ? Color(red: 0.98, green: 0.80, blue: 0.35) : .white)
+                .font(.system(size: 13, weight: onField ? .bold : .semibold))
+                .foregroundColor(onField ? .white : .white.opacity(0.6))
                 .lineLimit(1)
             Text("\(entry.species.baseStats.spe)")
                 .font(.system(size: 13, weight: .bold, design: .monospaced))
-                .foregroundColor(.white)
+                .foregroundColor(onField ? .white : .white.opacity(0.6))
         }
         .padding(.horizontal, 6)
         .padding(.vertical, 3)
-        .background(sideAccent(entry.side).opacity(0.18))
+        .background(sideAccent(entry.side).opacity(onField ? 0.45 : 0.10))
         .overlay(RoundedRectangle(cornerRadius: 5)
-                    .stroke(sideAccent(entry.side).opacity(0.75), lineWidth: 1))
+                    .stroke(sideAccent(entry.side).opacity(onField ? 1 : 0.4),
+                            lineWidth: onField ? 2 : 1))
         .cornerRadius(5)
     }
 }
@@ -610,7 +620,8 @@ struct StatsPanel: View {
                 .fixedSize()
             }
 
-            SpeedList(seen: battle.seen)
+            SpeedList(seen: battle.seen,
+                      onField: Set(battle.slots.map { speedID($0.key.side, $0.value.species) }))
 
             HStack(alignment: .top, spacing: 14) {
                 SideColumn(title: L10n.text(.opponent, lang),
