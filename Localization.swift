@@ -23,7 +23,7 @@ extension EnvironmentValues {
 enum L10n {
     enum Key {
         case opponent, yourSide, weak, resist, immune, megaWeak
-        case unidentified, ability, hidden, bst
+        case unidentified, ability, hidden, bst, speed
     }
 
     private static let strings: [Key: (en: String, zh: String)] = [
@@ -37,6 +37,7 @@ enum L10n {
         .ability: ("ABILITY", "特性"),
         .hidden: ("HIDDEN", "隱藏"),
         .bst: ("BST", "總和"),
+        .speed: ("SPEED", "速度"),
     ]
 
     static func text(_ key: Key, _ lang: Lang) -> String {

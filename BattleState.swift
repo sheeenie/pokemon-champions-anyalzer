@@ -20,6 +20,13 @@ struct SlotOccupant {
     let margin: Double
 }
 
+/// A Pokemon confirmed at some point this battle, kept for the speed list after
+/// it has switched out.
+struct SeenPokemon {
+    let species: Species
+    let side: BattleSide
+}
+
 /// Holds what is currently on the field, smoothing over transient frames.
 ///
 /// Matching runs on individual frames, and a frame can land mid-animation, on a
@@ -33,10 +40,14 @@ final class BattleStateTracker: ObservableObject {
 
     @Published private(set) var format: BattleFormat = .idle
     @Published private(set) var slots: [BattleSlot: SlotOccupant] = [:]
+    /// Everything confirmed since the last reset, on both sides.
+    @Published private(set) var seen: [String: SeenPokemon] = [:]
 
     /// Species key currently proposed for each slot, with an agreement count.
     private var pending: [BattleSlot: (key: String, count: Int)] = [:]
     private var committed: [BattleSlot: String] = [:]
+    /// Mirror of `seen`'s keys on the analysis queue, so only additions publish.
+    private var seenIDs: Set<String> = []
 
     /// Feed one frame's answer for one slot.
     ///
@@ -54,6 +65,10 @@ final class BattleStateTracker: ObservableObject {
         let key = result.species.key
         if committed[slot] == key {
             pending[slot] = nil
+            // Recorded here too, not only on commit: after a reset the same
+            // Pokemon can return in the next battle to a slot already showing
+            // it, which never commits again and would stay off the list.
+            recordSeen(slot, result.species)
             return
         }
 
@@ -68,9 +83,25 @@ final class BattleStateTracker: ObservableObject {
 
         pending[slot] = nil
         committed[slot] = key
+        recordSeen(slot, result.species)
         publish(slot, SlotOccupant(species: result.species,
                                    distance: result.distance,
                                    margin: result.margin))
+    }
+
+    /// Clears the speed list, for a new battle. Cards are left alone: they
+    /// persist until a different Pokemon replaces them.
+    func resetSeen() {
+        seenIDs.removeAll()
+        DispatchQueue.main.async { self.seen.removeAll() }
+    }
+
+    private func recordSeen(_ slot: BattleSlot, _ species: Species) {
+        // Identity ignores shininess: a shiny is the same Pokemon at the same speed.
+        let id = "\(slot.side)-\(species.dex)-\(species.form)"
+        guard seenIDs.insert(id).inserted else { return }
+        let entry = SeenPokemon(species: species, side: slot.side)
+        DispatchQueue.main.async { self.seen[id] = entry }
     }
 
     private func publish(_ slot: BattleSlot, _ occupant: SlotOccupant) {

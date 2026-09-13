@@ -428,6 +428,149 @@ private struct SideColumn: View {
     }
 }
 
+private func sideAccent(_ side: BattleSide) -> Color {
+    switch side {
+    case .opponent: return Color(red: 0.93, green: 0.31, blue: 0.45)
+    case .player: return Color(red: 0.36, green: 0.71, blue: 0.95)
+    }
+}
+
+/// Lays children out left to right, wrapping onto new lines when out of width.
+private struct FlowLayout: Layout {
+    var spacing: CGFloat = 6
+    var lineSpacing: CGFloat = 6
+
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let width = proposal.width ?? .infinity
+        var x: CGFloat = 0, y: CGFloat = 0, lineHeight: CGFloat = 0, widest: CGFloat = 0
+        for view in subviews {
+            let size = view.sizeThatFits(.unspecified)
+            if x > 0, x + size.width > width {
+                x = 0
+                y += lineHeight + lineSpacing
+                lineHeight = 0
+            }
+            x += size.width + spacing
+            widest = max(widest, x - spacing)
+            lineHeight = max(lineHeight, size.height)
+        }
+        return CGSize(width: width.isFinite ? width : widest, height: y + lineHeight)
+    }
+
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize,
+                       subviews: Subviews, cache: inout ()) {
+        var x = bounds.minX, y = bounds.minY, lineHeight: CGFloat = 0
+        for view in subviews {
+            let size = view.sizeThatFits(.unspecified)
+            if x > bounds.minX, x + size.width > bounds.maxX {
+                x = bounds.minX
+                y += lineHeight + lineSpacing
+                lineHeight = 0
+            }
+            view.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(size))
+            x += size.width + spacing
+            lineHeight = max(lineHeight, size.height)
+        }
+    }
+}
+
+private struct SpeedEntry: Identifiable {
+    let id: String
+    let species: Species
+    let side: BattleSide
+}
+
+/// Every Pokemon seen this battle plus the Megas each could become, fastest
+/// first, for reading turn order at a glance.
+private struct SpeedList: View {
+    let seen: [String: SeenPokemon]
+    @Environment(\.lang) private var lang
+
+    private var entries: [SpeedEntry] {
+        var byID: [String: SpeedEntry] = [:]
+        for pokemon in seen.values {
+            for species in [pokemon.species] + PokedexStore.shared.megaForms(for: pokemon.species) {
+                // Keyed without shininess, and per side: a Pokemon seen both as
+                // itself and already Mega Evolved must not list that Mega twice,
+                // while a mirror match keeps one entry for each side.
+                let id = "\(pokemon.side)-\(species.dex)-\(species.form)"
+                if byID[id] == nil {
+                    byID[id] = SpeedEntry(id: id, species: species, side: pokemon.side)
+                }
+            }
+        }
+        return byID.values.sorted {
+            let a = $0.species.baseStats.spe, b = $1.species.baseStats.spe
+            return a != b ? a > b : $0.id < $1.id
+        }
+    }
+
+    var body: some View {
+        let list = entries
+        if !list.isEmpty {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(L10n.text(.speed, lang))
+                    .font(.system(size: 11, weight: .heavy))
+                    .foregroundColor(Color(red: 0.49, green: 0.83, blue: 0.55))
+                    .fixedSize()
+                FlowLayout(spacing: 4, lineSpacing: 6) {
+                    ForEach(Array(list.enumerated()), id: \.element.id) { index, entry in
+                        HStack(spacing: 4) {
+                            SpeedChip(entry: entry)
+                            // Kept with its chip so a wrap never starts a line
+                            // with a dangling separator.
+                            if index < list.count - 1 {
+                                let tie = entry.species.baseStats.spe
+                                    == list[index + 1].species.baseStats.spe
+                                Text(tie ? "=" : ">")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(.white.opacity(tie ? 0.9 : 0.45))
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(10)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(9)
+        }
+    }
+}
+
+private struct SpeedChip: View {
+    let entry: SpeedEntry
+    @Environment(\.lang) private var lang
+
+    private var isMega: Bool { entry.species.form.contains("Mega") }
+
+    var body: some View {
+        HStack(spacing: 5) {
+            if let sprite = PokedexStore.shared.icon(for: entry.species.key) {
+                Image(nsImage: NSImage(cgImage: sprite,
+                                       size: NSSize(width: sprite.width, height: sprite.height)))
+                    .resizable()
+                    .interpolation(.high)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 22, height: 22)
+            }
+            Text(entry.species.displayName(lang))
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(isMega ? Color(red: 0.98, green: 0.80, blue: 0.35) : .white)
+                .lineLimit(1)
+            Text("\(entry.species.baseStats.spe)")
+                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .background(sideAccent(entry.side).opacity(0.18))
+        .overlay(RoundedRectangle(cornerRadius: 5)
+                    .stroke(sideAccent(entry.side).opacity(0.75), lineWidth: 1))
+        .cornerRadius(5)
+    }
+}
+
 struct StatsPanel: View {
     @ObservedObject var battle: BattleStateTracker
     /// Remembered across launches.
@@ -448,13 +591,15 @@ struct StatsPanel: View {
                 .fixedSize()
             }
 
+            SpeedList(seen: battle.seen)
+
             HStack(alignment: .top, spacing: 14) {
                 SideColumn(title: L10n.text(.opponent, lang),
-                           accent: Color(red: 0.93, green: 0.31, blue: 0.45),
+                           accent: sideAccent(.opponent),
                            slots: [.opponent1, .opponent2],
                            occupants: battle.slots)
                 SideColumn(title: L10n.text(.yourSide, lang),
-                           accent: Color(red: 0.36, green: 0.71, blue: 0.95),
+                           accent: sideAccent(.player),
                            slots: [.player1, .player2],
                            occupants: battle.slots)
             }

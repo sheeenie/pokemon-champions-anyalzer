@@ -25,6 +25,13 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
     /// otherwise skipping unchanged frames starves it and it never commits.
     private var lastResult: [BattleSlot: MatchResult] = [:]
 
+    /// A sustained black screen marks the end of a battle and clears the
+    /// speed list. Two frames is about half a second at the analysis rate, so
+    /// a single dark frame mid-animation does not wipe it.
+    private static let blackThreshold = 0.03
+    private static let blackFramesToReset = 2
+    private var blackFrames = 0
+
     init(tracker: BattleStateTracker) {
         self.tracker = tracker
         super.init()
@@ -124,6 +131,18 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
 
         guard let frame = makeCGImage(from: pixelBuffer) else { return }
 
+        let brightness = meanBrightness(of: frame)
+        if brightness < BattleAnalyzer.blackThreshold {
+            blackFrames += 1
+            if blackFrames == BattleAnalyzer.blackFramesToReset {
+                tracker.resetSeen()
+                log(String(format: "[analyzer] black screen (brightness %.3f): speed list reset",
+                           brightness))
+            }
+            return
+        }
+        blackFrames = 0
+
         for slot in BattleSlot.allCases {
             let rect = slot.spriteRect(in: size)
             guard let crop = frame.cropping(to: rect),
@@ -159,21 +178,30 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         }
     }
 
-    /// Mean brightness, via a 1x1 downsample. Used to skip blank frames (phone
-    /// asleep, transitions) so calibration dumps capture actual gameplay.
+    /// Mean brightness of the whole frame, 0...1. Detects black screens (end of
+    /// a battle, phone asleep) and keeps blank frames out of calibration dumps.
+    ///
+    /// Averages a 32x16 downsample. Drawing straight into a single pixel with low
+    /// interpolation samples only a few source pixels, which is unreliable for a
+    /// decision that clears the speed list.
     private func meanBrightness(of image: CGImage) -> Double {
-        var pixel: [UInt8] = [0, 0, 0, 0]
-        guard let ctx = CGContext(data: &pixel,
-                                  width: 1,
-                                  height: 1,
+        let w = 32, h = 16
+        var pixels = [UInt8](repeating: 0, count: w * h * 4)
+        guard let ctx = CGContext(data: &pixels,
+                                  width: w,
+                                  height: h,
                                   bitsPerComponent: 8,
-                                  bytesPerRow: 4,
+                                  bytesPerRow: w * 4,
                                   space: CGColorSpaceCreateDeviceRGB(),
                                   bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
         else { return 1 }
-        ctx.interpolationQuality = .low
-        ctx.draw(image, in: CGRect(x: 0, y: 0, width: 1, height: 1))
-        return (Double(pixel[0]) + Double(pixel[1]) + Double(pixel[2])) / (3 * 255)
+        ctx.interpolationQuality = .medium
+        ctx.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
+        var sum = 0.0
+        for i in stride(from: 0, to: pixels.count, by: 4) {
+            sum += Double(pixels[i]) + Double(pixels[i + 1]) + Double(pixels[i + 2])
+        }
+        return sum / (Double(w * h) * 3 * 255)
     }
 
     // MARK: Calibration output
