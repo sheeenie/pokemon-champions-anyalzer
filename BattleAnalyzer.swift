@@ -20,6 +20,10 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
 
     /// Last fingerprint per slot, so the library search runs only on change.
     private var lastSignature: [BattleSlot: [UInt8]] = [:]
+    /// Last match per slot, replayed on unchanged frames. The tracker debounces
+    /// by counting agreeing observations, so it must be fed every frame -
+    /// otherwise skipping unchanged frames starves it and it never commits.
+    private var lastResult: [BattleSlot: MatchResult] = [:]
 
     init(tracker: BattleStateTracker) {
         self.tracker = tracker
@@ -110,14 +114,26 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
                   let signature = IconMatcher.signature(crop)
             else { continue }
 
-            if let previous = lastSignature[slot],
-               !IconMatcher.differs(previous, signature) {
+            let unchanged = lastSignature[slot].map { !IconMatcher.differs($0, signature) } ?? false
+            if unchanged {
+                // Replay the cached answer: cheap, and keeps the debounce fed.
+                tracker.observe(slot, lastResult[slot])
                 continue
             }
             lastSignature[slot] = signature
 
+            let previousKey = lastResult[slot]?.species.key
             let result = matcher.match(crop)
+            if let result {
+                lastResult[slot] = result
+            } else {
+                lastResult.removeValue(forKey: slot)
+            }
             tracker.observe(slot, result)
+
+            // Only log transitions; a slot over the moving battlefield changes
+            // every frame and would otherwise flood the log.
+            guard result?.species.key != previousKey else { continue }
             if let result {
                 log(String(format: "[match] %@ -> %@ (d %.4f, margin %.2fx)",
                            slot.label, result.species.name, result.distance, result.margin))
