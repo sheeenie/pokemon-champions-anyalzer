@@ -55,6 +55,7 @@ swiftc -parse-as-library \
     StatsPanel.swift \
     TypeChart.swift \
     TypeIcons.swift \
+    Localization.swift \
     -o "$MACOS_DIR/$APP_NAME"
 
 echo "Build complete! App bundle created at: $APP_DIR"

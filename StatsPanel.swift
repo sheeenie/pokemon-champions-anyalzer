@@ -36,6 +36,7 @@ private struct TypeBadge: View {
 /// Full type badge with the name spelled out, for the Pokemon's own typing.
 private struct TypeNameBadge: View {
     let type: String
+    @Environment(\.lang) private var lang
 
     var body: some View {
         HStack(spacing: 4) {
@@ -46,7 +47,7 @@ private struct TypeNameBadge: View {
                     .foregroundColor(.white)
                     .frame(width: 13, height: 13)
             }
-            Text(type.uppercased())
+            Text(L10n.type(type, lang))
                 .font(.system(size: 11, weight: .bold))
                 .foregroundColor(.white)
         }
@@ -79,25 +80,67 @@ private struct ChipRow<Content: View>: View {
     }
 }
 
+/// One ability. Hovering shows what it does.
+private struct AbilityChip: View {
+    let ability: Ability
+    @Environment(\.lang) private var lang
+
+    var body: some View {
+        HStack(spacing: 4) {
+            Text(ability.name(lang))
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            if ability.hidden {
+                Text(L10n.text(.hidden, lang))
+                    .font(.system(size: 9, weight: .heavy))
+                    .foregroundColor(.white.opacity(0.55))
+            }
+        }
+        .padding(.horizontal, 7)
+        .padding(.vertical, 3)
+        .background(Color.white.opacity(ability.hidden ? 0.06 : 0.13))
+        .cornerRadius(4)
+        .help(ability.description(lang))
+    }
+}
+
+private struct AbilityRow: View {
+    let abilities: [Ability]
+    @Environment(\.lang) private var lang
+
+    var body: some View {
+        ChipRow(label: L10n.text(.ability, lang),
+                labelColor: Color(red: 0.70, green: 0.72, blue: 0.95),
+                count: abilities.count) {
+            ForEach(Array(abilities.enumerated()), id: \.offset) { _, ability in
+                AbilityChip(ability: ability)
+            }
+        }
+    }
+}
+
 private struct MatchupSection: View {
     let types: [String]
+    @Environment(\.lang) private var lang
 
     var body: some View {
         let m = TypeChart.grouped(defending: types)
         VStack(alignment: .leading, spacing: 4) {
-            ChipRow(label: "WEAK",
+            ChipRow(label: L10n.text(.weak, lang),
                     labelColor: Color(red: 0.95, green: 0.42, blue: 0.42),
                     count: m.quadWeak.count + m.weak.count) {
                 ForEach(m.quadWeak, id: \.self) { TypeBadge(type: $0, text: "×4") }
                 ForEach(m.weak, id: \.self) { TypeBadge(type: $0, text: "×2") }
             }
-            ChipRow(label: "RESIST",
+            ChipRow(label: L10n.text(.resist, lang),
                     labelColor: Color(red: 0.45, green: 0.78, blue: 0.60),
                     count: m.resist.count + m.quadResist.count) {
                 ForEach(m.quadResist, id: \.self) { TypeBadge(type: $0, text: "×¼", dimmed: true) }
                 ForEach(m.resist, id: \.self) { TypeBadge(type: $0, text: "×½", dimmed: true) }
             }
-            ChipRow(label: "IMMUNE",
+            ChipRow(label: L10n.text(.immune, lang),
                     labelColor: Color(red: 0.62, green: 0.62, blue: 0.70),
                     count: m.immune.count) {
                 ForEach(m.immune, id: \.self) { TypeBadge(type: $0, text: "0", dimmed: true) }
@@ -106,17 +149,17 @@ private struct MatchupSection: View {
     }
 }
 
-/// What a species becomes if it Mega Evolves: new typing, stat changes, and -
-/// only when the typing actually changes - the weaknesses that come with it,
-/// since that is the part a player cannot infer from the base card.
+/// What a species becomes if it Mega Evolves: new typing, ability, stat
+/// changes, and - only when the typing actually changes - the weaknesses that
+/// come with it, since that is the part a player cannot infer from the base card.
 private struct MegaRow: View {
     let base: Species
     let mega: Species
+    @Environment(\.lang) private var lang
 
     /// All six stats in fixed columns, value above its change from the base,
     /// so columns line up and can be read straight down. Unchanged stats stay
-    /// in place (shown as a dash) rather than being dropped, which is what made
-    /// the old single-line version hard to scan.
+    /// in place (shown as a dash) rather than being dropped.
     private var columns: [(label: String, value: Int, delta: Int)] {
         zip(base.baseStats.ordered, mega.baseStats.ordered)
             .map { (label: $1.0, value: $1.1, delta: $1.1 - $0.1) }
@@ -127,23 +170,25 @@ private struct MegaRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
-                Text(mega.form.uppercased())
+                Text(mega.formLabel(lang))
                     .font(.system(size: 13, weight: .heavy))
                     .foregroundColor(Color(red: 0.98, green: 0.80, blue: 0.35))
                     .lineLimit(1)
                     .fixedSize()
                 ForEach(mega.types, id: \.self) { TypeNameBadge(type: $0) }
                 Spacer(minLength: 0)
-                Text("BST \(mega.bst)")
+                Text("\(L10n.text(.bst, lang)) \(mega.bst)")
                     .font(.system(size: 12, weight: .semibold, design: .monospaced))
                     .foregroundColor(.white.opacity(0.5))
             }
+
+            AbilityRow(abilities: mega.abilityList)
 
             Grid(horizontalSpacing: 4, verticalSpacing: 2) {
                 GridRow {
                     ForEach(columns, id: \.label) { col in
                         VStack(spacing: 1) {
-                            Text(col.label)
+                            Text(L10n.stat(col.label, lang))
                                 .font(.system(size: 11, weight: .medium, design: .monospaced))
                                 .foregroundColor(.white.opacity(0.5))
                             Text("\(col.value)")
@@ -172,7 +217,7 @@ private struct MegaRow: View {
 
             if typingChanged {
                 let m = TypeChart.grouped(defending: mega.types)
-                ChipRow(label: "→WEAK",
+                ChipRow(label: L10n.text(.megaWeak, lang),
                         labelColor: Color(red: 0.95, green: 0.42, blue: 0.42),
                         count: m.quadWeak.count + m.weak.count) {
                     ForEach(m.quadWeak, id: \.self) { TypeBadge(type: $0, text: "×4") }
@@ -186,6 +231,7 @@ private struct MegaRow: View {
 private struct StatRow: View {
     let label: String
     let value: Int
+    @Environment(\.lang) private var lang
 
     /// 255 is the highest base stat in the games, so bars stay comparable
     /// across cards rather than rescaling per Pokemon.
@@ -202,10 +248,10 @@ private struct StatRow: View {
 
     var body: some View {
         HStack(spacing: 7) {
-            Text(label)
+            Text(L10n.stat(label, lang))
                 .font(.system(size: 12, weight: .medium, design: .monospaced))
                 .foregroundColor(.white.opacity(0.55))
-                .frame(width: 30, alignment: .leading)
+                .frame(width: 32, alignment: .leading)
             Text("\(value)")
                 .font(.system(size: 13, weight: .semibold, design: .monospaced))
                 .foregroundColor(.white)
@@ -226,6 +272,7 @@ private struct StatRow: View {
 
 private struct PokemonCard: View {
     let occupant: SlotOccupant
+    @Environment(\.lang) private var lang
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -243,7 +290,7 @@ private struct PokemonCard: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(alignment: .firstTextBaseline, spacing: 5) {
-                        Text(occupant.species.name)
+                        Text(occupant.species.displayName(lang))
                             .font(.system(size: 17, weight: .bold))
                             .foregroundColor(.white)
                             .lineLimit(1)
@@ -264,6 +311,8 @@ private struct PokemonCard: View {
                     }
                 }
             }
+
+            AbilityRow(abilities: occupant.species.abilityList)
 
             VStack(spacing: 4) {
                 ForEach(occupant.species.baseStats.ordered, id: \.0) { stat in
@@ -293,8 +342,10 @@ private struct PokemonCard: View {
 }
 
 private struct EmptyCard: View {
+    @Environment(\.lang) private var lang
+
     var body: some View {
-        Text("Unidentified")
+        Text(L10n.text(.unidentified, lang))
             .font(.system(size: 12))
             .foregroundColor(.white.opacity(0.3))
             .frame(maxWidth: .infinity, minHeight: 70)
@@ -340,25 +391,37 @@ private struct SideColumn: View {
 
 struct StatsPanel: View {
     @ObservedObject var battle: BattleStateTracker
+    /// Remembered across launches.
+    @AppStorage("language") private var lang: Lang = .en
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(battle.format.label)
-                .font(.system(size: 12, weight: .bold))
-                .foregroundColor(.white.opacity(0.75))
+            HStack {
+                Text(L10n.format(battle.format, lang))
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.white.opacity(0.75))
+                Spacer()
+                Picker("", selection: $lang) {
+                    ForEach(Lang.allCases) { Text($0.pickerLabel).tag($0) }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                .fixedSize()
+            }
 
             HStack(alignment: .top, spacing: 14) {
-                SideColumn(title: "OPPONENT",
+                SideColumn(title: L10n.text(.opponent, lang),
                            accent: Color(red: 0.93, green: 0.31, blue: 0.45),
                            slots: [.opponent1, .opponent2],
                            occupants: battle.slots)
-                SideColumn(title: "YOUR SIDE",
+                SideColumn(title: L10n.text(.yourSide, lang),
                            accent: Color(red: 0.36, green: 0.71, blue: 0.95),
                            slots: [.player1, .player2],
                            occupants: battle.slots)
             }
             Spacer(minLength: 0)
         }
+        .environment(\.lang, lang)
         .padding(14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(red: 0.07, green: 0.07, blue: 0.09))

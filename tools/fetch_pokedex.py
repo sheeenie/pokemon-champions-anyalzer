@@ -2,7 +2,7 @@
 """Build-time generator for the Pokemon Champions reference data.
 
 Produces, into Resources/:
-  pokedex.json   species key -> English name, types, base stats
+  pokedex.json   species key -> English/Chinese names, types, base stats, abilities
   icons/*.png    Champions menu sprite per species/form
 
 The icons come from Bulbagarden's "Champions menu sprites" category, which is
@@ -180,11 +180,65 @@ def pokemon_stats(slug):
     stats = {s["stat"]["name"]: s["base_stat"] for s in data["stats"]}
     return {
         "types": [t["type"]["name"] for t in data["types"]],
+        "abilities": [{"name": a["ability"]["name"], "hidden": a["is_hidden"]}
+                      for a in sorted(data["abilities"], key=lambda a: a["slot"])],
         "baseStats": {
             "hp": stats["hp"], "atk": stats["attack"], "def": stats["defense"],
             "spa": stats["special-attack"], "spd": stats["special-defense"],
             "spe": stats["speed"],
         },
+    }
+
+
+# Traditional Chinese for form labels. PokeAPI's own localized form names are
+# unusable as a source: some are the full name ("超級噴火龍Ｘ"), some only the form
+# ("阿羅拉的樣子"), and Champions-exclusive forms such as Mega Z have none at all.
+# Whole phrases are tried first, then individual words; anything unlisted stays
+# in English rather than being guessed.
+FORM_ZH = {
+    "Mega": "超級", "Alola": "阿羅拉", "Galar": "伽勒爾", "Hisui": "洗翠",
+    "Paldea": "帕底亞", "Combat": "鬥戰種", "Blaze": "火熾種", "Aqua": "水瀾種",
+    "Therian": "靈獸形態", "Incarnate": "化身形態", "Origin": "起源形態",
+    "Female": "雌性", "Male": "雄性",
+    "Heat": "加熱", "Wash": "清洗", "Frost": "結冰", "Fan": "旋轉", "Mow": "切割",
+    "Sunny": "太陽的樣子", "Rainy": "雨水的樣子", "Snowy": "雪雲的樣子",
+    "Rapid Strike": "連擊流", "Single Strike": "一擊流",
+    "Family of Three": "三口之家", "Family of Four": "四口之家",
+    "Midday": "白晝的樣子", "Midnight": "黑夜的樣子", "Dusk": "黃昏的樣子",
+}
+
+
+def form_zh(form):
+    if form in FORM_ZH:
+        return FORM_ZH[form]
+    return " ".join(FORM_ZH.get(word, word) for word in form.split(" "))
+
+
+def ability_info(name):
+    """English and Traditional Chinese name and description for one ability.
+
+    A failed lookup degrades to the slug rather than raising, so a missing
+    description can never drop a species from the library.
+    """
+    try:
+        data = json.loads(get(f"{POKEAPI}/ability/{name}"))
+    except Exception:  # noqa: BLE001
+        return {"en": name.replace("-", " ").title(), "zh": "", "descEn": "", "descZh": ""}
+
+    names = {n["language"]["name"]: n["name"] for n in data["names"]}
+
+    def latest(lang):
+        texts = [e["flavor_text"] for e in data["flavor_text_entries"]
+                 if e["language"]["name"] == lang]
+        return texts[-1] if texts else ""
+
+    return {
+        "en": names.get("en", name),
+        "zh": names.get("zh-hant", ""),
+        "descEn": re.sub(r"\s+", " ", latest("en")).strip(),
+        # Chinese flavour text is hard-wrapped with spaces and newlines that
+        # are line breaks, not word separators.
+        "descZh": re.sub(r"\s+", "", latest("zh-hant")),
     }
 
 
@@ -252,7 +306,11 @@ def main():
                 "name": english + (f" ({form})" if form else ""),
                 "shiny": shiny,
                 "form": form,
+                "formZh": form_zh(form) if form else "",
                 "zhHant": zh,
+                "nameZh": (zh or english) + (f"（{form_zh(form)}）" if form else ""),
+                "abilities": [dict(ability_info(a["name"]), hidden=a["hidden"])
+                              for a in info["abilities"]],
                 "types": info["types"],
                 "baseStats": stats,
                 "bst": sum(stats.values()),

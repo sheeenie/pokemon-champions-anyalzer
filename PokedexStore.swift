@@ -15,6 +15,17 @@ struct BaseStats: Codable {
     }
 }
 
+struct Ability: Codable {
+    let en: String
+    let zh: String
+    let descEn: String
+    let descZh: String
+    let hidden: Bool
+
+    func name(_ lang: Lang) -> String { lang == .zh && !zh.isEmpty ? zh : en }
+    func description(_ lang: Lang) -> String { lang == .zh && !descZh.isEmpty ? descZh : descEn }
+}
+
 struct Species: Codable {
     /// Unique per sprite file, so distinct artwork never shares an entry.
     let key: String
@@ -34,6 +45,22 @@ struct Species: Codable {
     /// typing are identical. Optional so older generated data still decodes.
     private let shiny: Bool?
     var isShiny: Bool { shiny ?? false }
+
+    // Optional so data generated before these fields existed still decodes.
+    private let nameZh: String?
+    private let formZh: String?
+    let abilities: [Ability]?
+
+    var abilityList: [Ability] { abilities ?? [] }
+
+    func displayName(_ lang: Lang) -> String {
+        guard lang == .zh else { return name }
+        return nameZh ?? (zhHant.isEmpty ? name : zhHant)
+    }
+
+    func formLabel(_ lang: Lang) -> String {
+        lang == .zh ? (formZh ?? form) : form.uppercased()
+    }
 }
 
 /// Loads the generated reference data produced by tools/fetch_pokedex.py.
