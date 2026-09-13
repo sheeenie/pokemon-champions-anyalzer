@@ -106,6 +106,65 @@ private struct MatchupSection: View {
     }
 }
 
+/// What a species becomes if it Mega Evolves: new typing, stat changes, and -
+/// only when the typing actually changes - the weaknesses that come with it,
+/// since that is the part a player cannot infer from the base card.
+private struct MegaRow: View {
+    let base: Species
+    let mega: Species
+
+    private var deltas: [(String, Int)] {
+        zip(base.baseStats.ordered, mega.baseStats.ordered)
+            .map { ($0.0, $1.1 - $0.1) }
+            .filter { $0.1 != 0 }
+    }
+
+    private var typingChanged: Bool { mega.types != base.types }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(spacing: 5) {
+                Text(mega.form.uppercased())
+                    .font(.system(size: 9, weight: .heavy))
+                    .foregroundColor(Color(red: 0.98, green: 0.80, blue: 0.35))
+                    .lineLimit(1)
+                    .fixedSize()
+                ForEach(mega.types, id: \.self) { TypeBadge(type: $0, size: 11) }
+                Spacer(minLength: 0)
+                Text("\(mega.bst)")
+                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.4))
+            }
+
+            HStack(spacing: 7) {
+                ForEach(deltas, id: \.0) { stat in
+                    HStack(spacing: 2) {
+                        Text(stat.0)
+                            .font(.system(size: 9, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.45))
+                        Text(stat.1 > 0 ? "+\(stat.1)" : "\(stat.1)")
+                            .font(.system(size: 9, weight: .bold, design: .monospaced))
+                            .foregroundColor(stat.1 > 0
+                                             ? Color(red: 0.49, green: 0.83, blue: 0.55)
+                                             : Color(red: 0.90, green: 0.45, blue: 0.45))
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+
+            if typingChanged {
+                let m = TypeChart.grouped(defending: mega.types)
+                ChipRow(label: "→WEAK",
+                        labelColor: Color(red: 0.95, green: 0.42, blue: 0.42),
+                        count: m.quadWeak.count + m.weak.count) {
+                    ForEach(m.quadWeak, id: \.self) { TypeBadge(type: $0, text: "×4", size: 11) }
+                    ForEach(m.weak, id: \.self) { TypeBadge(type: $0, text: "×2", size: 11) }
+                }
+            }
+        }
+    }
+}
+
 private struct StatRow: View {
     let label: String
     let value: Int
@@ -158,6 +217,11 @@ private struct PokemonCard: View {
                     .foregroundColor(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
+                if occupant.species.isShiny {
+                    Text("✦")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(Color(red: 0.98, green: 0.83, blue: 0.35))
+                }
                 Spacer(minLength: 0)
                 Text("\(occupant.species.bst)")
                     .font(.system(size: 11, weight: .semibold, design: .monospaced))
@@ -178,6 +242,16 @@ private struct PokemonCard: View {
             Divider().overlay(Color.white.opacity(0.12))
 
             MatchupSection(types: occupant.species.types)
+
+            let megas = PokedexStore.shared.megaForms(for: occupant.species)
+            if !megas.isEmpty {
+                Divider().overlay(Color.white.opacity(0.12))
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(megas, id: \.key) { mega in
+                        MegaRow(base: occupant.species, mega: mega)
+                    }
+                }
+            }
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)

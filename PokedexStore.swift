@@ -28,6 +28,12 @@ struct Species: Codable {
     let types: [String]
     let baseStats: BaseStats
     let bst: Int
+
+    /// Shiny artwork is a separate reference icon for the same species, because
+    /// identification compares colour and a shiny is a recolour. Stats and
+    /// typing are identical. Optional so older generated data still decodes.
+    private let shiny: Bool?
+    var isShiny: Bool { shiny ?? false }
 }
 
 /// Loads the generated reference data produced by tools/fetch_pokedex.py.
@@ -36,6 +42,7 @@ final class PokedexStore {
 
     private(set) var species: [Species] = []
     private var byKey: [String: Species] = [:]
+    private var megasByDex: [Int: [Species]] = [:]
     private var iconCache: [String: CGImage] = [:]
     private let resourceRoot: URL?
 
@@ -69,6 +76,11 @@ final class PokedexStore {
             let data = try Data(contentsOf: root.appendingPathComponent("pokedex.json"))
             species = try JSONDecoder().decode([Species].self, from: data)
             byKey = Dictionary(uniqueKeysWithValues: species.map { ($0.key, $0) })
+            // Shiny Megas are excluded: they are the same form, and listing both
+            // would show every Mega twice.
+            megasByDex = Dictionary(
+                grouping: species.filter { $0.form.contains("Mega") && !$0.isShiny },
+                by: { $0.dex })
             print("[pokedex] loaded \(species.count) species")
         } catch {
             print("[pokedex] failed to load: \(error.localizedDescription)")
@@ -76,6 +88,15 @@ final class PokedexStore {
     }
 
     subscript(key: String) -> Species? { byKey[key] }
+
+    /// Mega forms this species could turn into; empty if it has none, or if it
+    /// is already a Mega. Champions adds its own beyond the mainline ones -
+    /// "Mega Z" variants, and X/Y pairs for species that never had them - so
+    /// this is read from the data rather than assumed.
+    func megaForms(for species: Species) -> [Species] {
+        guard !species.form.contains("Mega") else { return [] }
+        return (megasByDex[species.dex] ?? []).sorted { $0.form < $1.form }
+    }
 
     /// The Champions menu sprite for a species, decoded on first use.
     func icon(for key: String) -> CGImage? {

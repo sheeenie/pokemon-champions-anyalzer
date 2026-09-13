@@ -45,10 +45,11 @@ final class BattleStateTracker: ObservableObject {
     /// flicker between the cards and "Unidentified" all battle. A card stays up
     /// until a *different* Pokemon is confidently identified in that slot.
     func observe(_ slot: BattleSlot, _ result: MatchResult?) {
-        guard let result else {
-            pending[slot] = nil
-            return
-        }
+        // A no-op, not a reset. Clearing progress here meant a plate that
+        // flickers between visible and hidden (which is every plate, during
+        // every animation) alternated match/nil and never accumulated the
+        // agreements needed to commit at all.
+        guard let result else { return }
 
         let key = result.species.key
         if committed[slot] == key {

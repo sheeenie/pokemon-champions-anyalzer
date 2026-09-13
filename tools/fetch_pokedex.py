@@ -95,13 +95,13 @@ def get(url, binary=False, pause=0.25, attempts=4):
     return data if binary else data.decode("utf-8")
 
 
-def champions_files():
-    """Every Menu_CP_*.png in the Champions menu sprites category."""
+def champions_files(category):
+    """Every Menu_CP_*.png in one category."""
     names, cont = [], None
     while True:
         params = {
             "action": "query", "list": "categorymembers",
-            "cmtitle": "Category:Champions_menu_sprites",
+            "cmtitle": f"Category:{category}",
             "cmlimit": "500", "cmtype": "file", "format": "json",
         }
         if cont:
@@ -114,12 +114,24 @@ def champions_files():
 
 
 def parse_title(title):
-    """'File:Menu CP 0006-Mega X.png' -> (6, 'Mega X', 'Menu_CP_0006-Mega X.png')"""
+    """Split a sprite filename into dex number, form, file name and shininess.
+
+    'File:Menu CP 0006-Mega X.png'       -> (6, 'Mega X', ..., False)
+    'File:Menu CP 0006-Mega X shiny.png' -> (6, 'Mega X', ..., True)
+
+    Shinies are a separate reference icon for the same species: identification
+    is colour-based, and a shiny is a recolour, so it cannot match the normal
+    artwork. Stats are unaffected.
+    """
     stem = title[len("File:"):-len(".png")]
+    filename = stem.replace(" ", "_") + ".png"
+    shiny = stem.endswith(" shiny")
+    if shiny:
+        stem = stem[: -len(" shiny")]
     m = re.match(r"Menu CP (\d+)(?:-(.+))?$", stem)
     if not m:
         return None
-    return int(m.group(1)), (m.group(2) or ""), stem.replace(" ", "_") + ".png"
+    return int(m.group(1)), (m.group(2) or ""), filename, shiny
 
 
 def species_info(dex):
@@ -194,8 +206,9 @@ def fetch_type_icons():
 def main():
     os.makedirs(ICONS, exist_ok=True)
     fetch_type_icons()
-    titles = champions_files()
-    print(f"Champions menu sprites: {len(titles)}")
+    titles = (champions_files("Champions_menu_sprites")
+              + champions_files("Champions_Shiny_menu_sprites"))
+    print(f"Champions menu sprites (incl. shiny): {len(titles)}")
 
     entries, failures = [], []
     for i, title in enumerate(titles, 1):
@@ -203,7 +216,7 @@ def main():
         if not parsed:
             failures.append((title, "unparseable filename"))
             continue
-        dex, form, filename = parsed
+        dex, form, filename, shiny = parsed
 
         try:
             base_slug, varieties, species_slug, english, zh = species_info(dex)
@@ -225,6 +238,8 @@ def main():
             species_name = species_slug
             file_form = re.sub(r"[^a-z0-9]+", "-", form.lower()).strip("-")
             key = f"{species_name}-{file_form}" if file_form else species_name
+            if shiny:
+                key += "-shiny"
 
             icon = get(BULBA_FILE + urllib.parse.quote(filename), binary=True)
             with open(os.path.join(ICONS, key + ".png"), "wb") as f:
@@ -235,6 +250,7 @@ def main():
                 "key": key,
                 "dex": dex,
                 "name": english + (f" ({form})" if form else ""),
+                "shiny": shiny,
                 "form": form,
                 "zhHant": zh,
                 "types": info["types"],
