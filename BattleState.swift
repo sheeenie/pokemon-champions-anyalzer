@@ -48,6 +48,10 @@ final class BattleStateTracker: ObservableObject {
     private var committed: [BattleSlot: String] = [:]
     /// Mirror of `seen`'s keys on the analysis queue, so only additions publish.
     private var seenIDs: Set<String> = []
+    /// Set by a black loading screen. The next confirmed Pokemon then clears
+    /// the cards and speed list before showing itself, so the last battle stays
+    /// visible through the loading screen instead of the panel going blank.
+    private var resetArmed = false
 
     /// Feed one frame's answer for one slot.
     ///
@@ -63,12 +67,11 @@ final class BattleStateTracker: ObservableObject {
         guard let result else { return }
 
         let key = result.species.key
-        if committed[slot] == key {
+        // Skipped while a reset is armed: the new battle may open with the same
+        // Pokemon in the same slot, and it must still count as the detection
+        // that triggers the reset.
+        if !resetArmed, committed[slot] == key {
             pending[slot] = nil
-            // Recorded here too, not only on commit: after a reset the same
-            // Pokemon can return in the next battle to a slot already showing
-            // it, which never commits again and would stay off the list.
-            recordSeen(slot, result.species)
             return
         }
 
@@ -81,6 +84,7 @@ final class BattleStateTracker: ObservableObject {
         pending[slot] = (key, count)
         guard count >= BattleStateTracker.confirmations else { return }
 
+        if resetArmed { performReset() }
         pending[slot] = nil
         committed[slot] = key
         recordSeen(slot, result.species)
@@ -89,11 +93,26 @@ final class BattleStateTracker: ObservableObject {
                                    margin: result.margin))
     }
 
-    /// Clears the speed list, for a new battle. Cards are left alone: they
-    /// persist until a different Pokemon replaces them.
-    func resetSeen() {
+    /// Call on a black loading screen. Nothing clears yet; the next confirmed
+    /// Pokemon clears everything first. Partial agreement counts from before the
+    /// black screen are dropped so they cannot complete on the first new frame.
+    func armReset() {
+        resetArmed = true
+        pending.removeAll()
+    }
+
+    /// Clears cards, speed list and format. Runs on the analysis queue just
+    /// before the triggering Pokemon is committed; both publish to main in
+    /// order, so the new card lands on an empty panel.
+    private func performReset() {
+        resetArmed = false
+        committed.removeAll()
         seenIDs.removeAll()
-        DispatchQueue.main.async { self.seen.removeAll() }
+        DispatchQueue.main.async {
+            self.slots.removeAll()
+            self.seen.removeAll()
+            self.format = .idle
+        }
     }
 
     private func recordSeen(_ slot: BattleSlot, _ species: Species) {

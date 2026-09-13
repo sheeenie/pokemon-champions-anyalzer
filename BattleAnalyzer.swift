@@ -25,9 +25,10 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
     /// otherwise skipping unchanged frames starves it and it never commits.
     private var lastResult: [BattleSlot: MatchResult] = [:]
 
-    /// A sustained black screen marks the end of a battle and clears the
-    /// speed list. Two frames is about half a second at the analysis rate, so
-    /// a single dark frame mid-animation does not wipe it.
+    /// A sustained black screen is the loading screen between battles; it arms a
+    /// reset that the next detected Pokemon carries out. Two frames is about half
+    /// a second at the analysis rate, so a single dark frame mid-animation does
+    /// not arm it.
     private static let blackThreshold = 0.03
     private static let blackFramesToReset = 2
     private var blackFrames = 0
@@ -135,8 +136,8 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         if brightness < BattleAnalyzer.blackThreshold {
             blackFrames += 1
             if blackFrames == BattleAnalyzer.blackFramesToReset {
-                tracker.resetSeen()
-                log(String(format: "[analyzer] black screen (brightness %.3f): speed list reset",
+                tracker.armReset()
+                log(String(format: "[analyzer] black screen (brightness %.3f): reset armed",
                            brightness))
             }
             return
