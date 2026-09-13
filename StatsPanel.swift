@@ -4,7 +4,7 @@ import SwiftUI
 private struct TypeBadge: View {
     let type: String
     var text: String? = nil
-    var size: CGFloat = 13
+    var size: CGFloat = 16
     var dimmed: Bool = false
 
     var body: some View {
@@ -22,12 +22,12 @@ private struct TypeBadge: View {
             }
             if let text {
                 Text(text)
-                    .font(.system(size: size * 0.75, weight: .heavy))
+                    .font(.system(size: size * 0.85, weight: .heavy))
                     .foregroundColor(.white)
             }
         }
-        .padding(.horizontal, 5)
-        .padding(.vertical, 3)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 4)
         .background(TypePalette.color(type).opacity(dimmed ? 0.5 : 1))
         .cornerRadius(4)
     }
@@ -67,11 +67,11 @@ private struct ChipRow<Content: View>: View {
         if count > 0 {
             HStack(alignment: .center, spacing: 6) {
                 Text(label)
-                    .font(.system(size: 9, weight: .heavy))
+                    .font(.system(size: 11, weight: .heavy))
                     .foregroundColor(labelColor)
                     .lineLimit(1)
                     .fixedSize()
-                    .frame(width: 44, alignment: .leading)
+                    .frame(width: 56, alignment: .leading)
                 HStack(spacing: 3) { content() }
                 Spacer(minLength: 0)
             }
@@ -113,52 +113,70 @@ private struct MegaRow: View {
     let base: Species
     let mega: Species
 
-    private var deltas: [(String, Int)] {
+    /// All six stats in fixed columns, value above its change from the base,
+    /// so columns line up and can be read straight down. Unchanged stats stay
+    /// in place (shown as a dash) rather than being dropped, which is what made
+    /// the old single-line version hard to scan.
+    private var columns: [(label: String, value: Int, delta: Int)] {
         zip(base.baseStats.ordered, mega.baseStats.ordered)
-            .map { ($0.0, $1.1 - $0.1) }
-            .filter { $0.1 != 0 }
+            .map { (label: $1.0, value: $1.1, delta: $1.1 - $0.1) }
     }
 
     private var typingChanged: Bool { mega.types != base.types }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            HStack(spacing: 5) {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
                 Text(mega.form.uppercased())
-                    .font(.system(size: 9, weight: .heavy))
+                    .font(.system(size: 13, weight: .heavy))
                     .foregroundColor(Color(red: 0.98, green: 0.80, blue: 0.35))
                     .lineLimit(1)
                     .fixedSize()
-                ForEach(mega.types, id: \.self) { TypeBadge(type: $0, size: 11) }
+                ForEach(mega.types, id: \.self) { TypeNameBadge(type: $0) }
                 Spacer(minLength: 0)
-                Text("\(mega.bst)")
-                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                    .foregroundColor(.white.opacity(0.4))
+                Text("BST \(mega.bst)")
+                    .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.5))
             }
 
-            HStack(spacing: 7) {
-                ForEach(deltas, id: \.0) { stat in
-                    HStack(spacing: 2) {
-                        Text(stat.0)
-                            .font(.system(size: 9, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.45))
-                        Text(stat.1 > 0 ? "+\(stat.1)" : "\(stat.1)")
-                            .font(.system(size: 9, weight: .bold, design: .monospaced))
-                            .foregroundColor(stat.1 > 0
-                                             ? Color(red: 0.49, green: 0.83, blue: 0.55)
-                                             : Color(red: 0.90, green: 0.45, blue: 0.45))
+            Grid(horizontalSpacing: 4, verticalSpacing: 2) {
+                GridRow {
+                    ForEach(columns, id: \.label) { col in
+                        VStack(spacing: 1) {
+                            Text(col.label)
+                                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                .foregroundColor(.white.opacity(0.5))
+                            Text("\(col.value)")
+                                .font(.system(size: 15, weight: .bold, design: .monospaced))
+                                .foregroundColor(.white)
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                 }
-                Spacer(minLength: 0)
+                GridRow {
+                    ForEach(columns, id: \.label) { col in
+                        Text(col.delta == 0 ? "–" : (col.delta > 0 ? "+\(col.delta)" : "\(col.delta)"))
+                            .font(.system(size: 13, weight: .bold, design: .monospaced))
+                            .foregroundColor(col.delta == 0
+                                             ? .white.opacity(0.3)
+                                             : col.delta > 0
+                                                ? Color(red: 0.49, green: 0.83, blue: 0.55)
+                                                : Color(red: 0.90, green: 0.45, blue: 0.45))
+                            .frame(maxWidth: .infinity)
+                    }
+                }
             }
+            .padding(.vertical, 5)
+            .background(Color.white.opacity(0.04))
+            .cornerRadius(6)
 
             if typingChanged {
                 let m = TypeChart.grouped(defending: mega.types)
                 ChipRow(label: "→WEAK",
                         labelColor: Color(red: 0.95, green: 0.42, blue: 0.42),
                         count: m.quadWeak.count + m.weak.count) {
-                    ForEach(m.quadWeak, id: \.self) { TypeBadge(type: $0, text: "×4", size: 11) }
-                    ForEach(m.weak, id: \.self) { TypeBadge(type: $0, text: "×2", size: 11) }
+                    ForEach(m.quadWeak, id: \.self) { TypeBadge(type: $0, text: "×4") }
+                    ForEach(m.weak, id: \.self) { TypeBadge(type: $0, text: "×2") }
                 }
             }
         }
