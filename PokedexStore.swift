@@ -44,6 +44,7 @@ final class PokedexStore {
     private var byKey: [String: Species] = [:]
     private var megasByDex: [Int: [Species]] = [:]
     private var iconCache: [String: CGImage] = [:]
+    private let iconLock = NSLock()
     private let resourceRoot: URL?
 
     init() {
@@ -99,7 +100,12 @@ final class PokedexStore {
     }
 
     /// The Champions menu sprite for a species, decoded on first use.
+    ///
+    /// Locked because the cards read this on the main thread while the matcher
+    /// may still be loading references on the analysis queue.
     func icon(for key: String) -> CGImage? {
+        iconLock.lock()
+        defer { iconLock.unlock() }
         if let cached = iconCache[key] { return cached }
         guard let root = resourceRoot else { return nil }
         let url = root.appendingPathComponent("icons/\(key).png")

@@ -211,26 +211,40 @@ private struct PokemonCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(occupant.species.name)
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundColor(.white)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                if occupant.species.isShiny {
-                    Text("✦")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(Color(red: 0.98, green: 0.83, blue: 0.35))
+            HStack(alignment: .center, spacing: 8) {
+                // The reference sprite that actually won the match, so a wrong
+                // identification is obvious at a glance against the mirror.
+                if let sprite = PokedexStore.shared.icon(for: occupant.species.key) {
+                    Image(nsImage: NSImage(cgImage: sprite,
+                                           size: NSSize(width: sprite.width, height: sprite.height)))
+                        .resizable()
+                        .interpolation(.high)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 40, height: 40)
                 }
-                Spacer(minLength: 0)
-                Text("\(occupant.species.bst)")
-                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
-                    .foregroundColor(.white.opacity(0.4))
-            }
 
-            HStack(spacing: 5) {
-                ForEach(occupant.species.types, id: \.self) { TypeNameBadge(type: $0) }
-                Spacer(minLength: 0)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack(alignment: .firstTextBaseline, spacing: 5) {
+                        Text(occupant.species.name)
+                            .font(.system(size: 17, weight: .bold))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                        if occupant.species.isShiny {
+                            Text("✦")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(Color(red: 0.98, green: 0.83, blue: 0.35))
+                        }
+                        Spacer(minLength: 0)
+                        Text("\(occupant.species.bst)")
+                            .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.4))
+                    }
+                    HStack(spacing: 5) {
+                        ForEach(occupant.species.types, id: \.self) { TypeNameBadge(type: $0) }
+                        Spacer(minLength: 0)
+                    }
+                }
             }
 
             VStack(spacing: 4) {
