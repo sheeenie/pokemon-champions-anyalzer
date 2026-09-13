@@ -43,7 +43,10 @@ else
     echo "WARNING: no Resources/ - run: python3 tools/fetch_pokedex.py"
 fi
 
-swiftc -parse-as-library \
+# -O matters here: the icon matcher is a tight per-pixel loop, and unoptimized
+# it took ~2.7s per frame (all four slots) against ~50ms optimized, which showed
+# up as a multi-second delay before a Pokemon was identified.
+swiftc -O -parse-as-library \
     main.swift \
     CaptureManager.swift \
     CameraPreview.swift \
