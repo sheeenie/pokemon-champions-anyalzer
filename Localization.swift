@@ -24,6 +24,7 @@ enum L10n {
     enum Key {
         case opponent, yourSide, weak, resist, immune, megaWeak
         case unidentified, ability, hidden, bst, speed
+        case hideMirror, showMirror
     }
 
     private static let strings: [Key: (en: String, zh: String)] = [
@@ -38,6 +39,8 @@ enum L10n {
         .hidden: ("HIDDEN", "隱藏"),
         .bst: ("BST", "總和"),
         .speed: ("SPEED", "速度"),
+        .hideMirror: ("Hide screen", "隱藏畫面"),
+        .showMirror: ("Show screen", "顯示畫面"),
     ]
 
     static func text(_ key: Key, _ lang: Lang) -> String {

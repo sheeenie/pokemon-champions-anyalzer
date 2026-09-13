@@ -23,31 +23,55 @@ struct iPhoneMirrorApp: App {
 
 struct ContentView: View {
     @StateObject private var captureManager = CaptureManager()
-    
+    @AppStorage("language") private var lang: Lang = .en
+    /// Shown on every launch; hiding it is for the current session only.
+    @State private var showMirror = true
+
     /// The mirror is a reference, not the point of the app - the stats are.
     /// It floats small in the corner so the panel gets the whole window.
-    private static let mirrorWidth: CGFloat = 300
+    private static let mirrorWidth: CGFloat = 200
     private static let mirrorAspect: CGFloat = 2622.0 / 1206.0
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             StatsPanel(battle: captureManager.battle)
 
-            VStack(alignment: .trailing, spacing: 3) {
-                Text(captureManager.deviceName)
-                    .font(.system(size: 9))
-                    .foregroundColor(.white.opacity(0.45))
+            VStack(alignment: .trailing, spacing: 6) {
+                // Hiding removes only the preview. Identification reads frames
+                // from its own output on the capture session, so it keeps
+                // running while the mirror is hidden.
+                if showMirror {
+                    VStack(alignment: .trailing, spacing: 3) {
+                        Text(captureManager.deviceName)
+                            .font(.system(size: 9))
+                            .foregroundColor(.white.opacity(0.45))
 
-                CameraPreview(session: captureManager.session)
-                    .frame(width: ContentView.mirrorWidth,
-                           height: ContentView.mirrorWidth / ContentView.mirrorAspect)
-                    .background(Color.black)
-                    .cornerRadius(7)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 7)
-                            .stroke(Color.white.opacity(0.15), lineWidth: 1)
-                    )
-                    .shadow(color: .black.opacity(0.5), radius: 8, y: 3)
+                        CameraPreview(session: captureManager.session)
+                            .frame(width: ContentView.mirrorWidth,
+                                   height: ContentView.mirrorWidth / ContentView.mirrorAspect)
+                            .background(Color.black)
+                            .cornerRadius(7)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 7)
+                                    .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                            )
+                            .shadow(color: .black.opacity(0.5), radius: 8, y: 3)
+                    }
+                }
+
+                Button {
+                    showMirror.toggle()
+                } label: {
+                    Label(L10n.text(showMirror ? .hideMirror : .showMirror, lang),
+                          systemImage: showMirror ? "eye.slash" : "eye")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 5)
+                        .background(Color.white.opacity(0.12))
+                        .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
             }
             .padding(14)
         }
