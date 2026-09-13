@@ -5,7 +5,6 @@ private struct TypeBadge: View {
     let type: String
     var text: String? = nil
     var size: CGFloat = 16
-    var dimmed: Bool = false
 
     var body: some View {
         HStack(spacing: 3) {
@@ -28,7 +27,7 @@ private struct TypeBadge: View {
         }
         .padding(.horizontal, 6)
         .padding(.vertical, 4)
-        .background(TypePalette.color(type).opacity(dimmed ? 0.5 : 1))
+        .background(TypePalette.color(type))
         .cornerRadius(4)
     }
 }
@@ -177,13 +176,13 @@ private struct MatchupSection: View {
             ChipRow(label: L10n.text(.resist, lang),
                     labelColor: Color(red: 0.45, green: 0.78, blue: 0.60),
                     count: m.resist.count + m.quadResist.count) {
-                ForEach(m.quadResist, id: \.self) { TypeBadge(type: $0, text: "×¼", dimmed: true) }
-                ForEach(m.resist, id: \.self) { TypeBadge(type: $0, text: "×½", dimmed: true) }
+                ForEach(m.quadResist, id: \.self) { TypeBadge(type: $0, text: "×¼") }
+                ForEach(m.resist, id: \.self) { TypeBadge(type: $0, text: "×½") }
             }
             ChipRow(label: L10n.text(.immune, lang),
                     labelColor: Color(red: 0.62, green: 0.62, blue: 0.70),
                     count: m.immune.count) {
-                ForEach(m.immune, id: \.self) { TypeBadge(type: $0, text: "0", dimmed: true) }
+                ForEach(m.immune, id: \.self) { TypeBadge(type: $0, text: "0") }
             }
         }
     }
