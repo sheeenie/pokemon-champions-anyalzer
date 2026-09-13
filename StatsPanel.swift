@@ -80,12 +80,18 @@ private struct ChipRow<Content: View>: View {
     }
 }
 
-/// One ability. Hovering shows what it does.
+/// One ability. Hovering opens a popover describing what it does.
+///
+/// A popover rather than `.help`: the system tooltip waits about a second,
+/// only appears while this app is frontmost - and during play the game has
+/// focus - and renders in small system text.
 private struct AbilityChip: View {
     let ability: Ability
     @Environment(\.lang) private var lang
+    @State private var hovering = false
 
     var body: some View {
+        let description = ability.description(lang)
         HStack(spacing: 4) {
             Text(ability.name(lang))
                 .font(.system(size: 13, weight: .semibold))
@@ -100,9 +106,43 @@ private struct AbilityChip: View {
         }
         .padding(.horizontal, 7)
         .padding(.vertical, 3)
-        .background(Color.white.opacity(ability.hidden ? 0.06 : 0.13))
+        .background(Color.white.opacity(hovering ? 0.24 : (ability.hidden ? 0.06 : 0.13)))
         .cornerRadius(4)
-        .help(ability.description(lang))
+        .onHover { hovering = $0 && !description.isEmpty }
+        // Anchored below the chip so the popover never sits under the cursor;
+        // if it did, it would end the hover that opened it and flicker.
+        .popover(isPresented: $hovering, arrowEdge: .bottom) {
+            // Values passed explicitly: popover content is presented in its
+            // own window and should not rely on inheriting the environment.
+            AbilityDescription(name: ability.name(lang),
+                               hiddenLabel: ability.hidden ? L10n.text(.hidden, lang) : nil,
+                               description: description)
+        }
+    }
+}
+
+private struct AbilityDescription: View {
+    let name: String
+    let hiddenLabel: String?
+    let description: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(name)
+                    .font(.system(size: 15, weight: .bold))
+                if let hiddenLabel {
+                    Text(hiddenLabel)
+                        .font(.system(size: 10, weight: .heavy))
+                        .foregroundColor(.secondary)
+                }
+            }
+            Text(description)
+                .font(.system(size: 14))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(12)
+        .frame(width: 280, alignment: .leading)
     }
 }
 
