@@ -28,46 +28,53 @@ struct SlotOccupant {
 /// while still following real switches promptly.
 final class BattleStateTracker: ObservableObject {
 
-    /// Consecutive agreeing observations required before a slot changes.
+    /// Consecutive agreeing observations before a slot shows a new Pokemon.
     private static let confirmations = 3
 
     @Published private(set) var format: BattleFormat = .idle
     @Published private(set) var slots: [BattleSlot: SlotOccupant] = [:]
 
-    /// Species key (nil = empty) currently proposed for each slot, with a count.
-    private var pending: [BattleSlot: (key: String?, count: Int)] = [:]
-    private var committed: [BattleSlot: String?] = [:]
+    /// Species key currently proposed for each slot, with an agreement count.
+    private var pending: [BattleSlot: (key: String, count: Int)] = [:]
+    private var committed: [BattleSlot: String] = [:]
 
-    /// Feed one frame's answer for one slot. `nil` means the slot looks empty.
+    /// Feed one frame's answer for one slot.
+    ///
+    /// A nil result is ignored rather than blanking the slot. The name plates
+    /// vanish during every move animation, so clearing on nil made the panel
+    /// flicker between the cards and "Unidentified" all battle. A card stays up
+    /// until a *different* Pokemon is confidently identified in that slot.
     func observe(_ slot: BattleSlot, _ result: MatchResult?) {
-        let key = result?.species.key
-        let current = committed[slot] ?? nil
-
-        if key == current {
+        guard let result else {
             pending[slot] = nil
             return
         }
 
-        let seen = pending[slot]
-        let count = (seen?.key == key ? seen!.count : 0) + 1
+        let key = result.species.key
+        if committed[slot] == key {
+            pending[slot] = nil
+            return
+        }
+
+        let count: Int
+        if let seen = pending[slot], seen.key == key {
+            count = seen.count + 1
+        } else {
+            count = 1
+        }
         pending[slot] = (key, count)
         guard count >= BattleStateTracker.confirmations else { return }
 
         pending[slot] = nil
         committed[slot] = key
-        let occupant = result.map {
-            SlotOccupant(species: $0.species, distance: $0.distance, margin: $0.margin)
-        }
-        publish(slot, occupant)
+        publish(slot, SlotOccupant(species: result.species,
+                                   distance: result.distance,
+                                   margin: result.margin))
     }
 
-    private func publish(_ slot: BattleSlot, _ occupant: SlotOccupant?) {
+    private func publish(_ slot: BattleSlot, _ occupant: SlotOccupant) {
         DispatchQueue.main.async {
-            if let occupant {
-                self.slots[slot] = occupant
-            } else {
-                self.slots.removeValue(forKey: slot)
-            }
+            self.slots[slot] = occupant
             self.format = BattleStateTracker.inferFormat(from: self.slots)
         }
     }

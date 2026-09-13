@@ -26,7 +26,12 @@ import urllib.request
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESOURCES = os.path.join(ROOT, "Resources")
 ICONS = os.path.join(RESOURCES, "icons")
+TYPE_ICONS = os.path.join(RESOURCES, "types")
 CACHE = os.path.join(ROOT, "tools", ".cache")
+
+TYPES = ["Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting",
+         "Poison", "Ground", "Flying", "Psychic", "Bug", "Rock", "Ghost",
+         "Dragon", "Dark", "Steel", "Fairy"]
 
 BULBA_API = "https://archives.bulbagarden.net/w/api.php"
 BULBA_FILE = "https://archives.bulbagarden.net/wiki/Special:FilePath/"
@@ -171,8 +176,24 @@ def pokemon_stats(slug):
     }
 
 
+def fetch_type_icons():
+    """Scarlet/Violet type glyphs.
+
+    These ship as a white symbol on the type's own coloured background. The app
+    keys the background out at load and redraws the glyph over the palette in
+    TypeChart, so one colour scheme governs the whole panel.
+    """
+    os.makedirs(TYPE_ICONS, exist_ok=True)
+    for name in TYPES:
+        data = get(BULBA_FILE + f"{name}_icon_SV.png", binary=True)
+        with open(os.path.join(TYPE_ICONS, name.lower() + ".png"), "wb") as f:
+            f.write(data)
+    print(f"wrote {len(TYPES)} type icons")
+
+
 def main():
     os.makedirs(ICONS, exist_ok=True)
+    fetch_type_icons()
     titles = champions_files()
     print(f"Champions menu sprites: {len(titles)}")
 

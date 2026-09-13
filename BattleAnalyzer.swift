@@ -111,20 +111,22 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         // home screen, or a rotation - not a battle - and every calibrated box
         // would be pointing at unrelated pixels, which can produce confident
         // nonsense. Report the field as empty instead.
+        // Cards deliberately persist, so leaving the game does not wipe the
+        // panel; only a new identification replaces one.
         guard size.width > size.height else {
             if !lastSignature.isEmpty {
                 lastSignature.removeAll()
                 lastResult.removeAll()
                 log("[analyzer] portrait frame (\(Int(size.width))x\(Int(size.height))): not a battle")
             }
-            for slot in BattleSlot.allCases { tracker.observe(slot, nil) }
             return
         }
 
         guard let frame = makeCGImage(from: pixelBuffer) else { return }
 
         for slot in BattleSlot.allCases {
-            guard let crop = frame.cropping(to: slot.spriteRect(in: size)),
+            let rect = slot.spriteRect(in: size)
+            guard let crop = frame.cropping(to: rect),
                   let signature = IconMatcher.signature(crop)
             else { continue }
 
@@ -137,7 +139,7 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
             lastSignature[slot] = signature
 
             let previousKey = lastResult[slot]?.species.key
-            let result = matcher.match(crop)
+            let result = matcher.match(in: frame, near: rect)
             if let result {
                 lastResult[slot] = result
             } else {

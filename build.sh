@@ -54,6 +54,7 @@ swiftc -parse-as-library \
     PokedexStore.swift \
     StatsPanel.swift \
     TypeChart.swift \
+    TypeIcons.swift \
     -o "$MACOS_DIR/$APP_NAME"
 
 echo "Build complete! App bundle created at: $APP_DIR"

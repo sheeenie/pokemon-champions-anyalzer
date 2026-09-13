@@ -55,10 +55,39 @@ final class IconMatcher {
         print("[matcher] prepared \(built.count) references")
     }
 
-    /// Best species for a plate's sprite crop, or nil when nothing matches
-    /// confidently - an empty slot, or artwork not in the library.
-    func match(_ crop: CGImage) -> MatchResult? {
-        guard isReady, let cap = IconMatcher.rasterize(crop, IconMatcher.grid) else { return nil }
+    /// How far around the nominal box to look, as a fraction of its size.
+    /// Calibration is measured rather than guessed, but a slot that drifts even
+    /// slightly crops half the artwork and then matches nothing at all - a
+    /// silent failure. Searching a small window makes that impossible, and
+    /// costs little because matching only runs when a slot changes.
+    private static let searchOffsets: [CGFloat] = [-0.12, 0, 0.12]
+
+    /// Best species for the sprite box at `rect`, searching nearby placements.
+    /// Returns nil when nothing matches confidently - an empty slot, or
+    /// artwork not in the library.
+    func match(in frame: CGImage, near rect: CGRect) -> MatchResult? {
+        guard isReady else { return nil }
+
+        var best: (species: Species, d: Double, rival: Double)?
+        for fx in IconMatcher.searchOffsets {
+            for fy in IconMatcher.searchOffsets {
+                let probe = rect.offsetBy(dx: fx * rect.width, dy: fy * rect.height)
+                guard let crop = frame.cropping(to: probe),
+                      let scored = rank(crop) else { continue }
+                if best == nil || scored.d < best!.d { best = scored }
+            }
+        }
+
+        guard let winner = best, winner.d <= IconMatcher.maxDistance else { return nil }
+        let margin = winner.d > 0 ? winner.rival / winner.d : .infinity
+        guard margin >= IconMatcher.minMargin else { return nil }
+        return MatchResult(species: winner.species, distance: winner.d, margin: margin)
+    }
+
+    /// Closest reference for one crop, plus the closest of a *different*
+    /// species, with no thresholds applied.
+    private func rank(_ crop: CGImage) -> (species: Species, d: Double, rival: Double)? {
+        guard let cap = IconMatcher.rasterize(crop, IconMatcher.grid) else { return nil }
 
         var best: (ref: Reference, d: Double)?
         var bestOther: (dex: Int, d: Double)?
@@ -78,12 +107,8 @@ final class IconMatcher {
             }
         }
 
-        guard let winner = best, winner.d <= IconMatcher.maxDistance else { return nil }
-        let rivalDistance = bestOther?.d ?? 1.0
-        let margin = winner.d > 0 ? rivalDistance / winner.d : .infinity
-        guard margin >= IconMatcher.minMargin else { return nil }
-
-        return MatchResult(species: winner.ref.species, distance: winner.d, margin: margin)
+        guard let winner = best else { return nil }
+        return (winner.ref.species, winner.d, bestOther?.d ?? 1.0)
     }
 
     // MARK: Change detection

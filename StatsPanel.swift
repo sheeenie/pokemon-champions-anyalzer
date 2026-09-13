@@ -1,76 +1,62 @@
 import SwiftUI
 
-/// Colours matching the standard Pokemon type palette.
-private let typeColors: [String: Color] = [
-    "normal": Color(red: 0.66, green: 0.65, blue: 0.48),
-    "fire": Color(red: 0.94, green: 0.50, blue: 0.19),
-    "water": Color(red: 0.39, green: 0.56, blue: 0.94),
-    "electric": Color(red: 0.97, green: 0.82, blue: 0.17),
-    "grass": Color(red: 0.48, green: 0.78, blue: 0.30),
-    "ice": Color(red: 0.59, green: 0.85, blue: 0.84),
-    "fighting": Color(red: 0.76, green: 0.18, blue: 0.16),
-    "poison": Color(red: 0.64, green: 0.24, blue: 0.63),
-    "ground": Color(red: 0.88, green: 0.75, blue: 0.41),
-    "flying": Color(red: 0.66, green: 0.56, blue: 0.95),
-    "psychic": Color(red: 0.98, green: 0.34, blue: 0.53),
-    "bug": Color(red: 0.65, green: 0.73, blue: 0.10),
-    "rock": Color(red: 0.71, green: 0.63, blue: 0.21),
-    "ghost": Color(red: 0.45, green: 0.34, blue: 0.59),
-    "dragon": Color(red: 0.44, green: 0.21, blue: 0.99),
-    "dark": Color(red: 0.44, green: 0.34, blue: 0.27),
-    "steel": Color(red: 0.72, green: 0.72, blue: 0.81),
-    "fairy": Color(red: 0.93, green: 0.60, blue: 0.67),
-]
-
-private func typeColor(_ type: String) -> Color { typeColors[type] ?? .gray }
-
-/// Three-letter abbreviations keep matchup chips scannable at a glance.
-private let typeAbbrev: [String: String] = [
-    "normal": "NRM", "fire": "FIR", "water": "WAT", "electric": "ELE",
-    "grass": "GRS", "ice": "ICE", "fighting": "FGT", "poison": "PSN",
-    "ground": "GRD", "flying": "FLY", "psychic": "PSY", "bug": "BUG",
-    "rock": "RCK", "ghost": "GHO", "dragon": "DRA", "dark": "DRK",
-    "steel": "STL", "fairy": "FAI",
-]
-
-private struct TypeChip: View {
+/// A type's glyph on its palette colour, optionally labelled.
+private struct TypeBadge: View {
     let type: String
-
-    var body: some View {
-        Text(type.uppercased())
-            .font(.system(size: 11, weight: .bold))
-            .foregroundColor(.white)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 3)
-            .background(typeColor(type))
-            .cornerRadius(4)
-    }
-}
-
-/// Compact chip used in the matchup rows, optionally badged with a multiplier.
-private struct MatchupChip: View {
-    let type: String
-    var badge: String? = nil
+    var text: String? = nil
+    var size: CGFloat = 13
     var dimmed: Bool = false
 
     var body: some View {
         HStack(spacing: 3) {
-            Text(typeAbbrev[type] ?? type.prefix(3).uppercased())
-                .font(.system(size: 10, weight: .bold))
-            if let badge {
-                Text(badge).font(.system(size: 9, weight: .heavy))
+            if let glyph = TypeIcons.glyph(type) {
+                Image(nsImage: glyph)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.white)
+                    .frame(width: size, height: size)
+            } else {
+                Text(type.prefix(1).uppercased())
+                    .font(.system(size: size * 0.8, weight: .heavy))
+                    .foregroundColor(.white)
+            }
+            if let text {
+                Text(text)
+                    .font(.system(size: size * 0.75, weight: .heavy))
+                    .foregroundColor(.white)
             }
         }
-        .foregroundColor(.white)
-        .padding(.horizontal, 6)
-        .padding(.vertical, 2)
-        .background(typeColor(type).opacity(dimmed ? 0.45 : 1.0))
-        .cornerRadius(3)
+        .padding(.horizontal, 5)
+        .padding(.vertical, 3)
+        .background(TypePalette.color(type).opacity(dimmed ? 0.5 : 1))
+        .cornerRadius(4)
     }
 }
 
-/// Wraps chips onto fixed-width rows. There are at most a handful per band,
-/// so simple chunking beats a full flow layout here.
+/// Full type badge with the name spelled out, for the Pokemon's own typing.
+private struct TypeNameBadge: View {
+    let type: String
+
+    var body: some View {
+        HStack(spacing: 4) {
+            if let glyph = TypeIcons.glyph(type) {
+                Image(nsImage: glyph)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.white)
+                    .frame(width: 13, height: 13)
+            }
+            Text(type.uppercased())
+                .font(.system(size: 11, weight: .bold))
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 7)
+        .padding(.vertical, 3)
+        .background(TypePalette.color(type))
+        .cornerRadius(4)
+    }
+}
+
 private struct ChipRow<Content: View>: View {
     let label: String
     let labelColor: Color
@@ -79,14 +65,13 @@ private struct ChipRow<Content: View>: View {
 
     var body: some View {
         if count > 0 {
-            HStack(alignment: .top, spacing: 6) {
+            HStack(alignment: .center, spacing: 6) {
                 Text(label)
                     .font(.system(size: 9, weight: .heavy))
                     .foregroundColor(labelColor)
                     .lineLimit(1)
                     .fixedSize()
-                    .frame(width: 46, alignment: .leading)
-                    .padding(.top, 2)
+                    .frame(width: 44, alignment: .leading)
                 HStack(spacing: 3) { content() }
                 Spacer(minLength: 0)
             }
@@ -99,23 +84,23 @@ private struct MatchupSection: View {
 
     var body: some View {
         let m = TypeChart.grouped(defending: types)
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 4) {
             ChipRow(label: "WEAK",
                     labelColor: Color(red: 0.95, green: 0.42, blue: 0.42),
                     count: m.quadWeak.count + m.weak.count) {
-                ForEach(m.quadWeak, id: \.self) { MatchupChip(type: $0, badge: "4") }
-                ForEach(m.weak, id: \.self) { MatchupChip(type: $0) }
+                ForEach(m.quadWeak, id: \.self) { TypeBadge(type: $0, text: "×4") }
+                ForEach(m.weak, id: \.self) { TypeBadge(type: $0, text: "×2") }
             }
             ChipRow(label: "RESIST",
                     labelColor: Color(red: 0.45, green: 0.78, blue: 0.60),
                     count: m.resist.count + m.quadResist.count) {
-                ForEach(m.quadResist, id: \.self) { MatchupChip(type: $0, badge: "¼", dimmed: true) }
-                ForEach(m.resist, id: \.self) { MatchupChip(type: $0, dimmed: true) }
+                ForEach(m.quadResist, id: \.self) { TypeBadge(type: $0, text: "×¼", dimmed: true) }
+                ForEach(m.resist, id: \.self) { TypeBadge(type: $0, text: "×½", dimmed: true) }
             }
             ChipRow(label: "IMMUNE",
                     labelColor: Color(red: 0.62, green: 0.62, blue: 0.70),
                     count: m.immune.count) {
-                ForEach(m.immune, id: \.self) { MatchupChip(type: $0, badge: "0", dimmed: true) }
+                ForEach(m.immune, id: \.self) { TypeBadge(type: $0, text: "0", dimmed: true) }
             }
         }
     }
@@ -166,10 +151,10 @@ private struct PokemonCard: View {
     let occupant: SlotOccupant
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text(occupant.species.name)
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 17, weight: .bold))
                     .foregroundColor(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
@@ -180,7 +165,7 @@ private struct PokemonCard: View {
             }
 
             HStack(spacing: 5) {
-                ForEach(occupant.species.types, id: \.self) { TypeChip(type: $0) }
+                ForEach(occupant.species.types, id: \.self) { TypeNameBadge(type: $0) }
                 Spacer(minLength: 0)
             }
 
@@ -194,10 +179,10 @@ private struct PokemonCard: View {
 
             MatchupSection(types: occupant.species.types)
         }
-        .padding(11)
+        .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.white.opacity(0.06))
-        .cornerRadius(8)
+        .cornerRadius(9)
     }
 }
 
@@ -208,7 +193,7 @@ private struct EmptyCard: View {
             .foregroundColor(.white.opacity(0.3))
             .frame(maxWidth: .infinity, minHeight: 70)
             .background(Color.white.opacity(0.03))
-            .cornerRadius(8)
+            .cornerRadius(9)
     }
 }
 
@@ -226,7 +211,7 @@ private struct SideColumn: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 5) {
                 Circle().fill(accent).frame(width: 7, height: 7)
                 Text(title)
@@ -256,21 +241,20 @@ struct StatsPanel: View {
                 .font(.system(size: 12, weight: .bold))
                 .foregroundColor(.white.opacity(0.75))
 
-            ScrollView(.vertical, showsIndicators: false) {
-                HStack(alignment: .top, spacing: 12) {
-                    SideColumn(title: "OPPONENT",
-                               accent: Color(red: 0.93, green: 0.31, blue: 0.45),
-                               slots: [.opponent1, .opponent2],
-                               occupants: battle.slots)
-                    SideColumn(title: "YOUR SIDE",
-                               accent: Color(red: 0.36, green: 0.71, blue: 0.95),
-                               slots: [.player1, .player2],
-                               occupants: battle.slots)
-                }
+            HStack(alignment: .top, spacing: 14) {
+                SideColumn(title: "OPPONENT",
+                           accent: Color(red: 0.93, green: 0.31, blue: 0.45),
+                           slots: [.opponent1, .opponent2],
+                           occupants: battle.slots)
+                SideColumn(title: "YOUR SIDE",
+                           accent: Color(red: 0.36, green: 0.71, blue: 0.95),
+                           slots: [.player1, .player2],
+                           occupants: battle.slots)
             }
+            Spacer(minLength: 0)
         }
-        .padding(12)
-        .frame(width: 500)
+        .padding(14)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(red: 0.07, green: 0.07, blue: 0.09))
     }
 }

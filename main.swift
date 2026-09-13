@@ -14,7 +14,7 @@ struct iPhoneMirrorApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 900, minHeight: 620)
+                .frame(minWidth: 720, minHeight: 640)
                 .background(Color.black)
         }
         .windowStyle(.hiddenTitleBar)
@@ -24,24 +24,32 @@ struct iPhoneMirrorApp: App {
 struct ContentView: View {
     @StateObject private var captureManager = CaptureManager()
     
+    /// The mirror is a reference, not the point of the app - the stats are.
+    /// It floats small in the corner so the panel gets the whole window.
+    private static let mirrorWidth: CGFloat = 300
+    private static let mirrorAspect: CGFloat = 2622.0 / 1206.0
+
     var body: some View {
-        HStack(spacing: 0) {
-            ZStack(alignment: .top) {
-                CameraPreview(session: captureManager.session)
-                    .edgesIgnoringSafeArea(.all)
-
-                Text(captureManager.deviceName)
-                    .font(.system(size: 11))
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.black.opacity(0.6))
-                    .cornerRadius(6)
-                    .padding(8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+        ZStack(alignment: .bottomTrailing) {
             StatsPanel(battle: captureManager.battle)
+
+            VStack(alignment: .trailing, spacing: 3) {
+                Text(captureManager.deviceName)
+                    .font(.system(size: 9))
+                    .foregroundColor(.white.opacity(0.45))
+
+                CameraPreview(session: captureManager.session)
+                    .frame(width: ContentView.mirrorWidth,
+                           height: ContentView.mirrorWidth / ContentView.mirrorAspect)
+                    .background(Color.black)
+                    .cornerRadius(7)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 7)
+                            .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                    )
+                    .shadow(color: .black.opacity(0.5), radius: 8, y: 3)
+            }
+            .padding(14)
         }
     }
 }

@@ -58,13 +58,22 @@ enum BattleSlot: Int, CaseIterable {
     ///
     /// Independently fitted on two species (Garchomp on the opponent side,
     /// Maushold on the player side); both agreed on the 121px size.
+    /// Positions were located by searching captured frames for a known
+    /// reference icon, not derived from each other: an earlier player2 guessed
+    /// as "player1 plus the plate offset" sat 36px too far right, which cropped
+    /// half the artwork and made that slot silently unidentifiable. The inner
+    /// slot spacing is 0.1686, not the 0.183 the plate edges suggest.
+    ///
+    /// opponent1 is still inferred, by mirroring the measured player spacing -
+    /// no captured frame so far has had both opponent slots filled. The match
+    /// window below is what keeps that from mattering.
     var normalizedSpriteBox: CGRect {
-        let w = 0.0461, h = 0.1003
+        let w = 0.0450, h = 0.0978
         switch self {
-        case .opponent1: return CGRect(x: 0.5890, y: 0.0423, width: w, height: h)
-        case .opponent2: return CGRect(x: 0.7460, y: 0.0423, width: w, height: h)
-        case .player1:   return CGRect(x: 0.0908, y: 0.8408, width: w, height: h)
-        case .player2:   return CGRect(x: 0.2738, y: 0.8408, width: w, height: h)
+        case .opponent1: return CGRect(x: 0.5774, y: 0.0431, width: w, height: h)
+        case .opponent2: return CGRect(x: 0.7460, y: 0.0431, width: w, height: h)
+        case .player1:   return CGRect(x: 0.0915, y: 0.8425, width: w, height: h)
+        case .player2:   return CGRect(x: 0.2601, y: 0.8425, width: w, height: h)
         }
     }
 
