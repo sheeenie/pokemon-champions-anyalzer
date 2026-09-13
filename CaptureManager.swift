@@ -11,6 +11,9 @@ class CaptureManager: ObservableObject {
     private var currentInput: AVCaptureDeviceInput?
     private var currentDeviceID: String?
 
+    private let analyzer = BattleAnalyzer()
+    private let videoOutput = AVCaptureVideoDataOutput()
+
     init() {
         // Enable iOS Screen Capture explicitly in CoreMediaIO
         var prop = CMIOObjectPropertyAddress(
@@ -33,6 +36,8 @@ class CaptureManager: ObservableObject {
             position: .unspecified
         )
 
+        configureVideoOutput()
+
         DispatchQueue.global(qos: .userInitiated).async {
             self.session.startRunning()
         }
@@ -43,6 +48,24 @@ class CaptureManager: ObservableObject {
             guard let self, let devices = change.newValue else { return }
             self.reconcile(devices: devices)
         }
+    }
+
+    /// Adds the frame tap the analyzer reads from. The preview layer keeps its own
+    /// connection to the session, so this is purely additive to the mirroring path.
+    private func configureVideoOutput() {
+        videoOutput.alwaysDiscardsLateVideoFrames = true
+        videoOutput.videoSettings = [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA
+        ]
+        videoOutput.setSampleBufferDelegate(analyzer, queue: analyzer.queue)
+
+        session.beginConfiguration()
+        if session.canAddOutput(videoOutput) {
+            session.addOutput(videoOutput)
+        } else {
+            print("Failed to add video data output")
+        }
+        session.commitConfiguration()
     }
 
     private func reconcile(devices: [AVCaptureDevice]) {

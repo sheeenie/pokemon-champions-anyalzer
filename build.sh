@@ -35,6 +35,12 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
 EOF
 
 # Compile the swift files into an executable
-swiftc -parse-as-library main.swift CaptureManager.swift CameraPreview.swift -o "$MACOS_DIR/$APP_NAME"
+swiftc -parse-as-library \
+    main.swift \
+    CaptureManager.swift \
+    CameraPreview.swift \
+    BattleGeometry.swift \
+    BattleAnalyzer.swift \
+    -o "$MACOS_DIR/$APP_NAME"
 
 echo "Build complete! App bundle created at: $APP_DIR"

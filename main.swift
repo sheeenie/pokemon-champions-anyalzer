@@ -4,7 +4,13 @@ import AppKit
 @main
 struct iPhoneMirrorApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+
+    init() {
+        // Unbuffer stdout so diagnostics appear immediately when the app is
+        // launched from a terminal with its output piped to a file.
+        setvbuf(stdout, nil, _IONBF, 0)
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
