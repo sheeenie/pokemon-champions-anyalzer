@@ -7,6 +7,8 @@ possible Mega Evolutions and speed order in real time.
 It only looks at the screen. Nothing is installed on the iPhone and the game is
 not modified.
 
+![Demo: switching between English and Traditional Chinese, a Pokémon switching in and Mega Evolving, and Garchomp entering a doubles battle with its Mega previews](docs/demo.gif)
+
 ## Features
 
 - **Automatic identification** in singles and doubles, including shiny Pokémon,
