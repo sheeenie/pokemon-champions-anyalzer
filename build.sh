@@ -15,10 +15,13 @@ MIN_MACOS="13.0"
 MACOS_DIR="$APP_DIR/Contents/MacOS"
 RESOURCES_DIR="$APP_DIR/Contents/Resources"
 
-# Create directories. Resources are linked into the executable (below), so the
-# bundle has no Resources folder; remove one left by an older build.
+# Create directories. Everything the app loads is linked into the executable
+# (below), so Resources holds only the app icon, which Finder and the Dock read
+# from a file in the bundle. Clear out anything left by an older build.
 mkdir -p "$MACOS_DIR"
 rm -rf "$RESOURCES_DIR"
+mkdir -p "$RESOURCES_DIR"
+cp Assets/AppIcon.icns "$RESOURCES_DIR/AppIcon.icns"
 
 # Create Info.plist
 cat > "$APP_DIR/Contents/Info.plist" <<EOF
@@ -42,6 +45,8 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
     <string>$MIN_MACOS</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>NSCameraUsageDescription</key>
     <string>We need access to capture the iPhone screen.</string>
 </dict>

@@ -171,6 +171,7 @@ identified after it clears the panel for the new battle.
 | `main.swift`, `CameraPreview.swift` | App entry point, window and mirror |
 | `tools/fetch_pokedex.py` | Downloads sprites and generates `Resources/pokedex.json` |
 | `tools/pack_resources.py` | Packs `Resources/` into one file for `build.sh` to link into the executable |
+| `tools/make_icon.swift` | Draws the app icon into `Assets/` |
 | `build.sh` | Compiles the app, with `Resources/` packed into the executable |
 
 ## Troubleshooting
