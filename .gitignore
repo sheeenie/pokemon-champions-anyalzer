@@ -9,5 +9,8 @@ Resources/icons/
 # HTTP cache for the generator
 tools/.cache/
 
-# Resource blob packed by build.sh
+# Resource blob and per-architecture executables from build.sh
 build/
+
+# Release zips from tools/make_release.sh
+dist/

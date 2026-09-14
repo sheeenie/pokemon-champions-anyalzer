@@ -63,15 +63,36 @@ Switch the whole panel between English and 繁體中文 at any time.
 
 ## Requirements
 
-- A Mac running macOS. Tested on macOS 26.6; the code uses macOS 13 APIs, but
-  earlier versions haven't been tried.
-- Xcode Command Line Tools, for `swiftc` (`xcode-select --install`).
-- Python 3, standard library only.
+- macOS 13 or later, on Apple Silicon or Intel. The app is built for both, but
+  so far it has only been tested on macOS 26.6 with Apple Silicon.
 - An iPhone with Pokémon Champions, a USB cable, and the iPhone set to trust
   this Mac.
-- An internet connection for the one-time data download.
 
-## Setup
+## Download
+
+1. Download `PokemonChampionsAnalyzer-<version>.zip` from the
+   [latest release](https://github.com/sheeenie/pokemon-champions-anyalzer/releases/latest),
+   then double-click it to unzip.
+2. Move `iPhoneMirror.app` to your Applications folder.
+3. Open it. The first time, macOS blocks it because the app isn't signed with an
+   Apple Developer ID. Click **Done**, not **Move to Trash**.
+4. Open **System Settings → Privacy & Security**, scroll down to the message
+   about iPhoneMirror, click **Open Anyway**, then confirm. You only need to do
+   this once.
+5. When asked, allow camera access: macOS treats the iPhone's screen as a camera.
+
+Nothing else needs installing: the sprites and Pokédex data are inside the app.
+
+If macOS says the app "is damaged", or you'd rather skip steps 3 and 4, run this
+in Terminal once, then open the app:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/iPhoneMirror.app
+```
+
+## Build from source
+
+Needs Xcode Command Line Tools (`xcode-select --install`) and Python 3.
 
 ```bash
 git clone https://github.com/sheeenie/pokemon-champions-anyalzer.git
@@ -87,8 +108,10 @@ first run takes several minutes; after that, results are cached in
 this script before building, or the app can't identify anything.
 
 `build.sh` packs the sprites, type icons and Pokédex data into the app's
-executable, so the built `iPhoneMirror.app` is self-contained: it needs no
-other files and can be copied to another Mac.
+executable and builds for both Apple Silicon and Intel, so the built
+`iPhoneMirror.app` is self-contained and can be copied to another Mac.
+`tools/make_release.sh <version>` does the same and zips it in `dist/` for a
+GitHub Release.
 
 **Always start the app with `open`.** macOS only grants screen-capture permission
 to the app bundle. Running the binary directly from a terminal gives a black
