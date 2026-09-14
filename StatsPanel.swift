@@ -368,8 +368,13 @@ private struct PokemonCard: View {
             let megas = PokedexStore.shared.megaForms(for: occupant.species)
             if !megas.isEmpty {
                 Divider().overlay(Color.white.opacity(0.12))
-                VStack(alignment: .leading, spacing: 6) {
-                    ForEach(megas, id: \.key) { mega in
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(Array(megas.enumerated()), id: \.element.key) { index, mega in
+                        if index > 0 {
+                            // Separates alternative Megas (X and Y, Mega and Mega Z),
+                            // which otherwise run together into one block.
+                            Divider().overlay(Color.white.opacity(0.25))
+                        }
                         MegaRow(base: occupant.species, mega: mega)
                     }
                 }
@@ -514,14 +519,23 @@ private struct SpeedList: View {
 
     private var entries: [SpeedEntry] {
         var byID: [String: SpeedEntry] = [:]
-        for pokemon in seen.values {
-            for species in [pokemon.species] + PokedexStore.shared.megaForms(for: pokemon.species) {
-                // Keyed without shininess, and per side: a Pokemon seen both as
-                // itself and already Mega Evolved must not list that Mega twice,
-                // while a mirror match keeps one entry for each side.
-                let id = speedID(pokemon.side, species)
+        // Grouped per side and species, so a mirror match keeps each side separate.
+        let groups = Dictionary(grouping: seen.values) { "\($0.side)-\($0.species.dex)" }
+        for sightings in groups.values {
+            // Once a Pokemon has Mega Evolved, its base form and any Mega it did
+            // not choose no longer matter, so only the Mega that appeared is listed.
+            let evolved = sightings.filter { $0.species.form.contains("Mega") }
+            let candidates: [(side: BattleSide, species: Species)] = evolved.isEmpty
+                ? sightings.flatMap { pokemon in
+                    ([pokemon.species] + PokedexStore.shared.megaForms(for: pokemon.species))
+                        .map { (side: pokemon.side, species: $0) }
+                }
+                : evolved.map { (side: $0.side, species: $0.species) }
+            for candidate in candidates {
+                // Keyed without shininess, so a shiny and its normal art don't list twice.
+                let id = speedID(candidate.side, candidate.species)
                 if byID[id] == nil {
-                    byID[id] = SpeedEntry(id: id, species: species, side: pokemon.side)
+                    byID[id] = SpeedEntry(id: id, species: candidate.species, side: candidate.side)
                 }
             }
         }
