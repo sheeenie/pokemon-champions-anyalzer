@@ -73,12 +73,12 @@ Switch the whole panel between English and 繁體中文 at any time.
 1. Download `PokemonChampionsAnalyzer-<version>.zip` from the
    [latest release](https://github.com/sheeenie/pokemon-champions-anyalzer/releases/latest),
    then double-click it to unzip.
-2. Move `iPhoneMirror.app` to your Applications folder.
+2. Move `Pokémon Champions Analyzer.app` to your Applications folder.
 3. Open it. The first time, macOS blocks it because the app isn't signed with an
    Apple Developer ID. Click **Done**, not **Move to Trash**.
 4. Open **System Settings → Privacy & Security**, scroll down to the message
-   about iPhoneMirror, click **Open Anyway**, then confirm. You only need to do
-   this once.
+   about Pokémon Champions Analyzer, click **Open Anyway**, then confirm. You
+   only need to do this once.
 5. When asked, allow camera access: macOS treats the iPhone's screen as a camera.
 
 Nothing else needs installing: the sprites and Pokédex data are inside the app.
@@ -87,7 +87,7 @@ If macOS says the app "is damaged", or you'd rather skip steps 3 and 4, run this
 in Terminal once, then open the app:
 
 ```bash
-xattr -dr com.apple.quarantine /Applications/iPhoneMirror.app
+xattr -dr com.apple.quarantine "/Applications/Pokémon Champions Analyzer.app"
 ```
 
 ## Build from source
@@ -99,7 +99,7 @@ git clone https://github.com/sheeenie/pokemon-champions-anyalzer.git
 cd pokemon-champions-anyalzer
 python3 tools/fetch_pokedex.py
 ./build.sh
-open iPhoneMirror.app
+open "Pokémon Champions Analyzer.app"
 ```
 
 `tools/fetch_pokedex.py` downloads the reference sprites and Pokédex data. The
@@ -109,7 +109,7 @@ this script before building, or the app can't identify anything.
 
 `build.sh` packs the sprites, type icons and Pokédex data into the app's
 executable and builds for both Apple Silicon and Intel, so the built
-`iPhoneMirror.app` is self-contained and can be copied to another Mac.
+`Pokémon Champions Analyzer.app` is self-contained and can be copied to another Mac.
 `tools/make_release.sh <version>` does the same and zips it in `dist/` for a
 GitHub Release.
 
@@ -181,7 +181,7 @@ identified after it clears the panel for the new battle.
 - **Nothing gets identified.** Run `python3 tools/fetch_pokedex.py`, then
   `./build.sh`. Also check the game is in a battle and in landscape.
 - **Debug output.** Run
-  `defaults write com.example.iPhoneMirror dumpDir -string ~/Desktop/pokemon-debug`,
+  `defaults write io.github.sheeenie.pokemon-champions-analyzer dumpDir -string ~/Desktop/pokemon-debug`,
   then relaunch. The app writes `analyzer.log` and sample annotated frames to that
   folder.
 

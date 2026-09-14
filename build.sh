@@ -1,8 +1,13 @@
 #!/bin/bash
 set -e
 
-APP_NAME="iPhoneMirror"
-APP_DIR="$APP_NAME.app"
+# Shown in Finder, the Dock and the menu bar.
+DISPLAY_NAME="Pokémon Champions Analyzer"
+# The program file inside the bundle: no spaces or accents, to keep scripts simple.
+APP_NAME="PokemonChampionsAnalyzer"
+# macOS keys the camera permission and saved settings to this.
+BUNDLE_ID="io.github.sheeenie.pokemon-champions-analyzer"
+APP_DIR="$DISPLAY_NAME.app"
 VERSION="${VERSION:-1.0.0}"
 # Oldest macOS the build targets. The code uses macOS 13 APIs (SwiftUI Grid and
 # Layout); without an explicit target swiftc uses the build machine's version.
@@ -24,9 +29,11 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
     <key>CFBundleExecutable</key>
     <string>$APP_NAME</string>
     <key>CFBundleIdentifier</key>
-    <string>com.example.$APP_NAME</string>
+    <string>$BUNDLE_ID</string>
     <key>CFBundleName</key>
-    <string>$APP_NAME</string>
+    <string>$DISPLAY_NAME</string>
+    <key>CFBundleDisplayName</key>
+    <string>$DISPLAY_NAME</string>
     <key>CFBundleVersion</key>
     <string>$VERSION</string>
     <key>CFBundleShortVersionString</key>

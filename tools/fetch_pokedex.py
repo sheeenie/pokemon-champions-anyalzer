@@ -36,7 +36,7 @@ TYPES = ["Normal", "Fire", "Water", "Electric", "Grass", "Ice", "Fighting",
 BULBA_API = "https://archives.bulbagarden.net/w/api.php"
 BULBA_FILE = "https://archives.bulbagarden.net/wiki/Special:FilePath/"
 POKEAPI = "https://pokeapi.co/api/v2"
-UA = {"User-Agent": "iPhoneMirror-pokedex-builder/1.0"}
+UA = {"User-Agent": "PokemonChampionsAnalyzer-pokedex-builder/1.0"}
 
 # Form suffixes whose PokeAPI slug differs from a plain lowercase/hyphenate.
 FORM_OVERRIDES = {

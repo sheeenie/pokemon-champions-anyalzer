@@ -1,4 +1,5 @@
-iPhoneMirror.app
+# Built app bundles (build.sh)
+*.app
 *.o
 .DS_Store
 

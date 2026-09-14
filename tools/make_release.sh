@@ -16,8 +16,8 @@ fi
 
 VERSION="$VERSION" ./build.sh
 
-APP="iPhoneMirror.app"
-BIN="$APP/Contents/MacOS/iPhoneMirror"
+APP="Pokémon Champions Analyzer.app"
+BIN="$APP/Contents/MacOS/PokemonChampionsAnalyzer"
 codesign --verify --strict "$APP"
 ARCHS=$(lipo -archs "$BIN")
 [[ "$ARCHS" == *arm64* && "$ARCHS" == *x86_64* ]] || { echo "Not universal: $ARCHS"; exit 1; }

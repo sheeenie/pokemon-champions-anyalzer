@@ -11,7 +11,7 @@ import CoreImage
 final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     /// Serial queue the capture output delivers frames on.
-    let queue = DispatchQueue(label: "com.example.iPhoneMirror.analysis")
+    let queue = DispatchQueue(label: "io.github.sheeenie.pokemon-champions-analyzer.analysis")
 
     private let ciContext = CIContext()
     private let tracker: BattleStateTracker
@@ -45,7 +45,7 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
     // MARK: Calibration dumping
 
     /// Enable calibration dumps with:
-    ///   defaults write com.example.iPhoneMirror dumpDir -string /some/dir
+    ///   defaults write io.github.sheeenie.pokemon-champions-analyzer dumpDir -string /some/dir
     ///
     /// Read from UserDefaults rather than the environment because the app must be
     /// launched via `open` to retain its screen-capture permission; a binary run

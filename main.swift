@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 @main
-struct iPhoneMirrorApp: App {
+struct PokemonChampionsAnalyzerApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
@@ -83,7 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Apply custom styling to the main window
         if let window = NSApplication.shared.windows.first {
             window.level = .normal // Standard level is required for Chrome screen sharing
-            window.title = "iPhone Mirror"
+            window.title = "Pokémon Champions Analyzer"
             window.isOpaque = true
             window.backgroundColor = .black
             window.sharingType = .readOnly // Explicitly allow screen sharing
