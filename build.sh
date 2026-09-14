@@ -6,9 +6,10 @@ APP_DIR="$APP_NAME.app"
 MACOS_DIR="$APP_DIR/Contents/MacOS"
 RESOURCES_DIR="$APP_DIR/Contents/Resources"
 
-# Create directories
+# Create directories. Resources are linked into the executable (below), so the
+# bundle has no Resources folder; remove one left by an older build.
 mkdir -p "$MACOS_DIR"
-mkdir -p "$RESOURCES_DIR"
+rm -rf "$RESOURCES_DIR"
 
 # Create Info.plist
 cat > "$APP_DIR/Contents/Info.plist" <<EOF
@@ -34,19 +35,17 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
 </plist>
 EOF
 
-# Compile the swift files into an executable
-# Copy generated reference data (see tools/fetch_pokedex.py) into the bundle
-if [ -d "Resources" ]; then
-    rsync -a --delete Resources/ "$RESOURCES_DIR/"
-    echo "Bundled $(ls Resources/icons 2>/dev/null | wc -l | tr -d ' ') reference icons"
-else
-    echo "WARNING: no Resources/ - run: python3 tools/fetch_pokedex.py"
-fi
+# Pack Resources/ (sprites from tools/fetch_pokedex.py, type icons,
+# pokedex.json) into one blob, linked into the executable as a section that
+# EmbeddedResources.swift reads. The built app then needs no files beside it.
+BLOB="build/resources.bin"
+python3 tools/pack_resources.py Resources "$BLOB"
 
 # -O matters here: the icon matcher is a tight per-pixel loop, and unoptimized
 # it took ~2.7s per frame (all four slots) against ~50ms optimized, which showed
 # up as a multi-second delay before a Pokemon was identified.
 swiftc -O -parse-as-library \
+    -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __resources -Xlinker "$BLOB" \
     main.swift \
     CaptureManager.swift \
     CameraPreview.swift \
@@ -59,6 +58,7 @@ swiftc -O -parse-as-library \
     TypeChart.swift \
     TypeIcons.swift \
     Localization.swift \
+    EmbeddedResources.swift \
     -o "$MACOS_DIR/$APP_NAME"
 
 echo "Build complete! App bundle created at: $APP_DIR"

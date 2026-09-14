@@ -83,8 +83,12 @@ open iPhoneMirror.app
 
 `tools/fetch_pokedex.py` downloads the reference sprites and Pokédex data. The
 first run takes several minutes; after that, results are cached in
-`tools/.cache`. The Pokémon sprites aren't included in this repository, so the
-app can't identify anything until this script has run.
+`tools/.cache`. The Pokémon sprites aren't included in this repository, so run
+this script before building, or the app can't identify anything.
+
+`build.sh` packs the sprites, type icons and Pokédex data into the app's
+executable, so the built `iPhoneMirror.app` is self-contained: it needs no
+other files and can be copied to another Mac.
 
 **Always start the app with `open`.** macOS only grants screen-capture permission
 to the app bundle. Running the binary directly from a terminal gives a black
@@ -137,12 +141,14 @@ identified after it clears the panel for the new battle.
 | `IconMatcher.swift` | Sprite matching against the reference library |
 | `BattleState.swift` | Card, speed list and reset state |
 | `PokedexStore.swift` | Loads generated Pokédex data and sprites |
+| `EmbeddedResources.swift` | Reads the sprites, type icons and Pokédex data packed into the executable |
 | `StatsPanel.swift` | The stats panel UI |
 | `TypeChart.swift`, `TypeIcons.swift` | Type effectiveness, colours and icons |
 | `Localization.swift` | English and Traditional Chinese text |
 | `main.swift`, `CameraPreview.swift` | App entry point, window and mirror |
 | `tools/fetch_pokedex.py` | Downloads sprites and generates `Resources/pokedex.json` |
-| `build.sh` | Compiles the app and bundles `Resources/` |
+| `tools/pack_resources.py` | Packs `Resources/` into one file for `build.sh` to link into the executable |
+| `build.sh` | Compiles the app, with `Resources/` packed into the executable |
 
 ## Troubleshooting
 

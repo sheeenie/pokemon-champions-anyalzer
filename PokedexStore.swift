@@ -63,7 +63,8 @@ struct Species: Codable {
     }
 }
 
-/// Loads the generated reference data produced by tools/fetch_pokedex.py.
+/// Loads the generated reference data produced by tools/fetch_pokedex.py, from
+/// the resources embedded in the executable (see EmbeddedResources).
 final class PokedexStore {
     static let shared = PokedexStore()
 
@@ -72,36 +73,17 @@ final class PokedexStore {
     private var megasByDex: [Int: [Species]] = [:]
     private var iconCache: [String: CGImage] = [:]
     private let iconLock = NSLock()
-    private let resourceRoot: URL?
 
     init() {
-        resourceRoot = PokedexStore.locateResources()
         load()
     }
 
-    /// Prefers the app bundle, falling back to the source tree so the data can
-    /// be exercised without a full build.
-    private static func locateResources() -> URL? {
-        if let dir = Bundle.main.resourceURL,
-           FileManager.default.fileExists(atPath: dir.appendingPathComponent("pokedex.json").path) {
-            return dir
-        }
-        let source = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .appendingPathComponent("Resources")
-        if FileManager.default.fileExists(atPath: source.appendingPathComponent("pokedex.json").path) {
-            return source
-        }
-        return nil
-    }
-
     private func load() {
-        guard let root = resourceRoot else {
+        guard let data = EmbeddedResources.data("pokedex.json") else {
             print("[pokedex] no pokedex.json found; run tools/fetch_pokedex.py")
             return
         }
         do {
-            let data = try Data(contentsOf: root.appendingPathComponent("pokedex.json"))
             species = try JSONDecoder().decode([Species].self, from: data)
             byKey = Dictionary(uniqueKeysWithValues: species.map { ($0.key, $0) })
             // Shiny Megas are excluded: they are the same form, and listing both
@@ -109,7 +91,8 @@ final class PokedexStore {
             megasByDex = Dictionary(
                 grouping: species.filter { $0.form.contains("Mega") && !$0.isShiny },
                 by: { $0.dex })
-            print("[pokedex] loaded \(species.count) species")
+            print("[pokedex] loaded \(species.count) species"
+                  + (EmbeddedResources.isEmbedded ? " (embedded)" : " (from disk)"))
         } catch {
             print("[pokedex] failed to load: \(error.localizedDescription)")
         }
@@ -134,9 +117,8 @@ final class PokedexStore {
         iconLock.lock()
         defer { iconLock.unlock() }
         if let cached = iconCache[key] { return cached }
-        guard let root = resourceRoot else { return nil }
-        let url = root.appendingPathComponent("icons/\(key).png")
-        guard let image = NSImage(contentsOf: url),
+        guard let data = EmbeddedResources.data("icons/\(key).png"),
+              let image = NSImage(data: data),
               let cg = image.cgImage(forProposedRect: nil, context: nil, hints: nil)
         else { return nil }
         iconCache[key] = cg

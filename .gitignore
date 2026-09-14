@@ -8,3 +8,6 @@ Resources/icons/
 
 # HTTP cache for the generator
 tools/.cache/
+
+# Resource blob packed by build.sh
+build/

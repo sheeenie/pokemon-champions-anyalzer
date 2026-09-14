@@ -49,8 +49,8 @@ enum TypeIcons {
     }
 
     private static func load(_ type: String) -> NSImage? {
-        guard let root = resourceRoot,
-              let source = NSImage(contentsOf: root.appendingPathComponent("types/\(type).png")),
+        guard let data = EmbeddedResources.data("types/\(type).png"),
+              let source = NSImage(data: data),
               let cg = source.cgImage(forProposedRect: nil, context: nil, hints: nil),
               let keyed = keyOutBackground(cg)
         else { return nil }
@@ -58,17 +58,6 @@ enum TypeIcons {
         image.isTemplate = true
         return image
     }
-
-    private static let resourceRoot: URL? = {
-        if let dir = Bundle.main.resourceURL,
-           FileManager.default.fileExists(atPath: dir.appendingPathComponent("types").path) {
-            return dir
-        }
-        let source = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent().appendingPathComponent("Resources")
-        return FileManager.default.fileExists(atPath: source.appendingPathComponent("types").path)
-            ? source : nil
-    }()
 
     /// Turns "white symbol on a solid colour" into "white symbol on nothing".
     ///
