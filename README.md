@@ -7,26 +7,59 @@ possible Mega Evolutions and speed order in real time.
 It only looks at the screen. Nothing is installed on the iPhone and the game is
 not modified.
 
-![Demo: switching between English and Traditional Chinese, a Pokémon switching in and Mega Evolving, and Garchomp entering a doubles battle with its Mega previews](docs/demo.gif)
+![Overview: a new doubles battle fills all four cards, then the opponent's Garchomp switches in with its Mega previews and speed list entries](docs/overview.gif)
 
 ## Features
 
-- **Automatic identification** in singles and doubles, including shiny Pokémon,
-  Mega forms and regional forms, with 786 reference sprites.
-- **Stat cards** with typing, abilities (hover over one for its description, with
-  the hidden ability marked), base stats and total.
-- **Type matchups**: weaknesses (×4, ×2), resistances (×½, ×¼) and immunities.
-- **Mega Evolution preview**: every Mega a Pokémon could turn into, including
-  Champions-exclusive forms such as Mega Z, with each Mega's typing, ability and
-  stat changes. When the typing changes, its new weaknesses are shown too.
-- **Speed list**: every Pokémon seen this battle plus their possible Megas, fastest
-  first, with ties marked and the Pokémon currently on the field highlighted.
-- **Doubles layout** with four columns, one per slot, in the game's left-to-right
-  order.
-- **English and Traditional Chinese (繁體中文)**, switchable at any time.
-- **Stable display**: cards stay up through move animations, and the panel clears
-  when the first Pokémon of the next battle is identified.
-- **Small floating mirror** in the corner, with a button to hide it.
+### Automatic identification
+
+Each Pokémon is recognised from its name plate as it comes onto the field, in
+singles and doubles, including shiny Pokémon, Mega forms and regional forms
+(786 reference sprites). When a Pokémon switches in, its card and the speed list
+update.
+
+![Your Incineroar switching out for Basculegion](docs/switch-in.gif)
+
+### Stat cards and type matchups
+
+Each card shows the Pokémon's typing, abilities (hidden ability marked), base
+stats and total, plus its weaknesses (×4, ×2), resistances (×½, ×¼) and
+immunities. Doubles uses four columns, one per slot, in the game's left-to-right
+order.
+
+### Ability descriptions
+
+Hover over an ability to read what it does.
+
+![Hovering over Incineroar's abilities](docs/abilities.gif)
+
+### Mega Evolution preview
+
+A card lists every Mega the Pokémon could turn into, including
+Champions-exclusive forms such as Mega Z, with each Mega's typing, ability and
+stat changes. When the typing changes, the new weaknesses are shown too.
+
+![Garchomp's Mega and Mega Z previews, hovering over their abilities](docs/mega.gif)
+
+### Speed list
+
+Every Pokémon seen this battle, plus the Megas each could turn into, sorted
+fastest first. Ties are joined with `=`, and the Pokémon currently on the field
+are highlighted. Once a Pokémon has Mega Evolved, only that Mega is listed.
+
+![The speed list updating as Basculegion switches back to Incineroar](docs/speed-list.gif)
+
+### English and Traditional Chinese
+
+Switch the whole panel between English and 繁體中文 at any time.
+
+![Switching the panel from Traditional Chinese to English](docs/language.gif)
+
+### Built for use during play
+
+- Cards stay up through move animations, and the panel clears when the first
+  Pokémon of the next battle is identified.
+- The mirror floats small in the corner, with a button to hide it.
 
 ## Requirements
 
