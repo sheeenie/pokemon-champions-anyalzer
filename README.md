@@ -152,8 +152,11 @@ Shinies are separate reference sprites, since a shiny is a recolour.
 
 **Stability.** A card only appears after three frames in a row agree. Name plates
 disappear during every move animation, so a frame with no match never clears a
-card. A black loading screen marks the end of a battle, and the next Pokémon
-identified after it clears the panel for the new battle.
+card. The end of a battle is the loading screen, recognised by the Rotom icon in
+its bottom-right corner rather than by darkness alone: the screen also goes black
+during move animations and camera cuts, and treating those as the end of a battle
+cleared the panel mid-battle. The next Pokémon identified after a loading screen
+clears the panel for the new battle.
 
 **Speed.** Built with `-O`, checking all four slots takes about 50 ms.
 
