@@ -25,11 +25,19 @@ ARCHS=$(lipo -archs "$BIN")
 mkdir -p dist
 ZIP="dist/PokemonChampionsAnalyzer-$VERSION.zip"
 rm -f "$ZIP"
-# ditto keeps the bundle intact (unlike a plain zip of the folder). No
-# --sequesterRsrc: that is what puts a __MACOSX folder next to the app when the
-# zip is opened, which looks like junk to whoever downloads it. This is the form
-# Apple documents for submitting an app bundle.
-ditto -c -k --keepParent "$APP" "$ZIP"
+# ditto keeps the bundle intact (unlike a plain zip of the folder).
+#
+# --sequesterRsrc has to stay, even though it is what leaves a __MACOSX folder
+# beside the app when the zip is opened. macOS puts a com.apple.provenance
+# extended attribute on every file in the bundle, including the _CodeSignature
+# folder that codesign itself writes, and that attribute is restricted: xattr
+# -cr does not remove it, before or after signing. Without sequestering, ditto
+# stores those attributes as AppleDouble members, and command-line unzip
+# unpacks them as ._ files inside the bundle, which breaks the seal - the
+# unzipped app then fails codesign --verify and macOS calls it damaged. Opening
+# the zip from Finder handles either form, but a junk folder is a much smaller
+# problem than an app that will not open.
+ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
 
 echo
 echo "Release file: $ZIP ($(du -h "$ZIP" | cut -f1))"
