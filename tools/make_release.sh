@@ -25,8 +25,11 @@ ARCHS=$(lipo -archs "$BIN")
 mkdir -p dist
 ZIP="dist/PokemonChampionsAnalyzer-$VERSION.zip"
 rm -f "$ZIP"
-# ditto keeps the bundle intact (unlike a plain zip of the folder).
-ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
+# ditto keeps the bundle intact (unlike a plain zip of the folder). No
+# --sequesterRsrc: that is what puts a __MACOSX folder next to the app when the
+# zip is opened, which looks like junk to whoever downloads it. This is the form
+# Apple documents for submitting an app bundle.
+ditto -c -k --keepParent "$APP" "$ZIP"
 
 echo
 echo "Release file: $ZIP ($(du -h "$ZIP" | cut -f1))"

@@ -1,10 +1,15 @@
 #!/bin/bash
 # Builds, zips and publishes a GitHub Release in one step.
-# usage: tools/publish_release.sh <version>    e.g. tools/publish_release.sh 1.0.1
+# usage: tools/publish_release.sh <version> [changes.md]
+#   e.g. tools/publish_release.sh 1.0.1
+# The optional second argument is a file describing what changed, shown as
+# "What's new" at the top of the release notes.
 # Needs the GitHub CLI, signed in: brew install gh && gh auth login
 set -e
 
-VERSION="${1:?usage: tools/publish_release.sh <version, e.g. 1.0.1>}"
+VERSION="${1:?usage: tools/publish_release.sh <version, e.g. 1.0.1> [changes.md]}"
+CHANGES="$2"
+[ -z "$CHANGES" ] || [ -f "$CHANGES" ] || { echo "No such changes file: $CHANGES"; exit 1; }
 TAG="v$VERSION"
 cd "$(dirname "$0")/.."
 
@@ -40,7 +45,13 @@ tools/make_release.sh "$VERSION"
 ZIP="dist/PokemonChampionsAnalyzer-$VERSION.zip"
 SHA=$(shasum -a 256 "$ZIP" | cut -d' ' -f1)
 NOTES=$(mktemp)
-cat > "$NOTES" <<EOF
+if [ -n "$CHANGES" ]; then
+    echo "## What's new" >> "$NOTES"
+    echo >> "$NOTES"
+    cat "$CHANGES" >> "$NOTES"
+    echo >> "$NOTES"
+fi
+cat >> "$NOTES" <<EOF
 Download **PokemonChampionsAnalyzer-$VERSION.zip** below (not the "Source code" files), unzip it, and move **Pokémon Champions Analyzer.app** to Applications.
 
 The app isn't signed with an Apple Developer ID, so macOS blocks it the first time you open it. Approve it once in **System Settings → Privacy & Security → Open Anyway**. The [README](https://github.com/sheeenie/pokemon-champions-anyalzer#download) has the details.
