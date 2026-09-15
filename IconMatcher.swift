@@ -160,8 +160,13 @@ final class IconMatcher {
                 + abs(Double(reference[i + 2]) - Double(capture[i + 2]))
             counted += 1
         }
-        // Sprites covering almost nothing can score well by luck.
-        guard counted > grid * grid / 12 else { return nil }
+        // Sprites covering almost nothing can score well by luck, so references
+        // with very few solid pixels are skipped. The cutoff is 1/24 of the grid:
+        // at 1/12 thin sprites such as Klefki (162 px), Rotom (124) and Floette
+        // Eternal (162) could never match. Tested on every sprite composited onto
+        // plate colours, 1/24 identifies all six and no other species is ever
+        // matched to them.
+        guard counted > grid * grid / 24 else { return nil }
         return sum / (Double(counted) * 3 * 255)
     }
 }
