@@ -59,39 +59,22 @@ struct ContentView: View {
                     }
                 }
 
-                HStack(spacing: 6) {
-                    CornerButton(title: L10n.text(captureManager.soundOn ? .muteSound : .unmuteSound, lang),
-                                 systemImage: captureManager.soundOn ? "speaker.slash" : "speaker.wave.2") {
-                        captureManager.soundOn.toggle()
-                    }
-                    CornerButton(title: L10n.text(showMirror ? .hideMirror : .showMirror, lang),
-                                 systemImage: showMirror ? "eye.slash" : "eye") {
-                        showMirror.toggle()
-                    }
+                Button {
+                    showMirror.toggle()
+                } label: {
+                    Label(L10n.text(showMirror ? .hideMirror : .showMirror, lang),
+                          systemImage: showMirror ? "eye.slash" : "eye")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 5)
+                        .background(Color.white.opacity(0.12))
+                        .cornerRadius(6)
                 }
+                .buttonStyle(.plain)
             }
             .padding(14)
         }
-    }
-}
-
-/// Small labelled button for the bottom-right corner controls.
-struct CornerButton: View {
-    let title: String
-    let systemImage: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Label(title, systemImage: systemImage)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundColor(.white.opacity(0.8))
-                .padding(.horizontal, 9)
-                .padding(.vertical, 5)
-                .background(Color.white.opacity(0.12))
-                .cornerRadius(6)
-        }
-        .buttonStyle(.plain)
     }
 }
 

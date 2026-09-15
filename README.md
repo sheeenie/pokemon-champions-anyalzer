@@ -127,9 +127,6 @@ iPhone's screen as a camera.
    ability to read its description.
 4. **Hide screen** / **Show screen** in the bottom-right corner toggles the
    mirror. Identification keeps running while it is hidden.
-5. While connected, the iPhone sends its sound to the Mac instead of playing
-   it, so the game's audio comes out of the Mac. **Mute sound** /
-   **Unmute sound** next to Hide screen turns it off and on.
 
 ## How it works
 

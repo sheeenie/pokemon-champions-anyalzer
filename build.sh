@@ -49,8 +49,6 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
     <string>AppIcon</string>
     <key>NSCameraUsageDescription</key>
     <string>We need access to capture the iPhone screen.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Plays the iPhone's game sound through this Mac while it's connected.</string>
 </dict>
 </plist>
 EOF

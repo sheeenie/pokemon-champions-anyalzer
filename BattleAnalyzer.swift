@@ -95,11 +95,6 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         }
     }
 
-    /// Diagnostics from elsewhere in the app, written to the same log.
-    func note(_ message: String) {
-        queue.async { self.log(message) }
-    }
-
     /// Print, and also append to a file when dumping is on. The app has to be
     /// launched via `open` to keep its screen-capture permission, and that
     /// discards stdout, so a file is the only way to see diagnostics.
