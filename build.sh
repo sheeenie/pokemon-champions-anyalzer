@@ -76,6 +76,8 @@ SOURCES=(
     TypeIcons.swift
     Localization.swift
     EmbeddedResources.swift
+    DamageCalc.swift
+    UsageStore.swift
 )
 
 # Build for Apple Silicon and Intel, then combine into one universal executable.

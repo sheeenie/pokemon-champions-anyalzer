@@ -311,10 +311,80 @@ private struct StatRow: View {
     }
 }
 
+/// One estimated attack: name, share of the target's HP, and hits to KO.
+private struct DamageRow: View {
+    let estimate: DamageEstimate
+    @Environment(\.lang) private var lang
+
+    /// Coloured by how much it hurts, on the same reading as the type matchups
+    /// above it: red is the one that ends the turn badly.
+    private var tint: Color {
+        switch estimate.maxFraction {
+        case 1.0...: return Color(red: 0.98, green: 0.36, blue: 0.36)
+        case 0.5...: return Color(red: 0.98, green: 0.62, blue: 0.29)
+        case 0.25...: return Color(red: 0.96, green: 0.85, blue: 0.40)
+        default: return .white.opacity(0.65)
+        }
+    }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text(estimate.data.name(estimate.move, lang))
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.white.opacity(0.88))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Spacer(minLength: 4)
+            Text(String(format: "%.0f-%.0f%%",
+                        estimate.minFraction * 100, estimate.maxFraction * 100))
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundColor(tint)
+            Text(estimate.koLabel)
+                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                .foregroundColor(.white.opacity(0.4))
+                .frame(width: 52, alignment: .trailing)
+        }
+    }
+}
+
+/// What this Pokemon can do to the one across from it, using the moves it is
+/// actually seen carrying. Singles only: in doubles there are two Pokemon on
+/// each side, so there is no single counterpart to aim at.
+private struct DamageSection: View {
+    let attacker: Species
+    let defender: Species
+    @Environment(\.lang) private var lang
+
+    var body: some View {
+        let estimates = DamageCalc.topMoves(for: attacker, against: defender,
+                                            usage: UsageStore.shared.moves(for: attacker.key))
+        if !estimates.isEmpty {
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 4) {
+                    Text(L10n.text(.damage, lang))
+                        .font(.system(size: 11, weight: .heavy))
+                        .foregroundColor(.white.opacity(0.55))
+                        .tracking(0.8)
+                    Text("→ \(defender.displayName(lang))")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.35))
+                        .lineLimit(1)
+                }
+                ForEach(estimates) { DamageRow(estimate: $0) }
+                Text(L10n.text(.damageNote, lang))
+                    .font(.system(size: 9))
+                    .foregroundColor(.white.opacity(0.28))
+            }
+        }
+    }
+}
+
 private struct PokemonCard: View {
     let occupant: SlotOccupant
     /// False once this Pokemon's side has Mega Evolved, since it then can't.
     var showMegas = true
+    /// The Pokemon across from this one, in singles. Nil in doubles.
+    var facing: Species? = nil
     @Environment(\.lang) private var lang
 
     var body: some View {
@@ -367,6 +437,11 @@ private struct PokemonCard: View {
 
             MatchupSection(types: occupant.species.types)
 
+            if let facing {
+                Divider().overlay(Color.white.opacity(0.12))
+                DamageSection(attacker: occupant.species, defender: facing)
+            }
+
             let megas = showMegas ? PokedexStore.shared.megaForms(for: occupant.species) : []
             if !megas.isEmpty {
                 Divider().overlay(Color.white.opacity(0.12))
@@ -412,6 +487,8 @@ private struct SideColumn: View {
     /// Doubles: one column per slot, so four cards sit side by side instead of
     /// two tall cards stacked per side, which ran off the bottom of the window.
     let sideBySide: Bool
+    /// The Pokemon this side's card is up against, in singles. Nil in doubles.
+    var facing: Species? = nil
 
     /// In singles only the outer slot is used, so an inner slot with no
     /// occupant is hidden rather than shown as unidentified.
@@ -449,7 +526,7 @@ private struct SideColumn: View {
     @ViewBuilder
     private func card(for slot: BattleSlot) -> some View {
         if let occupant = occupants[slot] {
-            PokemonCard(occupant: occupant, showMegas: !megaUsed)
+            PokemonCard(occupant: occupant, showMegas: !megaUsed, facing: facing)
         } else {
             EmptyCard()
         }
@@ -634,12 +711,30 @@ struct StatsPanel: View {
 
     private var megaUsed: Set<BattleSide> { sidesThatMegaEvolved(battle.seen) }
 
+    /// In singles each card shows what its Pokemon does to the one opposite, so
+    /// it has to know its counterpart. Doubles has two Pokemon a side and no
+    /// single counterpart, so both come back nil and the section is left out.
+    private var facing: (opponent: Species?, player: Species?) {
+        guard battle.format == .singles else { return (nil, nil) }
+        return (battle.slots.first { $0.key.side == .opponent }?.value.species,
+                battle.slots.first { $0.key.side == .player }?.value.species)
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(L10n.format(battle.format, lang))
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(.white.opacity(0.75))
+                // Their data, their credit: the API's terms require it wherever
+                // the numbers are shown, so it lives in the header rather than
+                // under the cards, where a tall card can push it off screen.
+                if battle.format == .singles {
+                    Text(L10n.text(.usageCredit, lang))
+                        .font(.system(size: 9))
+                        .foregroundColor(.white.opacity(0.35))
+                        .padding(.leading, 4)
+                }
                 Spacer()
                 Picker("", selection: $lang) {
                     ForEach(Lang.allCases) { Text($0.pickerLabel).tag($0) }
@@ -658,13 +753,15 @@ struct StatsPanel: View {
                            slots: [.opponent1, .opponent2],
                            occupants: battle.slots,
                            megaUsed: megaUsed.contains(.opponent),
-                           sideBySide: battle.format == .doubles)
+                           sideBySide: battle.format == .doubles,
+                           facing: facing.player)
                 SideColumn(title: L10n.text(.yourSide, lang),
                            accent: sideAccent(.player),
                            slots: [.player1, .player2],
                            occupants: battle.slots,
                            megaUsed: megaUsed.contains(.player),
-                           sideBySide: battle.format == .doubles)
+                           sideBySide: battle.format == .doubles,
+                           facing: facing.opponent)
             }
             Spacer(minLength: 0)
         }

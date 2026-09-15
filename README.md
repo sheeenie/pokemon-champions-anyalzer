@@ -52,6 +52,23 @@ and the other Pokémon on its side no longer list possible Megas.
 
 ![The speed list updating as Basculegion switches back to Incineroar](docs/speed-list.gif)
 
+### Damage estimates (singles)
+
+In a single battle, each card lists the three hardest-hitting moves that
+Pokémon is actually seen carrying, against the Pokémon across from it, as a
+share of its HP and the hits needed to KO. Move usage comes from
+[championsbattledata.com](https://championsbattledata.com); a snapshot ships
+with the app, and each Pokémon is refreshed from their API the first time it
+appears in a battle, so it keeps up with the meta. Without a connection the
+snapshot is used.
+
+The numbers are deliberately a floor, not a prediction: they assume no Stat
+Points, a neutral nature, no held item and no ability or weather effects, so a
+real attacker hits at least this hard. Moves with no fixed base power, such as
+Seismic Toss and Grass Knot, are left out rather than shown with a wrong
+number. Doubles has no single Pokémon opposite each card, so the section only
+appears in singles.
+
 ### English and Traditional Chinese
 
 Switch the whole panel between English and 繁體中文 at any time.
@@ -101,6 +118,7 @@ Needs Xcode Command Line Tools (`xcode-select --install`) and Python 3.
 git clone https://github.com/sheeenie/pokemon-champions-anyalzer.git
 cd pokemon-champions-anyalzer
 python3 tools/fetch_pokedex.py
+python3 tools/fetch_usage.py
 ./build.sh
 open "Pokémon Champions Analyzer.app"
 ```
@@ -109,6 +127,12 @@ open "Pokémon Champions Analyzer.app"
 first run takes several minutes; after that, results are cached in
 `tools/.cache`. The Pokémon sprites aren't included in this repository, so run
 this script before building, or the app can't identify anything.
+
+`tools/fetch_usage.py` builds the move-usage snapshot: which moves each Pokémon
+carries, from championsbattledata.com, and each move's base power and type from
+PokéAPI. It is only needed when cutting a release, since the app refreshes
+itself from the same API while you play. Without it the app still runs; cards
+simply show no damage estimates.
 
 `build.sh` packs the sprites, type icons and Pokédex data into the app's
 executable and builds for both Apple Silicon and Intel, so the built
@@ -158,6 +182,13 @@ during move animations and camera cuts, and treating those as the end of a battl
 cleared the panel mid-battle. The next Pokémon identified after a loading screen
 clears the panel for the new battle.
 
+**Damage.** Champions fixes every battle at level 50 with perfect IVs, so the
+only unknowns are Stat Points, nature and held item. None are modelled: stats
+come from base stats alone, and damage from the standard formula with STAB, type
+effectiveness and the 85–100% roll. That makes every number a lower bound on
+what an invested attacker does, which is a more useful error than a confident
+guess at someone's spread would be.
+
 **Speed.** Built with `-O`, checking all four slots takes about 50 ms.
 
 ## Project layout
@@ -173,9 +204,12 @@ clears the panel for the new battle.
 | `EmbeddedResources.swift` | Reads the sprites, type icons and Pokédex data packed into the executable |
 | `StatsPanel.swift` | The stats panel UI |
 | `TypeChart.swift`, `TypeIcons.swift` | Type effectiveness, colours and icons |
+| `DamageCalc.swift` | Level-50 stats and damage estimates |
+| `UsageStore.swift` | Move usage: the bundled snapshot and its live refresh |
 | `Localization.swift` | English and Traditional Chinese text |
 | `main.swift`, `CameraPreview.swift` | App entry point, window and mirror |
 | `tools/fetch_pokedex.py` | Downloads sprites and generates `Resources/pokedex.json` |
+| `tools/fetch_usage.py` | Generates `Resources/usage.json` and `moves.json` |
 | `tools/pack_resources.py` | Packs `Resources/` into one file for `build.sh` to link into the executable |
 | `tools/make_icon.swift` | Draws the app icon into `Assets/` |
 | `build.sh` | Compiles the app, with `Resources/` packed into the executable |
@@ -205,7 +239,8 @@ clears the panel for the new battle.
   ("Champions menu sprites" and "Champions Shiny menu sprites"). Downloaded locally
   by the setup script, not included in this repository.
 - Type icons: Bulbagarden Archives (Scarlet and Violet icons).
-- Stats, abilities and names: [PokéAPI](https://pokeapi.co/).
+- Stats, abilities, move data and names: [PokéAPI](https://pokeapi.co/).
+- Move usage: [championsbattledata.com](https://championsbattledata.com).
 - Type colours: [52poke wiki](https://wiki.52poke.com/).
 
 This is an unofficial fan project. It is not affiliated with or endorsed by

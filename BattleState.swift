@@ -119,6 +119,9 @@ final class BattleStateTracker: ObservableObject {
         // Identity ignores shininess: a shiny is the same Pokemon at the same speed.
         let id = "\(slot.side)-\(species.dex)-\(species.form)"
         guard seenIDs.insert(id).inserted else { return }
+        // Once per Pokemon per battle, which is also how often its usage data is
+        // worth re-checking. The call returns immediately; the fetch is its own.
+        UsageStore.shared.refresh(species.key)
         let entry = SeenPokemon(species: species, side: slot.side)
         DispatchQueue.main.async { self.seen[id] = entry }
     }
