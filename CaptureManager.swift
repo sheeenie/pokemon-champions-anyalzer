@@ -16,6 +16,16 @@ class CaptureManager: ObservableObject {
     private let analyzer: BattleAnalyzer
     private let videoOutput = AVCaptureVideoDataOutput()
 
+    /// Plays the iPhone's sound on the Mac. While it's being captured the iPhone
+    /// sends its audio to the Mac instead of playing it, so without this the game
+    /// is silent.
+    private let audioOutput = AVCaptureAudioPreviewOutput()
+
+    /// Mac playback of the iPhone's sound. Off mutes it without affecting capture.
+    @Published var soundOn = true {
+        didSet { audioOutput.volume = soundOn ? 1 : 0 }
+    }
+
     init() {
         let tracker = BattleStateTracker()
         battle = tracker
@@ -43,6 +53,7 @@ class CaptureManager: ObservableObject {
         )
 
         configureVideoOutput()
+        configureAudioOutput()
 
         DispatchQueue.global(qos: .userInitiated).async {
             self.session.startRunning()
@@ -74,6 +85,19 @@ class CaptureManager: ObservableObject {
         session.commitConfiguration()
     }
 
+    /// Adds Mac playback of the iPhone's audio. Like the video output, it connects
+    /// to the iPhone's input automatically once that is added.
+    private func configureAudioOutput() {
+        audioOutput.volume = 1
+        session.beginConfiguration()
+        if session.canAddOutput(audioOutput) {
+            session.addOutput(audioOutput)
+        } else {
+            print("Failed to add audio preview output")
+        }
+        session.commitConfiguration()
+    }
+
     private func reconcile(devices: [AVCaptureDevice]) {
         let device = devices.first(where: { $0.modelID == "iOS Device" })
 
@@ -101,6 +125,10 @@ class CaptureManager: ObservableObject {
                 self.deviceName = "Connected: \(device.localizedName)"
             }
             print("Using capture device: \(device.localizedName) (ID: \(device.uniqueID))")
+            let ports = input.ports.map { $0.mediaType.rawValue }.joined(separator: ", ")
+            let audioConnected = audioOutput.connections.contains { $0.isEnabled && $0.isActive }
+            analyzer.note("[capture] \(device.localizedName): input ports \(ports); "
+                          + "audio playback connected: \(audioConnected)")
         } catch {
             print("Failed to add input: \(error.localizedDescription)")
         }
