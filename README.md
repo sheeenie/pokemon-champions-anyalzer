@@ -37,7 +37,9 @@ Hover over an ability to read what it does.
 
 A card lists every Mega the Pokémon could turn into, including
 Champions-exclusive forms such as Mega Z, with each Mega's typing, ability and
-stat changes. When the typing changes, the new weaknesses are shown too.
+stat changes. When the typing changes, the new weaknesses are shown too. Only
+one Pokémon per side can Mega Evolve in a battle, so once one has, the rest of
+that side's cards stop showing Mega previews.
 
 ![Garchomp's Mega and Mega Z previews, hovering over their abilities](docs/mega.gif)
 
@@ -45,7 +47,8 @@ stat changes. When the typing changes, the new weaknesses are shown too.
 
 Every Pokémon seen this battle, plus the Megas each could turn into, sorted
 fastest first. Ties are joined with `=`, and the Pokémon currently on the field
-are highlighted. Once a Pokémon has Mega Evolved, only that Mega is listed.
+are highlighted. Once a Pokémon has Mega Evolved, only that Mega is listed,
+and the other Pokémon on its side no longer list possible Megas.
 
 ![The speed list updating as Basculegion switches back to Incineroar](docs/speed-list.gif)
 

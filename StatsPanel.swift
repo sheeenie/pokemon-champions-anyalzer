@@ -313,6 +313,8 @@ private struct StatRow: View {
 
 private struct PokemonCard: View {
     let occupant: SlotOccupant
+    /// False once this Pokemon's side has Mega Evolved, since it then can't.
+    var showMegas = true
     @Environment(\.lang) private var lang
 
     var body: some View {
@@ -365,7 +367,7 @@ private struct PokemonCard: View {
 
             MatchupSection(types: occupant.species.types)
 
-            let megas = PokedexStore.shared.megaForms(for: occupant.species)
+            let megas = showMegas ? PokedexStore.shared.megaForms(for: occupant.species) : []
             if !megas.isEmpty {
                 Divider().overlay(Color.white.opacity(0.12))
                 VStack(alignment: .leading, spacing: 8) {
@@ -405,6 +407,8 @@ private struct SideColumn: View {
     let accent: Color
     let slots: [BattleSlot]
     let occupants: [BattleSlot: SlotOccupant]
+    /// This side has Mega Evolved this battle, so its cards hide Mega previews.
+    let megaUsed: Bool
     /// Doubles: one column per slot, so four cards sit side by side instead of
     /// two tall cards stacked per side, which ran off the bottom of the window.
     let sideBySide: Bool
@@ -445,7 +449,7 @@ private struct SideColumn: View {
     @ViewBuilder
     private func card(for slot: BattleSlot) -> some View {
         if let occupant = occupants[slot] {
-            PokemonCard(occupant: occupant)
+            PokemonCard(occupant: occupant, showMegas: !megaUsed)
         } else {
             EmptyCard()
         }
@@ -498,6 +502,12 @@ private struct FlowLayout: Layout {
     }
 }
 
+/// Sides that have Mega Evolved this battle. Only one Pokemon per side can Mega
+/// Evolve in a battle, so once a side has, its other Pokemon can't.
+private func sidesThatMegaEvolved(_ seen: [String: SeenPokemon]) -> Set<BattleSide> {
+    Set(seen.values.filter { $0.species.form.contains("Mega") }.map(\.side))
+}
+
 /// Identity of a speed list entry: per side, ignoring shininess.
 private func speedID(_ side: BattleSide, _ species: Species) -> String {
     "\(side)-\(species.dex)-\(species.form)"
@@ -519,16 +529,19 @@ private struct SpeedList: View {
 
     private var entries: [SpeedEntry] {
         var byID: [String: SpeedEntry] = [:]
+        let megaUsed = sidesThatMegaEvolved(seen)
         // Grouped per side and species, so a mirror match keeps each side separate.
         let groups = Dictionary(grouping: seen.values) { "\($0.side)-\($0.species.dex)" }
         for sightings in groups.values {
             // Once a Pokemon has Mega Evolved, its base form and any Mega it did
             // not choose no longer matter, so only the Mega that appeared is listed.
+            // Its side's other Pokemon then lose their possible Megas too.
             let evolved = sightings.filter { $0.species.form.contains("Mega") }
             let candidates: [(side: BattleSide, species: Species)] = evolved.isEmpty
-                ? sightings.flatMap { pokemon in
-                    ([pokemon.species] + PokedexStore.shared.megaForms(for: pokemon.species))
-                        .map { (side: pokemon.side, species: $0) }
+                ? sightings.flatMap { pokemon -> [(side: BattleSide, species: Species)] in
+                    let megas = megaUsed.contains(pokemon.side)
+                        ? [] : PokedexStore.shared.megaForms(for: pokemon.species)
+                    return ([pokemon.species] + megas).map { (side: pokemon.side, species: $0) }
                 }
                 : evolved.map { (side: $0.side, species: $0.species) }
             for candidate in candidates {
@@ -619,6 +632,8 @@ struct StatsPanel: View {
     /// Remembered across launches.
     @AppStorage("language") private var lang: Lang = .en
 
+    private var megaUsed: Set<BattleSide> { sidesThatMegaEvolved(battle.seen) }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -642,11 +657,13 @@ struct StatsPanel: View {
                            accent: sideAccent(.opponent),
                            slots: [.opponent1, .opponent2],
                            occupants: battle.slots,
+                           megaUsed: megaUsed.contains(.opponent),
                            sideBySide: battle.format == .doubles)
                 SideColumn(title: L10n.text(.yourSide, lang),
                            accent: sideAccent(.player),
                            slots: [.player1, .player2],
                            occupants: battle.slots,
+                           megaUsed: megaUsed.contains(.player),
                            sideBySide: battle.format == .doubles)
             }
             Spacer(minLength: 0)
