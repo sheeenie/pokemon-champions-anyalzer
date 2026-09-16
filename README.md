@@ -55,8 +55,8 @@ and the other Pokémon on its side no longer list possible Megas.
 ### Damage estimates (singles)
 
 In a single battle, each card lists the three moves that Pokémon most often
-carries, against the Pokémon across from it, as a share of its HP and the hits
-needed to KO, with how often each move is run. They are listed in usage order
+carries, against the Pokémon across from it, as a share of its HP, with how
+often each move is run. They are listed in usage order
 rather than by damage: how often a move is actually carried already prices in
 what this calculator ignores - accuracy above all, but also PP, side effects
 and how the move fits a real set. Move usage comes from

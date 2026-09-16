@@ -22,19 +22,11 @@ struct DamageEstimate: Identifiable {
     /// Share of the defender's HP, 0...1, at the lowest and highest roll.
     let minFraction: Double
     let maxFraction: Double
-    /// Hits needed to KO, from the worst and best roll. Equal when certain.
-    let maxHits: Int
-    let minHits: Int
     let effectiveness: Double
     /// Share of this Pokemon's teams carrying the move, when known.
     let usage: Double?
 
     var id: String { move }
-
-    /// "2HKO", or "2-3HKO" when the rolls disagree.
-    var koLabel: String {
-        minHits == maxHits ? "\(minHits)HKO" : "\(minHits)-\(maxHits)HKO"
-    }
 }
 
 /// Rough damage estimates for Pokemon Champions singles.
@@ -90,8 +82,6 @@ enum DamageCalc {
             data: data,
             minFraction: low / Double(defenderHP),
             maxFraction: high / Double(defenderHP),
-            maxHits: Int((Double(defenderHP) / low).rounded(.up)),
-            minHits: Int((Double(defenderHP) / high).rounded(.up)),
             effectiveness: effectiveness,
             usage: usage
         )

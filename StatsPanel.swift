@@ -346,10 +346,6 @@ private struct DamageRow: View {
                         estimate.minFraction * 100, estimate.maxFraction * 100))
                 .font(.system(size: 12, weight: .bold, design: .monospaced))
                 .foregroundColor(tint)
-            Text(estimate.koLabel)
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                .foregroundColor(.white.opacity(0.4))
-                .frame(width: 52, alignment: .trailing)
         }
         .frame(height: DamageSection.rowHeight)
     }
