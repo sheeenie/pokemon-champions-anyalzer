@@ -26,6 +26,8 @@ struct DamageEstimate: Identifiable {
     let maxHits: Int
     let minHits: Int
     let effectiveness: Double
+    /// Share of this Pokemon's teams carrying the move, when known.
+    let usage: Double?
 
     var id: String { move }
 
@@ -66,7 +68,8 @@ enum DamageCalc {
     /// cannot land at all - the defender is immune, or the attacker's typing
     /// makes the move unusable data.
     static func estimate(move: String, data: MoveData,
-                         attacker: Species, defender: Species) -> DamageEstimate? {
+                         attacker: Species, defender: Species,
+                         usage: Double? = nil) -> DamageEstimate? {
         let effectiveness = TypeChart.matchups(defending: defender.types)[data.type] ?? 1
         guard effectiveness > 0 else { return nil }
 
@@ -89,23 +92,26 @@ enum DamageCalc {
             maxFraction: high / Double(defenderHP),
             maxHits: Int((Double(defenderHP) / low).rounded(.up)),
             minHits: Int((Double(defenderHP) / high).rounded(.up)),
-            effectiveness: effectiveness
+            effectiveness: effectiveness,
+            usage: usage
         )
     }
 
-    /// The `limit` hardest-hitting moves this Pokemon is known to carry, best
-    /// first. Ordered by damage rather than by how often the move is used: the
-    /// question a player is asking mid-battle is what the worst case is, and a
-    /// popular but weak move does not answer it.
+    /// The `limit` moves this Pokemon most often carries, most-used first.
+    ///
+    /// Usage order, not damage order. How often a move is actually run already
+    /// prices in everything this calculator ignores - accuracy above all, but
+    /// also PP, side effects and how the move fits a real set. A 4x hit off a
+    /// move almost nobody carries is a number, not a threat.
     static func topMoves(for attacker: Species, against defender: Species,
                          usage: [UsageMove], limit: Int = 3) -> [DamageEstimate] {
         usage
             .compactMap { entry -> DamageEstimate? in
                 guard let data = UsageStore.shared.move(entry.name) else { return nil }
                 return estimate(move: entry.name, data: data,
-                                attacker: attacker, defender: defender)
+                                attacker: attacker, defender: defender,
+                                usage: entry.pct)
             }
-            .sorted { $0.maxFraction > $1.maxFraction }
             .prefix(limit)
             .map { $0 }
     }

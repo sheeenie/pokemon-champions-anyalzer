@@ -334,6 +334,13 @@ private struct DamageRow: View {
                 .foregroundColor(.white.opacity(0.88))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+            // How often it is carried: this is the order of the list, so it
+            // has to be visible or the ordering looks arbitrary.
+            if let usage = estimate.usage {
+                Text(String(format: "%.0f%%", usage))
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.32))
+            }
             Spacer(minLength: 4)
             Text(String(format: "%.0f-%.0f%%",
                         estimate.minFraction * 100, estimate.maxFraction * 100))

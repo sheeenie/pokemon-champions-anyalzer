@@ -54,9 +54,12 @@ and the other Pokémon on its side no longer list possible Megas.
 
 ### Damage estimates (singles)
 
-In a single battle, each card lists the three hardest-hitting moves that
-Pokémon is actually seen carrying, against the Pokémon across from it, as a
-share of its HP and the hits needed to KO. Move usage comes from
+In a single battle, each card lists the three moves that Pokémon most often
+carries, against the Pokémon across from it, as a share of its HP and the hits
+needed to KO, with how often each move is run. They are listed in usage order
+rather than by damage: how often a move is actually carried already prices in
+what this calculator ignores - accuracy above all, but also PP, side effects
+and how the move fits a real set. Move usage comes from
 [championsbattledata.com](https://championsbattledata.com); a snapshot ships
 with the app, and each Pokémon is refreshed from their API the first time it
 appears in a battle, so it keeps up with the meta. Without a connection the
@@ -185,7 +188,9 @@ clears the panel for the new battle.
 **Damage.** Champions fixes every battle at level 50 with perfect IVs, so the
 only unknowns are Stat Points, nature and held item. None are modelled: stats
 come from base stats alone, and damage from the standard formula with STAB, type
-effectiveness and the 85–100% roll. That makes every number a lower bound on
+effectiveness and the 85–100% roll. Moves are shown in the order they are
+actually carried, which stands in for the accuracy and side effects the formula
+leaves out. That makes every number a lower bound on
 what an invested attacker does, which is a more useful error than a confident
 guess at someone's spread would be.
 
