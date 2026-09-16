@@ -425,8 +425,57 @@ private struct DamageSection: View {
     }
 }
 
+/// One form button under a Pokemon's name.
+private struct FormChip: View {
+    let label: String
+    let active: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(label)
+                .font(.system(size: 10, weight: .heavy))
+                .foregroundColor(active ? .black.opacity(0.85) : .white.opacity(0.7))
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(active ? Color(red: 0.98, green: 0.83, blue: 0.35)
+                                   : Color.white.opacity(0.10))
+                .cornerRadius(4)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// A card's chosen Mega, pinned to the Pokemon it was chosen for.
+///
+/// The base key is stored, not just the Mega, because five Mega forms belong to
+/// two Pokemon at once - raichu-mega-x is both Raichu's and Alolan Raichu's -
+/// and without the pin a card would keep its Mega when one switched in for the
+/// other, which is exactly when it should let go.
+private struct FormChoice {
+    let base: String
+    let mega: String
+}
+
+/// The form a card shows: the Pokemon, or the Mega chosen for it.
+///
+/// This is what makes the choice stick without anything having to clear it. The
+/// card stays on its Mega through move animations and through the same Pokemon
+/// being re-identified, and the moment a different one is detected in the slot
+/// the pin no longer matches and the card is itself again.
+private func displayedForm(_ species: Species, choice: FormChoice?) -> Species {
+    guard let choice, choice.base == species.key,
+          let mega = PokedexStore.shared.megaForms(for: species).first(where: { $0.key == choice.mega })
+    else { return species }
+    return mega
+}
+
 private struct PokemonCard: View {
     let occupant: SlotOccupant
+    /// The form on show: `occupant.species`, or one of its Megas.
+    let shown: Species
+    /// Which Mega is on show, nil for the Pokemon itself.
+    @Binding var preview: String?
     /// False once this Pokemon's side has Mega Evolved, since it then can't.
     var showMegas = true
     /// The Pokemon across from this one, in singles. Nil in doubles.
@@ -436,9 +485,10 @@ private struct PokemonCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center, spacing: 8) {
-                // The reference sprite that actually won the match, so a wrong
-                // identification is obvious at a glance against the mirror.
-                if let sprite = PokedexStore.shared.icon(for: occupant.species.key) {
+                // The reference sprite for the form on show. With no Mega
+                // selected this is the sprite that actually won the match, so a
+                // wrong identification is obvious against the mirror.
+                if let sprite = PokedexStore.shared.icon(for: shown.key) {
                     Image(nsImage: NSImage(cgImage: sprite,
                                            size: NSSize(width: sprite.width, height: sprite.height)))
                         .resizable()
@@ -449,7 +499,7 @@ private struct PokemonCard: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(alignment: .firstTextBaseline, spacing: 5) {
-                        Text(occupant.species.displayName(lang))
+                        Text(shown.displayName(lang))
                             .font(.system(size: 17, weight: .bold))
                             .foregroundColor(.white)
                             .lineLimit(1)
@@ -460,36 +510,54 @@ private struct PokemonCard: View {
                                 .foregroundColor(Color(red: 0.98, green: 0.83, blue: 0.35))
                         }
                         Spacer(minLength: 0)
-                        Text("\(occupant.species.bst)")
+                        Text("\(shown.bst)")
                             .font(.system(size: 11, weight: .semibold, design: .monospaced))
                             .foregroundColor(.white.opacity(0.4))
                     }
                     HStack(spacing: 5) {
-                        ForEach(occupant.species.types, id: \.self) { TypeNameBadge(type: $0) }
+                        ForEach(shown.types, id: \.self) { TypeNameBadge(type: $0) }
                         Spacer(minLength: 0)
                     }
                 }
             }
 
-            AbilityRow(abilities: occupant.species.abilityList)
+            let megas = showMegas ? PokedexStore.shared.megaForms(for: occupant.species) : []
+            if !megas.isEmpty {
+                HStack(spacing: 5) {
+                    FormChip(label: L10n.text(.baseForm, lang), active: preview == nil) {
+                        preview = nil
+                    }
+                    ForEach(megas, id: \.key) { mega in
+                        FormChip(label: mega.formLabel(lang), active: preview == mega.key) {
+                            // Tapping the form already on show goes back, so the
+                            // buttons never trap the card in a Mega.
+                            preview = preview == mega.key ? nil : mega.key
+                        }
+                    }
+                    Spacer(minLength: 0)
+                }
+            }
+
+            AbilityRow(abilities: shown.abilityList)
 
             VStack(spacing: 4) {
-                ForEach(occupant.species.baseStats.ordered, id: \.0) { stat in
+                ForEach(shown.baseStats.ordered, id: \.0) { stat in
                     StatRow(label: stat.0, value: stat.1)
                 }
             }
 
             Divider().overlay(Color.white.opacity(0.12))
 
-            MatchupSection(types: occupant.species.types)
+            MatchupSection(types: shown.types)
 
             if let facing {
                 Divider().overlay(Color.white.opacity(0.12))
-                DamageSection(attacker: occupant.species, defender: facing)
+                DamageSection(attacker: shown, defender: facing)
             }
 
-            let megas = showMegas ? PokedexStore.shared.megaForms(for: occupant.species) : []
-            if !megas.isEmpty {
+            // Nothing to preview while a Mega is on the card: the card is the
+            // preview, in full, with its own stats and matchups.
+            if !megas.isEmpty, preview == nil {
                 Divider().overlay(Color.white.opacity(0.12))
                 VStack(alignment: .leading, spacing: 8) {
                     ForEach(Array(megas.enumerated()), id: \.element.key) { index, mega in
@@ -535,6 +603,9 @@ private struct SideColumn: View {
     let sideBySide: Bool
     /// The Pokemon this side's card is up against, in singles. Nil in doubles.
     var facing: Species? = nil
+    /// Which Mega each slot is previewing, owned by the panel so a card's
+    /// choice survives this view being rebuilt on every frame's update.
+    @Binding var megaPreview: [BattleSlot: FormChoice]
 
     /// In singles only the outer slot is used, so an inner slot with no
     /// occupant is hidden rather than shown as unidentified.
@@ -572,7 +643,19 @@ private struct SideColumn: View {
     @ViewBuilder
     private func card(for slot: BattleSlot) -> some View {
         if let occupant = occupants[slot] {
-            PokemonCard(occupant: occupant, showMegas: !megaUsed, facing: facing)
+            // A side that has already Mega Evolved cannot again, so its cards
+            // drop any preview along with the buttons.
+            let chosen = megaUsed ? nil : megaPreview[slot]
+            let base = occupant.species.key
+            PokemonCard(occupant: occupant,
+                        shown: displayedForm(occupant.species, choice: chosen),
+                        preview: Binding(
+                            get: { chosen?.base == base ? chosen?.mega : nil },
+                            set: { mega in
+                                megaPreview[slot] = mega.map { FormChoice(base: base, mega: $0) }
+                            }),
+                        showMegas: !megaUsed,
+                        facing: facing)
         } else {
             EmptyCard()
         }
@@ -757,13 +840,24 @@ struct StatsPanel: View {
 
     private var megaUsed: Set<BattleSide> { sidesThatMegaEvolved(battle.seen) }
 
+    /// Which Mega each slot's card is showing. Kept here rather than in the
+    /// card so it is not lost when the panel rebuilds, which it does on every
+    /// identification.
+    @State private var megaPreview: [BattleSlot: FormChoice] = [:]
+
     /// In singles each card shows what its Pokemon does to the one opposite, so
     /// it has to know its counterpart. Doubles has two Pokemon a side and no
     /// single counterpart, so both come back nil and the section is left out.
     private var facing: (opponent: Species?, player: Species?) {
         guard battle.format == .singles else { return (nil, nil) }
-        return (battle.slots.first { $0.key.side == .opponent }?.value.species,
-                battle.slots.first { $0.key.side == .player }?.value.species)
+        // Against the form actually on show, so switching a card to its Mega
+        // updates what the other card says it is up against.
+        func shown(_ side: BattleSide) -> Species? {
+            guard let entry = battle.slots.first(where: { $0.key.side == side }) else { return nil }
+            let chosen = megaUsed.contains(side) ? nil : megaPreview[entry.key]
+            return displayedForm(entry.value.species, choice: chosen)
+        }
+        return (shown(.opponent), shown(.player))
     }
 
     var body: some View {
@@ -800,14 +894,16 @@ struct StatsPanel: View {
                            occupants: battle.slots,
                            megaUsed: megaUsed.contains(.opponent),
                            sideBySide: battle.format == .doubles,
-                           facing: facing.player)
+                           facing: facing.player,
+                           megaPreview: $megaPreview)
                 SideColumn(title: L10n.text(.yourSide, lang),
                            accent: sideAccent(.player),
                            slots: [.player1, .player2],
                            occupants: battle.slots,
                            megaUsed: megaUsed.contains(.player),
                            sideBySide: battle.format == .doubles,
-                           facing: facing.opponent)
+                           facing: facing.opponent,
+                           megaPreview: $megaPreview)
             }
             Spacer(minLength: 0)
         }

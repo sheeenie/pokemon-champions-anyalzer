@@ -25,7 +25,7 @@ enum L10n {
         case opponent, yourSide, weak, resist, immune, megaWeak
         case unidentified, ability, hidden, bst, speed
         case hideMirror, showMirror
-        case damage, damageNote, usageCredit
+        case damage, damageNote, usageCredit, baseForm
     }
 
     private static let strings: [Key: (en: String, zh: String)] = [
@@ -40,6 +40,7 @@ enum L10n {
         .hidden: ("HIDDEN", "隱藏"),
         .bst: ("BST", "總和"),
         .damage: ("DAMAGE", "傷害"),
+        .baseForm: ("BASE", "原形"),
         .damageNote: ("no Stat Points, neutral nature, no item",
                       "無能力點數、無性格加成、無道具"),
         .usageCredit: ("Move usage: championsbattledata.com",
