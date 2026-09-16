@@ -70,9 +70,12 @@ out of turn order is marked with its priority. They are listed in usage order
 rather than by damage: how often a move is actually carried already prices in
 what this calculator ignores - accuracy above all, but also PP, side effects
 and how the move fits a real set. Move usage comes from
-[championsbattledata.com](https://championsbattledata.com); a snapshot ships
-with the app, and each Pokémon is refreshed from their API the first time it
-appears in a battle, so it keeps up with the meta. Without a connection the
+[championsbattledata.com](https://championsbattledata.com), separately for
+singles and doubles: they are different games, and a Pokémon's sets barely
+overlap - Garchomp runs Draco Meteor in singles and Dragon Claw with Rock Slide
+in doubles. The panel reads the set for the battle being played. A snapshot
+ships with the app, and each Pokémon is refreshed from their API the first time
+it appears in a battle, so it keeps up with the meta. Without a connection the
 snapshot is used.
 
 The numbers are deliberately a floor, not a prediction: they assume no Stat

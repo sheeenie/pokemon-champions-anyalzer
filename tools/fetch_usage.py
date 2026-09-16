@@ -59,6 +59,15 @@ def main():
                    if isinstance(v, list) and v and isinstance(v[0], dict) and "showdownId" in v[0])
     print(f"{len(listing)} Pokemon in the index")
 
+    def move_list(sid, fmt):
+        data = get(f"{API}/api/battle/{fmt}/{sid}", "usage-" + fmt.lower(), sid)
+        if not data:
+            return []
+        rows = [r for r in data.get("rows", []) if r.get("category") == "move"]
+        rows.sort(key=lambda r: r.get("rank") or 99)
+        return [{"name": r["name"], "pct": r.get("percentage_value")}
+                for r in rows if r.get("name")]
+
     pokemon, missing, move_names = {}, [], collections.Counter()
     for entry in listing:
         sid = entry["showdownId"]
@@ -66,16 +75,14 @@ def main():
         if not key:
             missing.append(sid)
             continue
-        data = get(f"{API}/api/battle/Singles/{sid}", "usage", sid)
-        if not data:
+        # The two formats are different games: a Pokemon's doubles set is not
+        # its singles set, so both are stored and the panel picks by battle.
+        singles = move_list(sid, "Singles")
+        doubles = move_list(sid, "Doubles")
+        if not singles and not doubles:
             continue
-        rows = [r for r in data.get("rows", []) if r.get("category") == "move"]
-        rows.sort(key=lambda r: r.get("rank") or 99)
-        moves = [{"name": r["name"], "pct": r.get("percentage_value")} for r in rows if r.get("name")]
-        if not moves:
-            continue
-        pokemon[key] = {"id": sid, "moves": moves}
-        for m in moves:
+        pokemon[key] = {"id": sid, "singles": singles, "doubles": doubles}
+        for m in singles + doubles:
             move_names[m["name"]] += 1
 
     # Only moves that can actually be estimated: a fixed base power and a
@@ -108,7 +115,6 @@ def main():
 
     usage = {
         "generated": datetime.date.today().isoformat(),
-        "format": "Singles",
         "source": "championsbattledata.com",
         "pokemon": pokemon,
     }
@@ -118,7 +124,8 @@ def main():
     with open(os.path.join(res, "moves.json"), "w") as f:
         json.dump(moves_out, f, ensure_ascii=False, separators=(",", ":"))
 
-    print(f"usage.json: {len(pokemon)} Pokemon"
+    both = sum(1 for v in pokemon.values() if v["singles"] and v["doubles"])
+    print(f"usage.json: {len(pokemon)} Pokemon, {both} with both formats"
           f" ({os.path.getsize(os.path.join(res, 'usage.json')) // 1024} KB)")
     print(f"moves.json: {len(moves_out)} damaging moves"
           f" ({os.path.getsize(os.path.join(res, 'moves.json')) // 1024} KB)")

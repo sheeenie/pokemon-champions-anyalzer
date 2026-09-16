@@ -8,12 +8,21 @@ struct UsageMove: Codable {
 
 private struct UsageEntry: Codable {
     let id: String
-    let moves: [UsageMove]
+    /// Kept apart because they are different games: a Pokemon's doubles set is
+    /// not its singles set. Garchomp runs Dragon Claw in one and not the other.
+    let singles: [UsageMove]
+    let doubles: [UsageMove]
+
+    func moves(_ format: BattleFormat) -> [UsageMove] {
+        let wanted = format == .doubles ? doubles : singles
+        // A Pokemon seen in only one format still gets an answer, since the
+        // other format's set is a better guess than no moves at all.
+        return wanted.isEmpty ? (format == .doubles ? singles : doubles) : wanted
+    }
 }
 
 private struct UsageFile: Codable {
     let generated: String?
-    let format: String?
     let pokemon: [String: UsageEntry]
 }
 
@@ -27,7 +36,7 @@ private struct UsageFile: Codable {
 final class UsageStore {
     static let shared = UsageStore()
 
-    private static let api = "https://championsbattledata.com/api/battle/Singles/"
+    private static let api = "https://championsbattledata.com/api/battle/"
     /// How long a downloaded copy is trusted before being fetched again. The
     /// site publishes daily, so anything shorter is just load on their server.
     private static let freshness: TimeInterval = 24 * 60 * 60
@@ -104,11 +113,11 @@ final class UsageStore {
 
     // MARK: Lookup
 
-    func moves(for species: Species) -> [UsageMove] {
+    func moves(for species: Species, format: BattleFormat) -> [UsageMove] {
         queue.sync {
             loadIfNeeded()
             guard let key = usageKey(for: species) else { return [] }
-            return entries[key]?.moves ?? []
+            return entries[key]?.moves(format) ?? []
         }
     }
 
@@ -124,28 +133,30 @@ final class UsageStore {
     /// Brings one Pokemon's moves up to date, at most once per session and at
     /// most once a day on disk. Safe to call from the analysis queue: the
     /// network work happens elsewhere and the result is merged back here.
-    func refresh(_ species: Species) {
+    func refresh(_ species: Species, format: BattleFormat) {
+        guard format != .idle else { return }
+        let path = format == .doubles ? "Doubles" : "Singles"
         queue.async {
             self.loadIfNeeded()
             guard let base = self.usageKey(for: species),
                   let id = self.entries[base]?.id,
-                  !self.refreshed.contains(base) else { return }
-            self.refreshed.insert(base)
+                  !self.refreshed.contains("\(id)/\(path)") else { return }
+            self.refreshed.insert("\(id)/\(path)")
 
-            if let cached = self.cacheDir?.appendingPathComponent("\(id).json"),
+            if let cached = self.cacheDir?.appendingPathComponent("\(id)-\(path).json"),
                let attrs = try? FileManager.default.attributesOfItem(atPath: cached.path),
                let modified = attrs[.modificationDate] as? Date,
                Date().timeIntervalSince(modified) < UsageStore.freshness,
                let data = try? Data(contentsOf: cached) {
-                self.merge(id: id, base: base, data: data)
+                self.merge(id: id, base: base, format: format, data: data)
                 return
             }
-            self.download(id: id, base: base)
+            self.download(id: id, base: base, format: format, path: path)
         }
     }
 
-    private func download(id: String, base: String) {
-        guard let url = URL(string: UsageStore.api + id) else { return }
+    private func download(id: String, base: String, format: BattleFormat, path: String) {
+        guard let url = URL(string: UsageStore.api + path + "/" + id) else { return }
         var request = URLRequest(url: url)
         request.timeoutInterval = 15
         URLSession.shared.dataTask(with: request) { [weak self] data, response, _ in
@@ -153,8 +164,8 @@ final class UsageStore {
                   let data,
                   (response as? HTTPURLResponse)?.statusCode == 200 else { return }
             self.queue.async {
-                self.merge(id: id, base: base, data: data)
-                if let cached = self.cacheDir?.appendingPathComponent("\(id).json") {
+                self.merge(id: id, base: base, format: format, data: data)
+                if let cached = self.cacheDir?.appendingPathComponent("\(id)-\(path).json") {
                     try? data.write(to: cached)
                 }
             }
@@ -163,7 +174,7 @@ final class UsageStore {
 
     /// Replaces one Pokemon's move list from an API response. Rows come from
     /// the network, so anything unexpected is dropped rather than trusted.
-    private func merge(id: String, base: String, data: Data) {
+    private func merge(id: String, base: String, format: BattleFormat, data: Data) {
         struct Row: Codable {
             let category: String?
             let rank: Int?
@@ -180,7 +191,9 @@ final class UsageStore {
                 guard let name = row.name, !name.isEmpty else { return nil }
                 return UsageMove(name: name, pct: row.percentage_value)
             }
-        guard !moves.isEmpty else { return }
-        entries[base] = UsageEntry(id: id, moves: moves)
+        guard !moves.isEmpty, let existing = entries[base] else { return }
+        entries[base] = UsageEntry(id: id,
+                                   singles: format == .doubles ? existing.singles : moves,
+                                   doubles: format == .doubles ? moves : existing.doubles)
     }
 }

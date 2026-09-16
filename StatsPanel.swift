@@ -434,6 +434,9 @@ private struct DamageSection: View {
     let foes: [Species]
     /// The partner a spread move would catch. Nil in singles.
     let ally: Species?
+    /// Which set of moves to use: a Pokemon's doubles set is not its singles
+    /// set, and reading the wrong one is how Garchomp lost Dragon Claw.
+    let format: BattleFormat
     /// Rows before it scrolls. Every move a Pokemon is seen carrying is listed
     /// either way; this only decides how many are visible at once. A card with
     /// Mega previews stacked below it has no room to grow, but one without them
@@ -453,8 +456,9 @@ private struct DamageSection: View {
     static let expandedRows = 12
 
     var body: some View {
-        let estimates = DamageCalc.topMoves(for: attacker, against: foes, ally: ally,
-                                            usage: UsageStore.shared.moves(for: attacker))
+        let estimates = DamageCalc.topMoves(
+            for: attacker, against: foes, ally: ally,
+            usage: UsageStore.shared.moves(for: attacker, format: format))
         let manyTargets = foes.count > 1
         if !estimates.isEmpty {
             let shown = min(estimates.count, rows)
@@ -499,6 +503,10 @@ private struct DamageSection: View {
                 }
                 .frame(height: height)
             }
+            // Asked for here rather than on identification, because this is
+            // where the format is known: the same Pokemon needs a different
+            // set depending on the battle it is standing in.
+            .onAppear { UsageStore.shared.refresh(attacker, format: format) }
         }
     }
 }
@@ -571,6 +579,8 @@ private struct PokemonCard: View {
     var foes: [Species] = []
     /// This Pokemon's partner, whom a spread move would also catch.
     var ally: Species? = nil
+    /// Which battle this is, since it decides which move set applies.
+    var format: BattleFormat = .singles
     @Environment(\.lang) private var lang
 
     var body: some View {
@@ -649,7 +659,7 @@ private struct PokemonCard: View {
             let previewsBelow = !megas.isEmpty && preview == nil
             if !foes.isEmpty {
                 Divider().overlay(Color.white.opacity(0.12))
-                DamageSection(attacker: shown, foes: foes, ally: ally,
+                DamageSection(attacker: shown, foes: foes, ally: ally, format: format,
                               rows: previewsBelow ? DamageSection.compactRows
                                                   : DamageSection.expandedRows)
             }
@@ -702,6 +712,8 @@ private struct SideColumn: View {
     let sideBySide: Bool
     /// What each slot is aiming at, and who stands beside it.
     let opposition: (BattleSlot) -> (foes: [Species], ally: Species?)
+    /// Passed down so each card reads the move set for the battle being played.
+    let format: BattleFormat
     /// Which Mega each slot is previewing, owned by the panel so a card's
     /// choice survives this view being rebuilt on every frame's update.
     @Binding var megaPreview: [BattleSlot: FormChoice]
@@ -759,7 +771,8 @@ private struct SideColumn: View {
                             }),
                         showMegas: !megaUsed,
                         foes: against.foes,
-                        ally: against.ally)
+                        ally: against.ally,
+                        format: format)
         } else {
             EmptyCard()
         }
@@ -1005,6 +1018,7 @@ struct StatsPanel: View {
                            megaUsed: megaUsed.contains(.opponent),
                            sideBySide: battle.format == .doubles,
                            opposition: opposition(for:),
+                           format: battle.format,
                            megaPreview: $megaPreview)
                 SideColumn(title: L10n.text(.yourSide, lang),
                            accent: sideAccent(.player),
@@ -1013,6 +1027,7 @@ struct StatsPanel: View {
                            megaUsed: megaUsed.contains(.player),
                            sideBySide: battle.format == .doubles,
                            opposition: opposition(for:),
+                           format: battle.format,
                            megaPreview: $megaPreview)
             }
             Spacer(minLength: 0)
