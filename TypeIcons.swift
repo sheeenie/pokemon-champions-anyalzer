@@ -26,6 +26,25 @@ enum TypePalette {
     static func color(_ type: String) -> Color { Self.color(hex[type] ?? 0x777777) }
     static func dark(_ type: String) -> Color { Self.color(hexDark[type] ?? 0x555555) }
 
+    /// The type's colour as *text* on the panel's dark background.
+    ///
+    /// The palette above is built for white text on a coloured chip, so its
+    /// darker entries - Dark at 0x775544, Fighting, Ghost - turn muddy when
+    /// they become the text themselves. Scaling every channel by the same
+    /// factor raises the brightness while leaving hue and saturation alone, so
+    /// each type stays recognisably itself rather than needing a second
+    /// hand-picked palette to maintain.
+    static func text(_ type: String) -> Color {
+        let rgb = hex[type] ?? 0x777777
+        let r = Double((rgb >> 16) & 0xFF) / 255
+        let g = Double((rgb >> 8) & 0xFF) / 255
+        let b = Double(rgb & 0xFF) / 255
+        let peak = max(r, g, b)
+        guard peak > 0, peak < 0.82 else { return Color(red: r, green: g, blue: b) }
+        let k = 0.82 / peak
+        return Color(red: min(1, r * k), green: min(1, g * k), blue: min(1, b * k))
+    }
+
     private static func color(_ rgb: UInt32) -> Color {
         Color(red: Double((rgb >> 16) & 0xFF) / 255,
               green: Double((rgb >> 8) & 0xFF) / 255,

@@ -331,9 +331,22 @@ private struct DamageRow: View {
         HStack(spacing: 6) {
             Text(estimate.data.name(estimate.move, lang))
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.white.opacity(0.88))
+                .foregroundColor(TypePalette.text(estimate.data.type))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
+            // Moving first can matter more than hitting hard, and nothing else
+            // on the card says a move is quick.
+            if let priority = estimate.data.priority, priority != 0 {
+                Text(priority > 0 ? "+\(priority)" : "\(priority)")
+                    .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                    .foregroundColor(.white.opacity(0.9))
+                    .padding(.horizontal, 3)
+                    .padding(.vertical, 1)
+                    .background(priority > 0
+                                ? Color(red: 0.36, green: 0.71, blue: 0.95).opacity(0.45)
+                                : Color.white.opacity(0.12))
+                    .cornerRadius(3)
+            }
             // How often it is carried: this is the order of the list, so it
             // has to be visible or the ordering looks arbitrary.
             if let usage = estimate.usage {

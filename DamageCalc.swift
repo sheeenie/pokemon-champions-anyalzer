@@ -7,6 +7,9 @@ struct MoveData: Codable {
     /// "physical" or "special". Status moves are not in the file at all.
     let category: String
     let zh: String
+    /// Move order, when it is not the usual 0. Absent from the file for the
+    /// 229 of 249 moves that do not have one.
+    let priority: Int?
 
     var isPhysical: Bool { category == "physical" }
 

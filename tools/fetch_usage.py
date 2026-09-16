@@ -94,8 +94,13 @@ def main():
             skipped.append((name, d["damage_class"]["name"] if not d["power"] else "status"))
             continue
         zh = next((n["name"] for n in d["names"] if n["language"]["name"] == "zh-hant"), "")
-        moves_out[name] = {"power": d["power"], "type": d["type"]["name"],
-                           "category": d["damage_class"]["name"], "zh": zh}
+        entry = {"power": d["power"], "type": d["type"]["name"],
+                 "category": d["damage_class"]["name"], "zh": zh}
+        # Only when it matters: priority 0 is the overwhelming majority, and
+        # writing it out would be most of the file saying nothing.
+        if d["priority"]:
+            entry["priority"] = d["priority"]
+        moves_out[name] = entry
 
     usage = {
         "generated": datetime.date.today().isoformat(),
