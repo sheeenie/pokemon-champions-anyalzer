@@ -95,7 +95,11 @@ def main():
             continue
         zh = next((n["name"] for n in d["names"] if n["language"]["name"] == "zh-hant"), "")
         entry = {"power": d["power"], "type": d["type"]["name"],
-                 "category": d["damage_class"]["name"], "zh": zh}
+                 "category": d["damage_class"]["name"], "zh": zh,
+                 # Who it hits: "selected-pokemon" for most, "all-opponents" for
+                 # spread moves, "all-other-pokemon" for the ones that catch
+                 # your own partner as well. Doubles damage depends on it.
+                 "target": d["target"]["name"]}
         # Only when it matters: priority 0 is the overwhelming majority, and
         # writing it out would be most of the file saying nothing.
         if d["priority"]:

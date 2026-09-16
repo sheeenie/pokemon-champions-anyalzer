@@ -57,7 +57,7 @@ and the other Pokémon on its side no longer list possible Megas.
 
 ![The speed list updating as Basculegion switches back to Incineroar](docs/speed-list.gif)
 
-### Damage estimates (singles)
+### Damage estimates
 
 In a single battle, each card lists the moves that Pokémon is seen carrying,
 most-used first, against the Pokémon across from it, as a share of its HP, with
@@ -77,8 +77,15 @@ The numbers are deliberately a floor, not a prediction: they assume no Stat
 Points, a neutral nature, no held item and no ability or weather effects, so a
 real attacker hits at least this hard. Moves with no fixed base power, such as
 Seismic Toss and Grass Knot, are left out rather than shown with a wrong
-number. Doubles has no single Pokémon opposite each card, so the section only
-appears in singles.
+number.
+
+In doubles each card shows a column per target, under that Pokémon's sprite:
+both opponents, and your own partner where the move would catch them. A move
+that hits several Pokémon at once is marked **ALL**, and its numbers already
+include the 0.75× every such move takes - which lifts again once only one
+target is left. Earthquake and its kind show what they do to your own partner
+in red, and a target that is immune shows a dash rather than nothing, since a
+Flying Pokémon walking through your Earthquake is the point of the row.
 
 ### English and Traditional Chinese
 

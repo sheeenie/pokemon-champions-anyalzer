@@ -312,19 +312,59 @@ private struct StatRow: View {
 }
 
 /// One estimated attack: name, share of the target's HP, and hits to KO.
+/// A target's sprite, used as a column heading over its damage numbers.
+private struct TargetIcon: View {
+    let species: Species
+    var dimmed = false
+
+    var body: some View {
+        if let sprite = PokedexStore.shared.icon(for: species.key) {
+            Image(nsImage: NSImage(cgImage: sprite,
+                                   size: NSSize(width: sprite.width, height: sprite.height)))
+                .resizable()
+                .interpolation(.high)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 15, height: 15)
+                .opacity(dimmed ? 0.55 : 1)
+        }
+    }
+}
+
 private struct DamageRow: View {
     let estimate: DamageEstimate
+    /// True when a partner is standing there, so every row keeps a column for
+    /// them - blank for the moves that spare them. Without it the rows that do
+    /// hit the partner have one column more than the rest, and every number
+    /// slides out from under the sprite that labels it.
+    var allyColumn = false
     @Environment(\.lang) private var lang
 
     /// Coloured by how much it hurts, on the same reading as the type matchups
     /// above it: red is the one that ends the turn badly.
-    private var tint: Color {
-        switch estimate.maxFraction {
+    private func tint(_ fraction: Double) -> Color {
+        switch fraction {
         case 1.0...: return Color(red: 0.98, green: 0.36, blue: 0.36)
         case 0.5...: return Color(red: 0.98, green: 0.62, blue: 0.29)
         case 0.25...: return Color(red: 0.96, green: 0.85, blue: 0.40)
         default: return .white.opacity(0.65)
         }
+    }
+
+    @ViewBuilder
+    private func number(_ target: TargetDamage, ally: Bool) -> some View {
+        Group {
+            if target.effectiveness > 0 {
+                Text(String(format: "%.0f%%", target.maxFraction * 100))
+                    .foregroundColor(ally ? Color(red: 0.98, green: 0.45, blue: 0.45)
+                                          : tint(target.maxFraction))
+            } else {
+                // Immune, and shown rather than left blank: that a target walks
+                // through the move is the useful part.
+                Text("—").foregroundColor(.white.opacity(0.25))
+            }
+        }
+        .font(.system(size: 11, weight: .bold, design: .monospaced))
+        .frame(width: DamageSection.columnWidth, alignment: .trailing)
     }
 
     var body: some View {
@@ -333,7 +373,7 @@ private struct DamageRow: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(TypePalette.text(estimate.data.type))
                 .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                .minimumScaleFactor(0.6)
             // Moving first can matter more than hitting hard, and nothing else
             // on the card says a move is quick.
             if let priority = estimate.data.priority, priority != 0 {
@@ -347,6 +387,18 @@ private struct DamageRow: View {
                                 : Color.white.opacity(0.12))
                     .cornerRadius(3)
             }
+            // Without this a spread move looks like a single-target one that
+            // happens to have two numbers, when in fact it hits both at once -
+            // and those numbers already carry the 0.75x for doing so.
+            if estimate.data.reach.isSpread, !estimate.isSingleTarget {
+                Text(L10n.text(.spread, lang))
+                    .font(.system(size: 8, weight: .heavy))
+                    .foregroundColor(.black.opacity(0.8))
+                    .padding(.horizontal, 3)
+                    .padding(.vertical, 1)
+                    .background(Color(red: 0.98, green: 0.62, blue: 0.29).opacity(0.85))
+                    .cornerRadius(3)
+            }
             // How often it is carried: this is the order of the list, so it
             // has to be visible or the ordering looks arbitrary.
             if let usage = estimate.usage {
@@ -355,21 +407,44 @@ private struct DamageRow: View {
                     .foregroundColor(.white.opacity(0.32))
             }
             Spacer(minLength: 4)
-            Text(String(format: "%.0f-%.0f%%",
-                        estimate.minFraction * 100, estimate.maxFraction * 100))
-                .font(.system(size: 12, weight: .bold, design: .monospaced))
-                .foregroundColor(tint)
+
+            if estimate.isSingleTarget, let only = estimate.targets.first {
+                // One Pokemon opposite: room for the whole roll.
+                Text(String(format: "%.0f-%.0f%%",
+                            only.minFraction * 100, only.maxFraction * 100))
+                    .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    .foregroundColor(tint(only.maxFraction))
+            } else {
+                // Four cards share the window in doubles, so each target gets
+                // its highest roll in a fixed column under its sprite.
+                ForEach(Array(estimate.targets.enumerated()), id: \.offset) { _, target in
+                    number(target, ally: false)
+                }
+                if allyColumn {
+                    if let ally = estimate.ally {
+                        number(ally, ally: true)
+                    } else {
+                        Text("·")
+                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.18))
+                            .frame(width: DamageSection.columnWidth, alignment: .trailing)
+                    }
+                }
+            }
         }
         .frame(height: DamageSection.rowHeight)
     }
 }
 
-/// What this Pokemon can do to the one across from it, using the moves it is
-/// actually seen carrying. Singles only: in doubles there are two Pokemon on
-/// each side, so there is no single counterpart to aim at.
+/// What this Pokemon can do to the Pokemon opposite, using the moves it is
+/// actually seen carrying. In doubles that is both of them, and for moves like
+/// Earthquake the attacker's own partner as well.
 private struct DamageSection: View {
     let attacker: Species
-    let defender: Species
+    /// The opposing Pokemon, in the order their cards appear.
+    let foes: [Species]
+    /// The partner a spread move would catch. Nil in singles.
+    let ally: Species?
     /// Rows before it scrolls. Every move a Pokemon is seen carrying is listed
     /// either way; this only decides how many are visible at once. A card with
     /// Mega previews stacked below it has no room to grow, but one without them
@@ -382,13 +457,16 @@ private struct DamageSection: View {
     /// rather than cutting one in half and looking like a rendering mistake.
     static let rowHeight: CGFloat = 17
     private static let rowSpacing: CGFloat = 5
+    /// Each target's numbers, so the sprites above them line up.
+    static let columnWidth: CGFloat = 40
     static let compactRows = 4
     /// More than any Pokemon currently carries, so the list simply ends.
     static let expandedRows = 12
 
     var body: some View {
-        let estimates = DamageCalc.topMoves(for: attacker, against: defender,
+        let estimates = DamageCalc.topMoves(for: attacker, against: foes, ally: ally,
                                             usage: UsageStore.shared.moves(for: attacker))
+        let manyTargets = foes.count + (ally == nil ? 0 : 1) > 1
         if !estimates.isEmpty {
             let shown = min(estimates.count, rows)
             let height = CGFloat(shown) * DamageSection.rowHeight
@@ -399,10 +477,12 @@ private struct DamageSection: View {
                         .font(.system(size: 11, weight: .heavy))
                         .foregroundColor(.white.opacity(0.55))
                         .tracking(0.8)
-                    Text("→ \(defender.displayName(lang))")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.white.opacity(0.35))
-                        .lineLimit(1)
+                    if !manyTargets, let only = foes.first {
+                        Text("→ \(only.displayName(lang))")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.35))
+                            .lineLimit(1)
+                    }
                     Spacer(minLength: 0)
                     // macOS hides scrollbars until you scroll, so without this
                     // there is nothing to say the list continues.
@@ -414,10 +494,23 @@ private struct DamageSection: View {
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundColor(.white.opacity(0.4))
                     }
+                    // Which column is which, without spending a row on names.
+                    if manyTargets {
+                        ForEach(Array(foes.enumerated()), id: \.offset) { _, foe in
+                            TargetIcon(species: foe)
+                                .frame(width: DamageSection.columnWidth, alignment: .trailing)
+                        }
+                        if let ally {
+                            TargetIcon(species: ally, dimmed: true)
+                                .frame(width: DamageSection.columnWidth, alignment: .trailing)
+                        }
+                    }
                 }
                 ScrollView(.vertical) {
                     VStack(alignment: .leading, spacing: DamageSection.rowSpacing) {
-                        ForEach(estimates) { DamageRow(estimate: $0) }
+                        ForEach(estimates) {
+                            DamageRow(estimate: $0, allyColumn: ally != nil)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -425,6 +518,14 @@ private struct DamageSection: View {
                 Text(L10n.text(.damageNote, lang))
                     .font(.system(size: 9))
                     .foregroundColor(.white.opacity(0.28))
+                // Only worth saying when a partner is actually standing there.
+                if ally != nil, estimates.contains(where: { $0.ally != nil }) {
+                    Text(L10n.text(.allyHit, lang))
+                        .font(.system(size: 9))
+                        .foregroundColor(Color(red: 0.98, green: 0.45, blue: 0.45).opacity(0.7))
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
         }
     }
@@ -483,8 +584,10 @@ private struct PokemonCard: View {
     @Binding var preview: String?
     /// False once this Pokemon's side has Mega Evolved, since it then can't.
     var showMegas = true
-    /// The Pokemon across from this one, in singles. Nil in doubles.
-    var facing: Species? = nil
+    /// The Pokemon opposite: one in singles, both in doubles.
+    var foes: [Species] = []
+    /// This Pokemon's partner, whom a spread move would also catch.
+    var ally: Species? = nil
     @Environment(\.lang) private var lang
 
     var body: some View {
@@ -558,9 +661,9 @@ private struct PokemonCard: View {
             // The Mega previews are what a taller card would push off screen,
             // so when they are not there the damage list takes the room.
             let previewsBelow = !megas.isEmpty && preview == nil
-            if let facing {
+            if !foes.isEmpty {
                 Divider().overlay(Color.white.opacity(0.12))
-                DamageSection(attacker: shown, defender: facing,
+                DamageSection(attacker: shown, foes: foes, ally: ally,
                               rows: previewsBelow ? DamageSection.compactRows
                                                   : DamageSection.expandedRows)
             }
@@ -611,8 +714,8 @@ private struct SideColumn: View {
     /// Doubles: one column per slot, so four cards sit side by side instead of
     /// two tall cards stacked per side, which ran off the bottom of the window.
     let sideBySide: Bool
-    /// The Pokemon this side's card is up against, in singles. Nil in doubles.
-    var facing: Species? = nil
+    /// What each slot is aiming at, and who stands beside it.
+    let opposition: (BattleSlot) -> (foes: [Species], ally: Species?)
     /// Which Mega each slot is previewing, owned by the panel so a card's
     /// choice survives this view being rebuilt on every frame's update.
     @Binding var megaPreview: [BattleSlot: FormChoice]
@@ -657,6 +760,7 @@ private struct SideColumn: View {
             // drop any preview along with the buttons.
             let chosen = megaUsed ? nil : megaPreview[slot]
             let base = occupant.species.key
+            let against = opposition(slot)
             PokemonCard(occupant: occupant,
                         shown: displayedForm(occupant.species, choice: chosen),
                         preview: Binding(
@@ -665,7 +769,8 @@ private struct SideColumn: View {
                                 megaPreview[slot] = mega.map { FormChoice(base: base, mega: $0) }
                             }),
                         showMegas: !megaUsed,
-                        facing: facing)
+                        foes: against.foes,
+                        ally: against.ally)
         } else {
             EmptyCard()
         }
@@ -858,16 +963,22 @@ struct StatsPanel: View {
     /// In singles each card shows what its Pokemon does to the one opposite, so
     /// it has to know its counterpart. Doubles has two Pokemon a side and no
     /// single counterpart, so both come back nil and the section is left out.
-    private var facing: (opponent: Species?, player: Species?) {
-        guard battle.format == .singles else { return (nil, nil) }
-        // Against the form actually on show, so switching a card to its Mega
-        // updates what the other card says it is up against.
-        func shown(_ side: BattleSide) -> Species? {
-            guard let entry = battle.slots.first(where: { $0.key.side == side }) else { return nil }
-            let chosen = megaUsed.contains(side) ? nil : megaPreview[entry.key]
-            return displayedForm(entry.value.species, choice: chosen)
+    /// What the card in `slot` is aiming at: the Pokemon opposite, and the
+    /// partner a spread move would catch.
+    ///
+    /// One rule covers both formats. In singles the partner slot is simply
+    /// empty, so `ally` comes back nil and the opposing side yields a single
+    /// foe; in doubles both are filled and the card shows a number for each.
+    private func opposition(for slot: BattleSlot) -> (foes: [Species], ally: Species?) {
+        func shown(_ s: BattleSlot) -> Species? {
+            guard let occupant = battle.slots[s] else { return nil }
+            let chosen = megaUsed.contains(s.side) ? nil : megaPreview[s]
+            return displayedForm(occupant.species, choice: chosen)
         }
-        return (shown(.opponent), shown(.player))
+        let opposing: [BattleSlot] = slot.side == .opponent
+            ? [.player1, .player2]
+            : [.opponent1, .opponent2]
+        return (opposing.compactMap(shown), shown(slot.partner))
     }
 
     var body: some View {
@@ -904,7 +1015,7 @@ struct StatsPanel: View {
                            occupants: battle.slots,
                            megaUsed: megaUsed.contains(.opponent),
                            sideBySide: battle.format == .doubles,
-                           facing: facing.player,
+                           opposition: opposition(for:),
                            megaPreview: $megaPreview)
                 SideColumn(title: L10n.text(.yourSide, lang),
                            accent: sideAccent(.player),
@@ -912,7 +1023,7 @@ struct StatsPanel: View {
                            occupants: battle.slots,
                            megaUsed: megaUsed.contains(.player),
                            sideBySide: battle.format == .doubles,
-                           facing: facing.opponent,
+                           opposition: opposition(for:),
                            megaPreview: $megaPreview)
             }
             Spacer(minLength: 0)

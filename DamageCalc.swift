@@ -10,26 +10,71 @@ struct MoveData: Codable {
     /// Move order, when it is not the usual 0. Absent from the file for the
     /// 229 of 249 moves that do not have one.
     let priority: Int?
+    /// PokeAPI's target, which in doubles decides who is hit and whether the
+    /// damage is reduced. Optional so data generated before it decodes.
+    let target: String?
 
     var isPhysical: Bool { category == "physical" }
+
+    var reach: MoveReach {
+        switch target {
+        case "all-opponents": return .allOpponents
+        case "all-other-pokemon": return .allOthers
+        default: return .single
+        }
+    }
 
     func name(_ en: String, _ lang: Lang) -> String {
         lang == .zh && !zh.isEmpty ? zh : en
     }
 }
 
-/// One estimated attack: what it does to the Pokemon across from it.
+/// Who a move hits when there is more than one Pokemon on the other side.
+enum MoveReach {
+    /// One Pokemon of the attacker's choosing.
+    case single
+    /// Both opponents at once - Rock Slide, Heat Wave, Dazzling Gleam.
+    case allOpponents
+    /// Both opponents and the attacker's own partner - Earthquake, Surf,
+    /// Discharge, Explosion.
+    case allOthers
+
+    var hitsAlly: Bool { self == .allOthers }
+    var isSpread: Bool { self != .single }
+}
+
+/// What a move does to one Pokemon.
+struct TargetDamage {
+    let species: Species
+    /// Share of that Pokemon's HP, 0...1, at the lowest and highest roll.
+    let minFraction: Double
+    let maxFraction: Double
+    /// 0 when it cannot be hit at all, which is shown rather than hidden: an
+    /// Earthquake that misses one of the two is the point of the row.
+    let effectiveness: Double
+}
+
+/// One estimated attack, against everything it would hit.
 struct DamageEstimate: Identifiable {
     let move: String
     let data: MoveData
-    /// Share of the defender's HP, 0...1, at the lowest and highest roll.
-    let minFraction: Double
-    let maxFraction: Double
-    let effectiveness: Double
     /// Share of this Pokemon's teams carrying the move, when known.
     let usage: Double?
+    /// The opposing Pokemon, in the order their cards appear.
+    let targets: [TargetDamage]
+    /// The attacker's own partner, when the move would catch them too.
+    let ally: TargetDamage?
+    /// True when the 0.75x reduction for hitting several Pokemon applies.
+    let reduced: Bool
 
     var id: String { move }
+
+    /// The worst it does to anything, which is what colours the row.
+    var maxFraction: Double {
+        (targets.map(\.maxFraction) + [ally?.maxFraction ?? 0]).max() ?? 0
+    }
+    /// Singles, or a doubles field with only one Pokemon left opposite.
+    var isSingleTarget: Bool { targets.count == 1 && ally == nil }
 }
 
 /// Rough damage estimates for Pokemon Champions singles.
@@ -59,14 +104,13 @@ enum DamageCalc {
         22 * power * attack / defense / 50 + 2
     }
 
-    /// Estimates `move` used by `attacker` against `defender`, or nil when it
-    /// cannot land at all - the defender is immune, or the attacker's typing
-    /// makes the move unusable data.
-    static func estimate(move: String, data: MoveData,
-                         attacker: Species, defender: Species,
-                         usage: Double? = nil) -> DamageEstimate? {
+    /// What one move does to one Pokemon, before the roll is split out.
+    private static func damage(_ data: MoveData, attacker: Species, defender: Species,
+                               reduced: Bool) -> TargetDamage {
         let effectiveness = TypeChart.matchups(defending: defender.types)[data.type] ?? 1
-        guard effectiveness > 0 else { return nil }
+        guard effectiveness > 0 else {
+            return TargetDamage(species: defender, minFraction: 0, maxFraction: 0, effectiveness: 0)
+        }
 
         let attack = stat(base: data.isPhysical ? attacker.baseStats.atk : attacker.baseStats.spa)
         let defense = stat(base: data.isPhysical ? defender.baseStats.def : defender.baseStats.spd)
@@ -74,20 +118,43 @@ enum DamageCalc {
 
         let stab = attacker.types.contains(data.type) ? 1.5 : 1.0
         let raw = Double(base(power: data.power, attack: attack, defense: defense))
-            * stab * effectiveness
+            * stab * effectiveness * (reduced ? 0.75 : 1)
 
         // The game's damage roll is 85%...100%.
         let low = max(1.0, (raw * 0.85).rounded(.down))
         let high = max(1.0, raw.rounded(.down))
+        return TargetDamage(species: defender,
+                            minFraction: low / Double(defenderHP),
+                            maxFraction: high / Double(defenderHP),
+                            effectiveness: effectiveness)
+    }
 
-        return DamageEstimate(
-            move: move,
-            data: data,
-            minFraction: low / Double(defenderHP),
-            maxFraction: high / Double(defenderHP),
-            effectiveness: effectiveness,
-            usage: usage
-        )
+    /// Estimates `move` against everything it would hit, or nil when it can
+    /// touch none of them.
+    ///
+    /// A move that hits several Pokemon at once does 0.75x to each, and only
+    /// while there is more than one to hit: Rock Slide into a lone survivor is
+    /// back to full damage. Earthquake and its kind also hit the attacker's own
+    /// partner, which is worth seeing before the turn rather than after it.
+    static func estimate(move: String, data: MoveData, attacker: Species,
+                         foes: [Species], ally: Species? = nil,
+                         usage: Double? = nil) -> DamageEstimate? {
+        let reach = data.reach
+        let ally = reach.hitsAlly ? ally : nil
+        let hit = reach.isSpread ? foes.count + (ally == nil ? 0 : 1) : 1
+        let reduced = reach.isSpread && hit > 1
+
+        let targets = foes.map {
+            damage(data, attacker: attacker, defender: $0, reduced: reduced)
+        }
+        let allyHit = ally.map {
+            damage(data, attacker: attacker, defender: $0, reduced: reduced)
+        }
+        guard targets.contains(where: { $0.effectiveness > 0 }) || (allyHit?.effectiveness ?? 0) > 0
+        else { return nil }
+
+        return DamageEstimate(move: move, data: data, usage: usage,
+                              targets: targets, ally: allyHit, reduced: reduced)
     }
 
     /// The moves this Pokemon most often carries, most-used first, up to
@@ -98,14 +165,14 @@ enum DamageCalc {
     /// prices in everything this calculator ignores - accuracy above all, but
     /// also PP, side effects and how the move fits a real set. A 4x hit off a
     /// move almost nobody carries is a number, not a threat.
-    static func topMoves(for attacker: Species, against defender: Species,
+    static func topMoves(for attacker: Species, against foes: [Species],
+                         ally: Species? = nil,
                          usage: [UsageMove], limit: Int = 12) -> [DamageEstimate] {
         usage
             .compactMap { entry -> DamageEstimate? in
                 guard let data = UsageStore.shared.move(entry.name) else { return nil }
-                return estimate(move: entry.name, data: data,
-                                attacker: attacker, defender: defender,
-                                usage: entry.pct)
+                return estimate(move: entry.name, data: data, attacker: attacker,
+                                foes: foes, ally: ally, usage: entry.pct)
             }
             .prefix(limit)
             .map { $0 }
