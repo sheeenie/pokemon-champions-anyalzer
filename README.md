@@ -18,7 +18,7 @@ singles and doubles, including shiny Pokémon, Mega forms and regional forms
 (786 reference sprites). When a Pokémon switches in, its card and the speed list
 update.
 
-![Your Incineroar switching out for Basculegion](docs/switch-in.gif)
+![Your Incineroar switching out for Basculegion: sprite, name, typing, abilities, stats and matchups all follow, while its partner Sinistcha stays put](docs/switch-in.gif)
 
 ### Stat cards and type matchups
 
