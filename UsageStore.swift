@@ -78,12 +78,37 @@ final class UsageStore {
         return k
     }
 
+    /// The key this species' usage is filed under, or nil when there is none.
+    ///
+    /// Trimming the suffix is not enough on its own: a Mega's key does not
+    /// always contain its base form's key. Floette Eternal Flower is
+    /// "floette-eternal" while its Mega is "floette-mega", so trimming asks for
+    /// a "floette" that no entry uses, and the card silently lost its damage
+    /// estimates the moment it Mega Evolved. The dex number identifies the base
+    /// exactly, so it is the fallback - and only a fallback, because species
+    /// that share a dex with a different usage entry, such as Indeedee and
+    /// Indeedee-F, must keep resolving to their own.
+    ///
+    /// Call on `queue`.
+    private func usageKey(for species: Species) -> String? {
+        let trimmed = baseKey(species.key)
+        if entries[trimmed] != nil { return trimmed }
+        for candidate in PokedexStore.shared.species
+        where candidate.dex == species.dex
+            && !candidate.isShiny
+            && !candidate.form.contains("Mega") {
+            if entries[candidate.key] != nil { return candidate.key }
+        }
+        return nil
+    }
+
     // MARK: Lookup
 
-    func moves(for key: String) -> [UsageMove] {
+    func moves(for species: Species) -> [UsageMove] {
         queue.sync {
             loadIfNeeded()
-            return entries[baseKey(key)]?.moves ?? []
+            guard let key = usageKey(for: species) else { return [] }
+            return entries[key]?.moves ?? []
         }
     }
 
@@ -99,11 +124,12 @@ final class UsageStore {
     /// Brings one Pokemon's moves up to date, at most once per session and at
     /// most once a day on disk. Safe to call from the analysis queue: the
     /// network work happens elsewhere and the result is merged back here.
-    func refresh(_ key: String) {
+    func refresh(_ species: Species) {
         queue.async {
             self.loadIfNeeded()
-            let base = self.baseKey(key)
-            guard let id = self.entries[base]?.id, !self.refreshed.contains(base) else { return }
+            guard let base = self.usageKey(for: species),
+                  let id = self.entries[base]?.id,
+                  !self.refreshed.contains(base) else { return }
             self.refreshed.insert(base)
 
             if let cached = self.cacheDir?.appendingPathComponent("\(id).json"),

@@ -370,7 +370,7 @@ private struct DamageSection: View {
 
     var body: some View {
         let estimates = DamageCalc.topMoves(for: attacker, against: defender,
-                                            usage: UsageStore.shared.moves(for: attacker.key))
+                                            usage: UsageStore.shared.moves(for: attacker))
         if !estimates.isEmpty {
             let shown = min(estimates.count, DamageSection.visibleRows)
             let height = CGFloat(shown) * DamageSection.rowHeight
