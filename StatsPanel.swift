@@ -370,22 +370,27 @@ private struct DamageRow: View {
 private struct DamageSection: View {
     let attacker: Species
     let defender: Species
+    /// Rows before it scrolls. Every move a Pokemon is seen carrying is listed
+    /// either way; this only decides how many are visible at once. A card with
+    /// Mega previews stacked below it has no room to grow, but one without them
+    /// - a Pokemon with no Mega, or a card already switched to its Mega - can
+    /// simply be taller and show the whole list.
+    let rows: Int
     @Environment(\.lang) private var lang
 
     /// Row geometry is fixed so the scroll view can be sized to whole rows,
     /// rather than cutting one in half and looking like a rendering mistake.
     static let rowHeight: CGFloat = 17
     private static let rowSpacing: CGFloat = 5
-    /// Rows before it scrolls. Every move a Pokemon is seen carrying is listed,
-    /// but a card cannot grow without pushing the Mega previews off screen, so
-    /// the rest are a scroll away.
-    private static let visibleRows = 4
+    static let compactRows = 4
+    /// More than any Pokemon currently carries, so the list simply ends.
+    static let expandedRows = 12
 
     var body: some View {
         let estimates = DamageCalc.topMoves(for: attacker, against: defender,
                                             usage: UsageStore.shared.moves(for: attacker))
         if !estimates.isEmpty {
-            let shown = min(estimates.count, DamageSection.visibleRows)
+            let shown = min(estimates.count, rows)
             let height = CGFloat(shown) * DamageSection.rowHeight
                 + CGFloat(max(0, shown - 1)) * DamageSection.rowSpacing
             VStack(alignment: .leading, spacing: 5) {
@@ -401,7 +406,7 @@ private struct DamageSection: View {
                     Spacer(minLength: 0)
                     // macOS hides scrollbars until you scroll, so without this
                     // there is nothing to say the list continues.
-                    if estimates.count > DamageSection.visibleRows {
+                    if estimates.count > rows {
                         HStack(spacing: 2) {
                             Text("\(estimates.count)")
                             Image(systemName: "chevron.down")
@@ -550,9 +555,14 @@ private struct PokemonCard: View {
 
             MatchupSection(types: shown.types)
 
+            // The Mega previews are what a taller card would push off screen,
+            // so when they are not there the damage list takes the room.
+            let previewsBelow = !megas.isEmpty && preview == nil
             if let facing {
                 Divider().overlay(Color.white.opacity(0.12))
-                DamageSection(attacker: shown, defender: facing)
+                DamageSection(attacker: shown, defender: facing,
+                              rows: previewsBelow ? DamageSection.compactRows
+                                                  : DamageSection.expandedRows)
             }
 
             // Nothing to preview while a Mega is on the card: the card is the

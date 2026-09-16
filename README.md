@@ -43,6 +43,11 @@ that side's cards stop showing Mega previews.
 
 ![Garchomp's Mega and Mega Z previews, hovering over their abilities](docs/mega.gif)
 
+Buttons under the name switch the card to any of those Megas: the card then
+shows that form in full - sprite, typing, ability, stats, matchups and damage -
+and the damage on both cards aims at the forms on show. The card holds its form
+until a different Pokémon is detected in that slot.
+
 ### Speed list
 
 Every Pokémon seen this battle, plus the Megas each could turn into, sorted
@@ -54,9 +59,11 @@ and the other Pokémon on its side no longer list possible Megas.
 
 ### Damage estimates (singles)
 
-In a single battle, each card lists the three moves that Pokémon most often
-carries, against the Pokémon across from it, as a share of its HP, with how
-often each move is run. Each move is tinted by its type, and one that moves
+In a single battle, each card lists the moves that Pokémon is seen carrying,
+most-used first, against the Pokémon across from it, as a share of its HP, with
+how often each move is run. The list scrolls when it is long, and a card with no
+Mega previews stacked below it - a Pokémon with no Mega, or a card already
+switched to its Mega - grows taller and shows the whole list at once. Each move is tinted by its type, and one that moves
 out of turn order is marked with its priority. They are listed in usage order
 rather than by damage: how often a move is actually carried already prices in
 what this calculator ignores - accuracy above all, but also PP, side effects
