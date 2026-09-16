@@ -25,7 +25,7 @@ enum L10n {
         case opponent, yourSide, weak, resist, immune, megaWeak
         case unidentified, ability, hidden, bst, speed
         case hideMirror, showMirror
-        case damage, damageNote, usageCredit, baseForm, spread, allyHit
+        case damage, usageCredit, baseForm
     }
 
     private static let strings: [Key: (en: String, zh: String)] = [
@@ -41,11 +41,7 @@ enum L10n {
         .bst: ("BST", "總和"),
         .damage: ("DAMAGE", "傷害"),
         .baseForm: ("BASE", "原形"),
-        .spread: ("ALL", "全體"),
-        .allyHit: ("hits your partner too; a move that hits several does 0.75x to each",
-                   "亦會攻擊我方夥伴；攻擊多隻時傷害為 0.75 倍"),
-        .damageNote: ("no Stat Points, neutral nature, no item",
-                      "無能力點數、無性格加成、無道具"),
+
         .usageCredit: ("Move usage: championsbattledata.com",
                        "招式使用率：championsbattledata.com"),
         .speed: ("SPEED", "速度"),

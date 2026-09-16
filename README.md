@@ -45,8 +45,10 @@ that side's cards stop showing Mega previews.
 
 Buttons under the name switch the card to any of those Megas: the card then
 shows that form in full - sprite, typing, ability, stats, matchups and damage -
-and the damage on both cards aims at the forms on show. The card holds its form
-until a different Pokémon is detected in that slot.
+and the damage on both cards aims at the forms on show. **BASE** puts the
+previews away without changing the form, which gives the damage list their
+room. The card holds its choice until a different Pokémon is detected in that
+slot.
 
 ### Speed list
 
@@ -80,13 +82,12 @@ Seismic Toss and Grass Knot, are left out rather than shown with a wrong
 number.
 
 In doubles each card shows a column per target, under that Pokémon's sprite:
-both opponents, and your own partner on the cards that carry a move able to
-catch them - most do not, and those cards show two columns. A move
-that hits several Pokémon at once is marked **ALL**, and its numbers already
-include the 0.75× every such move takes - which lifts again once only one
-target is left. Earthquake and its kind show what they do to your own partner
-in red, and a target that is immune shows a dash rather than nothing, since a
-Flying Pokémon walking through your Earthquake is the point of the row.
+both opponents. A move that would also catch your own partner - Earthquake and
+the eleven like it - carries what it does to them in red, beside the move. The numbers
+for a move that hits several Pokémon at once already include the 0.75× it takes
+for doing so, which lifts again once only one target is left. A target that is
+immune shows a dash rather than nothing, since a Flying Pokémon walking through
+your Earthquake is the point of the row.
 
 ### English and Traditional Chinese
 

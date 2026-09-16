@@ -315,6 +315,7 @@ private struct StatRow: View {
 /// A target's sprite, used as a column heading over its damage numbers.
 private struct TargetIcon: View {
     let species: Species
+    var size: CGFloat = 15
     var dimmed = false
 
     var body: some View {
@@ -324,7 +325,7 @@ private struct TargetIcon: View {
                 .resizable()
                 .interpolation(.high)
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 15, height: 15)
+                .frame(width: size, height: size)
                 .opacity(dimmed ? 0.55 : 1)
         }
     }
@@ -332,12 +333,6 @@ private struct TargetIcon: View {
 
 private struct DamageRow: View {
     let estimate: DamageEstimate
-    /// True when some move on this card reaches the partner, so every row keeps
-    /// a column for them - empty for the moves that spare them, which is most
-    /// of them. The empty space is deliberate: without it the rows that do hit
-    /// the partner have one column more than the rest, and every number slides
-    /// out from under the sprite that labels it.
-    var allyColumn = false
     @Environment(\.lang) private var lang
 
     /// Coloured by how much it hurts, on the same reading as the type matchups
@@ -352,12 +347,11 @@ private struct DamageRow: View {
     }
 
     @ViewBuilder
-    private func number(_ target: TargetDamage, ally: Bool) -> some View {
+    private func number(_ target: TargetDamage) -> some View {
         Group {
             if target.effectiveness > 0 {
                 Text(String(format: "%.0f%%", target.maxFraction * 100))
-                    .foregroundColor(ally ? Color(red: 0.98, green: 0.45, blue: 0.45)
-                                          : tint(target.maxFraction))
+                    .foregroundColor(tint(target.maxFraction))
             } else {
                 // Immune, and shown rather than left blank: that a target walks
                 // through the move is the useful part.
@@ -388,17 +382,20 @@ private struct DamageRow: View {
                                 : Color.white.opacity(0.12))
                     .cornerRadius(3)
             }
-            // Without this a spread move looks like a single-target one that
-            // happens to have two numbers, when in fact it hits both at once -
-            // and those numbers already carry the 0.75x for doing so.
-            if estimate.data.reach.isSpread, !estimate.isSingleTarget {
-                Text(L10n.text(.spread, lang))
-                    .font(.system(size: 8, weight: .heavy))
-                    .foregroundColor(.black.opacity(0.8))
-                    .padding(.horizontal, 3)
-                    .padding(.vertical, 1)
-                    .background(Color(red: 0.98, green: 0.62, blue: 0.29).opacity(0.85))
-                    .cornerRadius(3)
+            // What this move does to your own partner, beside the move that
+            // does it. Only Earthquake and its kind reach them, so the badge
+            // being there at all is the warning.
+            if let ally = estimate.ally, ally.effectiveness > 0 {
+                HStack(spacing: 2) {
+                    TargetIcon(species: ally.species, size: 11)
+                    Text(String(format: "%.0f%%", ally.maxFraction * 100))
+                        .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                }
+                .foregroundColor(Color(red: 0.99, green: 0.55, blue: 0.55))
+                .padding(.horizontal, 3)
+                .padding(.vertical, 1)
+                .background(Color(red: 0.98, green: 0.36, blue: 0.36).opacity(0.22))
+                .cornerRadius(3)
             }
             // How often it is carried: this is the order of the list, so it
             // has to be visible or the ordering looks arbitrary.
@@ -419,16 +416,9 @@ private struct DamageRow: View {
                 // Four cards share the window in doubles, so each target gets
                 // its highest roll in a fixed column under its sprite.
                 ForEach(Array(estimate.targets.enumerated()), id: \.offset) { _, target in
-                    number(target, ally: false)
+                    number(target)
                 }
-                if allyColumn {
-                    if let ally = estimate.ally {
-                        number(ally, ally: true)
-                    } else {
-                        // Nothing to say: this move leaves the partner alone.
-                        Color.clear.frame(width: DamageSection.columnWidth, height: 1)
-                    }
-                }
+
             }
         }
         .frame(height: DamageSection.rowHeight)
@@ -465,11 +455,7 @@ private struct DamageSection: View {
     var body: some View {
         let estimates = DamageCalc.topMoves(for: attacker, against: foes, ally: ally,
                                             usage: UsageStore.shared.moves(for: attacker))
-        // The partner only earns a column when something on this card can
-        // actually hit them - Earthquake and the eleven like it. Most Pokemon
-        // carry none, and their cards should not carry an empty column.
-        let allyShown = ally != nil && estimates.contains { $0.ally != nil }
-        let manyTargets = foes.count + (allyShown ? 1 : 0) > 1
+        let manyTargets = foes.count > 1
         if !estimates.isEmpty {
             let shown = min(estimates.count, rows)
             let height = CGFloat(shown) * DamageSection.rowHeight
@@ -503,32 +489,15 @@ private struct DamageSection: View {
                             TargetIcon(species: foe)
                                 .frame(width: DamageSection.columnWidth, alignment: .trailing)
                         }
-                        if allyShown, let ally {
-                            TargetIcon(species: ally, dimmed: true)
-                                .frame(width: DamageSection.columnWidth, alignment: .trailing)
-                        }
                     }
                 }
                 ScrollView(.vertical) {
                     VStack(alignment: .leading, spacing: DamageSection.rowSpacing) {
-                        ForEach(estimates) {
-                            DamageRow(estimate: $0, allyColumn: allyShown)
-                        }
+                        ForEach(estimates) { DamageRow(estimate: $0) }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .frame(height: height)
-                Text(L10n.text(.damageNote, lang))
-                    .font(.system(size: 9))
-                    .foregroundColor(.white.opacity(0.28))
-                // Only worth saying when a partner is actually standing there.
-                if allyShown {
-                    Text(L10n.text(.allyHit, lang))
-                        .font(.system(size: 9))
-                        .foregroundColor(Color(red: 0.98, green: 0.45, blue: 0.45).opacity(0.7))
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
             }
         }
     }
@@ -555,15 +524,25 @@ private struct FormChip: View {
     }
 }
 
-/// A card's chosen Mega, pinned to the Pokemon it was chosen for.
+/// What a card has been asked to show.
 ///
-/// The base key is stored, not just the Mega, because five Mega forms belong to
-/// two Pokemon at once - raichu-mega-x is both Raichu's and Alolan Raichu's -
-/// and without the pin a card would keep its Mega when one switched in for the
-/// other, which is exactly when it should let go.
+/// Three states, not two: with nothing chosen the card shows the Pokemon and
+/// lists its Megas underneath, and choosing `base` shows the same Pokemon with
+/// those previews put away, which is what buys the damage list their room.
+private enum FormSelection: Equatable {
+    case base
+    case mega(String)
+}
+
+/// A card's chosen form, pinned to the Pokemon it was chosen for.
+///
+/// The base key is stored, not just the selection, because five Mega forms
+/// belong to two Pokemon at once - raichu-mega-x is both Raichu's and Alolan
+/// Raichu's - and without the pin a card would keep its choice when one
+/// switched in for the other, which is exactly when it should let go.
 private struct FormChoice {
     let base: String
-    let mega: String
+    let selection: FormSelection
 }
 
 /// The form a card shows: the Pokemon, or the Mega chosen for it.
@@ -574,7 +553,8 @@ private struct FormChoice {
 /// the pin no longer matches and the card is itself again.
 private func displayedForm(_ species: Species, choice: FormChoice?) -> Species {
     guard let choice, choice.base == species.key,
-          let mega = PokedexStore.shared.megaForms(for: species).first(where: { $0.key == choice.mega })
+          case let .mega(key) = choice.selection,
+          let mega = PokedexStore.shared.megaForms(for: species).first(where: { $0.key == key })
     else { return species }
     return mega
 }
@@ -583,8 +563,8 @@ private struct PokemonCard: View {
     let occupant: SlotOccupant
     /// The form on show: `occupant.species`, or one of its Megas.
     let shown: Species
-    /// Which Mega is on show, nil for the Pokemon itself.
-    @Binding var preview: String?
+    /// What the card was asked to show, nil for its default.
+    @Binding var preview: FormSelection?
     /// False once this Pokemon's side has Mega Evolved, since it then can't.
     var showMegas = true
     /// The Pokemon opposite: one in singles, both in doubles.
@@ -635,14 +615,17 @@ private struct PokemonCard: View {
             let megas = showMegas ? PokedexStore.shared.megaForms(for: occupant.species) : []
             if !megas.isEmpty {
                 HStack(spacing: 5) {
-                    FormChip(label: L10n.text(.baseForm, lang), active: preview == nil) {
-                        preview = nil
+                    // Off by default: pressing it does something, namely put the
+                    // Mega previews away and give the damage list their room.
+                    FormChip(label: L10n.text(.baseForm, lang), active: preview == .base) {
+                        preview = preview == .base ? nil : .base
                     }
                     ForEach(megas, id: \.key) { mega in
-                        FormChip(label: mega.formLabel(lang), active: preview == mega.key) {
-                            // Tapping the form already on show goes back, so the
+                        FormChip(label: mega.formLabel(lang),
+                                 active: preview == .mega(mega.key)) {
+                            // Pressing the form already on show goes back, so the
                             // buttons never trap the card in a Mega.
-                            preview = preview == mega.key ? nil : mega.key
+                            preview = preview == .mega(mega.key) ? nil : .mega(mega.key)
                         }
                     }
                     Spacer(minLength: 0)
@@ -763,13 +746,16 @@ private struct SideColumn: View {
             // drop any preview along with the buttons.
             let chosen = megaUsed ? nil : megaPreview[slot]
             let base = occupant.species.key
+            let selection = chosen?.base == base ? chosen?.selection : nil
             let against = opposition(slot)
             PokemonCard(occupant: occupant,
                         shown: displayedForm(occupant.species, choice: chosen),
                         preview: Binding(
-                            get: { chosen?.base == base ? chosen?.mega : nil },
-                            set: { mega in
-                                megaPreview[slot] = mega.map { FormChoice(base: base, mega: $0) }
+                            get: { selection },
+                            set: { choice in
+                                megaPreview[slot] = choice.map {
+                                    FormChoice(base: base, selection: $0)
+                                }
                             }),
                         showMegas: !megaUsed,
                         foes: against.foes,
