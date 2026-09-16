@@ -332,10 +332,11 @@ private struct TargetIcon: View {
 
 private struct DamageRow: View {
     let estimate: DamageEstimate
-    /// True when a partner is standing there, so every row keeps a column for
-    /// them - blank for the moves that spare them. Without it the rows that do
-    /// hit the partner have one column more than the rest, and every number
-    /// slides out from under the sprite that labels it.
+    /// True when some move on this card reaches the partner, so every row keeps
+    /// a column for them - empty for the moves that spare them, which is most
+    /// of them. The empty space is deliberate: without it the rows that do hit
+    /// the partner have one column more than the rest, and every number slides
+    /// out from under the sprite that labels it.
     var allyColumn = false
     @Environment(\.lang) private var lang
 
@@ -424,10 +425,8 @@ private struct DamageRow: View {
                     if let ally = estimate.ally {
                         number(ally, ally: true)
                     } else {
-                        Text("·")
-                            .font(.system(size: 11, weight: .bold, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.18))
-                            .frame(width: DamageSection.columnWidth, alignment: .trailing)
+                        // Nothing to say: this move leaves the partner alone.
+                        Color.clear.frame(width: DamageSection.columnWidth, height: 1)
                     }
                 }
             }
@@ -466,7 +465,11 @@ private struct DamageSection: View {
     var body: some View {
         let estimates = DamageCalc.topMoves(for: attacker, against: foes, ally: ally,
                                             usage: UsageStore.shared.moves(for: attacker))
-        let manyTargets = foes.count + (ally == nil ? 0 : 1) > 1
+        // The partner only earns a column when something on this card can
+        // actually hit them - Earthquake and the eleven like it. Most Pokemon
+        // carry none, and their cards should not carry an empty column.
+        let allyShown = ally != nil && estimates.contains { $0.ally != nil }
+        let manyTargets = foes.count + (allyShown ? 1 : 0) > 1
         if !estimates.isEmpty {
             let shown = min(estimates.count, rows)
             let height = CGFloat(shown) * DamageSection.rowHeight
@@ -500,7 +503,7 @@ private struct DamageSection: View {
                             TargetIcon(species: foe)
                                 .frame(width: DamageSection.columnWidth, alignment: .trailing)
                         }
-                        if let ally {
+                        if allyShown, let ally {
                             TargetIcon(species: ally, dimmed: true)
                                 .frame(width: DamageSection.columnWidth, alignment: .trailing)
                         }
@@ -509,7 +512,7 @@ private struct DamageSection: View {
                 ScrollView(.vertical) {
                     VStack(alignment: .leading, spacing: DamageSection.rowSpacing) {
                         ForEach(estimates) {
-                            DamageRow(estimate: $0, allyColumn: ally != nil)
+                            DamageRow(estimate: $0, allyColumn: allyShown)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -519,7 +522,7 @@ private struct DamageSection: View {
                     .font(.system(size: 9))
                     .foregroundColor(.white.opacity(0.28))
                 // Only worth saying when a partner is actually standing there.
-                if ally != nil, estimates.contains(where: { $0.ally != nil }) {
+                if allyShown {
                     Text(L10n.text(.allyHit, lang))
                         .font(.system(size: 9))
                         .foregroundColor(Color(red: 0.98, green: 0.45, blue: 0.45).opacity(0.7))

@@ -80,7 +80,8 @@ Seismic Toss and Grass Knot, are left out rather than shown with a wrong
 number.
 
 In doubles each card shows a column per target, under that Pokémon's sprite:
-both opponents, and your own partner where the move would catch them. A move
+both opponents, and your own partner on the cards that carry a move able to
+catch them - most do not, and those cards show two columns. A move
 that hits several Pokémon at once is marked **ALL**, and its numbers already
 include the 0.75× every such move takes - which lifts again once only one
 target is left. Earthquake and its kind show what they do to your own partner
