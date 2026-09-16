@@ -351,6 +351,7 @@ private struct DamageRow: View {
                 .foregroundColor(.white.opacity(0.4))
                 .frame(width: 52, alignment: .trailing)
         }
+        .frame(height: DamageSection.rowHeight)
     }
 }
 
@@ -362,10 +363,22 @@ private struct DamageSection: View {
     let defender: Species
     @Environment(\.lang) private var lang
 
+    /// Row geometry is fixed so the scroll view can be sized to whole rows,
+    /// rather than cutting one in half and looking like a rendering mistake.
+    static let rowHeight: CGFloat = 17
+    private static let rowSpacing: CGFloat = 5
+    /// Rows before it scrolls. Every move a Pokemon is seen carrying is listed,
+    /// but a card cannot grow without pushing the Mega previews off screen, so
+    /// the rest are a scroll away.
+    private static let visibleRows = 4
+
     var body: some View {
         let estimates = DamageCalc.topMoves(for: attacker, against: defender,
                                             usage: UsageStore.shared.moves(for: attacker.key))
         if !estimates.isEmpty {
+            let shown = min(estimates.count, DamageSection.visibleRows)
+            let height = CGFloat(shown) * DamageSection.rowHeight
+                + CGFloat(max(0, shown - 1)) * DamageSection.rowSpacing
             VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 4) {
                     Text(L10n.text(.damage, lang))
@@ -376,8 +389,25 @@ private struct DamageSection: View {
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundColor(.white.opacity(0.35))
                         .lineLimit(1)
+                    Spacer(minLength: 0)
+                    // macOS hides scrollbars until you scroll, so without this
+                    // there is nothing to say the list continues.
+                    if estimates.count > DamageSection.visibleRows {
+                        HStack(spacing: 2) {
+                            Text("\(estimates.count)")
+                            Image(systemName: "chevron.down")
+                        }
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.4))
+                    }
                 }
-                ForEach(estimates) { DamageRow(estimate: $0) }
+                ScrollView(.vertical) {
+                    VStack(alignment: .leading, spacing: DamageSection.rowSpacing) {
+                        ForEach(estimates) { DamageRow(estimate: $0) }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(height: height)
                 Text(L10n.text(.damageNote, lang))
                     .font(.system(size: 9))
                     .foregroundColor(.white.opacity(0.28))

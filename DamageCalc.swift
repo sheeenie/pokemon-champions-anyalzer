@@ -97,14 +97,16 @@ enum DamageCalc {
         )
     }
 
-    /// The `limit` moves this Pokemon most often carries, most-used first.
+    /// The moves this Pokemon most often carries, most-used first, up to
+    /// `limit` - the snapshot holds ten per Pokemon, and the panel scrolls
+    /// them, so the cap only exists to bound a surprising data file.
     ///
     /// Usage order, not damage order. How often a move is actually run already
     /// prices in everything this calculator ignores - accuracy above all, but
     /// also PP, side effects and how the move fits a real set. A 4x hit off a
     /// move almost nobody carries is a number, not a threat.
     static func topMoves(for attacker: Species, against defender: Species,
-                         usage: [UsageMove], limit: Int = 3) -> [DamageEstimate] {
+                         usage: [UsageMove], limit: Int = 12) -> [DamageEstimate] {
         usage
             .compactMap { entry -> DamageEstimate? in
                 guard let data = UsageStore.shared.move(entry.name) else { return nil }
