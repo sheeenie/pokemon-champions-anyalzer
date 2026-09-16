@@ -50,7 +50,7 @@ previews away without changing the form, which gives the damage list their
 room. The card holds its choice until a different Pokémon is detected in that
 slot.
 
-![Pressing MEGA on Dragonite's card: it becomes Mega Dragonite in full, and the damage on both cards re-aims - Charizard's Dragon Pulse goes from 34% to 46%](docs/form-switch.gif)
+![Pressing MEGA on Dragonite's card: it becomes Mega Dragonite in full, and its own Dragon Pulse rises from 34% and 72% to 46% and 98% as its Sp. Atk jumps, while Charizard's damage into it falls](docs/form-switch.gif)
 
 ### Speed list
 
@@ -63,7 +63,7 @@ and the other Pokémon on its side no longer list possible Megas.
 
 ### Damage estimates
 
-![A doubles battle: each card lists its moves with damage against both opponents, and when Incineroar switches out for Hydreigon every card's numbers re-aim - Garchomp's Dragon Claw goes from 44% to 98%](docs/damage.gif)
+![Two cards in a doubles battle, each move with its damage against both opponents under their sprites. Incineroar switches out for Hydreigon, whose list reads Dark Pulse 38% and 41%, Draco Meteor 61% and 131%, and Earth Power against only one of the two](docs/damage.gif)
 
 In a single battle, each card lists the moves that Pokémon is seen carrying,
 most-used first, against the Pokémon across from it, as a share of its HP, with
