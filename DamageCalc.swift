@@ -13,8 +13,22 @@ struct MoveData: Codable {
     /// PokeAPI's target, which in doubles decides who is hit and whether the
     /// damage is reduced. Optional so data generated before it decodes.
     let target: String?
+    /// Nil for a move that never misses.
+    let accuracy: Int?
+    let pp: Int?
+    /// What it does beyond damage. English is PokeAPI's short effect, which is
+    /// precise; Chinese is the flavour text, the only Chinese there is.
+    let descEn: String?
+    let descZh: String?
 
     var isPhysical: Bool { category == "physical" }
+
+    /// Chinese falls back to English: PokeAPI has no Chinese text at all for
+    /// the newer moves, and the English description beats an empty panel.
+    func effect(_ lang: Lang) -> String {
+        if lang == .zh, let zh = descZh, !zh.isEmpty { return zh }
+        return descEn ?? ""
+    }
 
     var reach: MoveReach {
         switch target {
@@ -49,6 +63,11 @@ struct TargetDamage {
     /// Share of that Pokemon's HP, 0...1, at the lowest and highest roll.
     let minFraction: Double
     let maxFraction: Double
+    /// The same thing in hit points, for the hover panel: a card has room only
+    /// for the percentage, but the raw numbers are what a player counts in.
+    let minHP: Int
+    let maxHP: Int
+    let targetHP: Int
     /// 0 when it cannot be hit at all, which is shown rather than hidden: an
     /// Earthquake that misses one of the two is the point of the row.
     let effectiveness: Double
@@ -108,13 +127,14 @@ enum DamageCalc {
     private static func damage(_ data: MoveData, attacker: Species, defender: Species,
                                reduced: Bool) -> TargetDamage {
         let effectiveness = TypeChart.matchups(defending: defender.types)[data.type] ?? 1
+        let defenderHP = hp(base: defender.baseStats.hp, dex: defender.dex)
         guard effectiveness > 0 else {
-            return TargetDamage(species: defender, minFraction: 0, maxFraction: 0, effectiveness: 0)
+            return TargetDamage(species: defender, minFraction: 0, maxFraction: 0,
+                                minHP: 0, maxHP: 0, targetHP: defenderHP, effectiveness: 0)
         }
 
         let attack = stat(base: data.isPhysical ? attacker.baseStats.atk : attacker.baseStats.spa)
         let defense = stat(base: data.isPhysical ? defender.baseStats.def : defender.baseStats.spd)
-        let defenderHP = hp(base: defender.baseStats.hp, dex: defender.dex)
 
         let stab = attacker.types.contains(data.type) ? 1.5 : 1.0
         let raw = Double(base(power: data.power, attack: attack, defense: defense))
@@ -126,6 +146,7 @@ enum DamageCalc {
         return TargetDamage(species: defender,
                             minFraction: low / Double(defenderHP),
                             maxFraction: high / Double(defenderHP),
+                            minHP: Int(low), maxHP: Int(high), targetHP: defenderHP,
                             effectiveness: effectiveness)
     }
 

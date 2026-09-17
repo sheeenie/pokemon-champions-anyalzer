@@ -101,8 +101,26 @@ def main():
             skipped.append((name, d["damage_class"]["name"] if not d["power"] else "status"))
             continue
         zh = next((n["name"] for n in d["names"] if n["language"]["name"] == "zh-hant"), "")
+
+        def flat(text):
+            return " ".join(text.split())
+
+        # What the move does beyond damage. PokeAPI's short_effect is precise
+        # but English-only, so Chinese falls back to the flavour text, which is
+        # the only Chinese description there is.
+        effect_en = next((flat(e["short_effect"]) for e in d.get("effect_entries", [])
+                          if e["language"]["name"] == "en"), "")
+        # PokeAPI has no short_effect for the newer moves - 45 of the 271 here,
+        # all Generation 8 and 9 - but it does have their flavour text.
+        if not effect_en:
+            effect_en = next((flat(f["flavor_text"]) for f in d.get("flavor_text_entries", [])
+                              if f["language"]["name"] == "en"), "")
+        effect_zh = next((flat(f["flavor_text"]) for f in d.get("flavor_text_entries", [])
+                          if f["language"]["name"] == "zh-hant"), "")
         entry = {"power": d["power"], "type": d["type"]["name"],
                  "category": d["damage_class"]["name"], "zh": zh,
+                 "accuracy": d["accuracy"], "pp": d["pp"],
+                 "descEn": effect_en, "descZh": effect_zh,
                  # Who it hits: "selected-pokemon" for most, "all-opponents" for
                  # spread moves, "all-other-pokemon" for the ones that catch
                  # your own partner as well. Doubles damage depends on it.

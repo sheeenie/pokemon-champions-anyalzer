@@ -331,9 +331,137 @@ private struct TargetIcon: View {
     }
 }
 
+/// Everything a row has no room for: what kind of damage it is, the numbers in
+/// hit points rather than percentages, and what the move does besides damage.
+///
+/// A popover rather than `.help`, for the same reasons as the ability chips:
+/// the system tooltip waits about a second and only appears while this app is
+/// frontmost, which during play it is not.
+private struct MoveDetail: View {
+    let estimate: DamageEstimate
+    let lang: Lang
+
+    private var data: MoveData { estimate.data }
+
+    private func figure(_ label: L10n.Key, _ value: String) -> some View {
+        HStack(spacing: 3) {
+            Text(L10n.text(label, lang))
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(.secondary)
+            Text(value)
+                .font(.system(size: 11, weight: .bold, design: .monospaced))
+        }
+    }
+
+    private func multiplier(_ e: Double) -> String {
+        switch e {
+        case 4: return "×4"
+        case 2: return "×2"
+        case 0.5: return "×½"
+        case 0.25: return "×¼"
+        default: return String(format: "×%g", e)
+        }
+    }
+
+    @ViewBuilder
+    private func line(_ target: TargetDamage, partner: Bool) -> some View {
+        HStack(spacing: 7) {
+            TargetIcon(species: target.species, size: 16)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(target.species.displayName(lang))
+                    .font(.system(size: 12, weight: .semibold))
+                    .lineLimit(1)
+                if partner {
+                    Text(L10n.text(.partnerLabel, lang))
+                        .font(.system(size: 9))
+                        .foregroundColor(Color(red: 0.85, green: 0.25, blue: 0.25))
+                }
+            }
+            Spacer(minLength: 8)
+            if target.effectiveness > 0 {
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text("\(target.minHP)-\(target.maxHP) / \(target.targetHP)")
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                    HStack(spacing: 5) {
+                        if target.effectiveness != 1 {
+                            Text(multiplier(target.effectiveness))
+                                .font(.system(size: 10, weight: .heavy))
+                                .foregroundColor(target.effectiveness > 1
+                                                 ? Color(red: 0.85, green: 0.25, blue: 0.25)
+                                                 : .secondary)
+                        }
+                        Text(String(format: "%.0f-%.0f%%",
+                                    target.minFraction * 100, target.maxFraction * 100))
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundColor(.secondary)
+                    }
+                }
+            } else {
+                Text(L10n.text(.noEffect, lang))
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+
+    var body: some View {
+        let effect = data.effect(lang)
+        VStack(alignment: .leading, spacing: 9) {
+            HStack(spacing: 6) {
+                Text(data.name(estimate.move, lang))
+                    .font(.system(size: 15, weight: .bold))
+                TypeNameBadge(type: data.type)
+                Text(L10n.text(data.isPhysical ? .physical : .special, lang))
+                    .font(.system(size: 9, weight: .heavy))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(Color.primary.opacity(0.10))
+                    .cornerRadius(3)
+            }
+
+            HStack(spacing: 12) {
+                figure(.movePower, "\(data.power)")
+                figure(.moveAccuracy, data.accuracy.map { "\($0)" } ?? L10n.text(.always, lang))
+                if let pp = data.pp { figure(.movePP, "\(pp)") }
+                if let priority = data.priority, priority != 0 {
+                    figure(.movePriority, priority > 0 ? "+\(priority)" : "\(priority)")
+                }
+            }
+
+            // Only worth saying where there is more than one Pokemon to hit.
+            if data.reach.isSpread, !estimate.isSingleTarget {
+                Text(L10n.text(data.reach.hitsAlly ? .hitsEverything : .hitsOpponents, lang))
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(.secondary)
+            }
+
+            Divider()
+            VStack(alignment: .leading, spacing: 6) {
+                ForEach(Array(estimate.targets.enumerated()), id: \.offset) { _, target in
+                    line(target, partner: false)
+                }
+                if let ally = estimate.ally { line(ally, partner: true) }
+            }
+
+            if !effect.isEmpty {
+                Divider()
+                Text(effect)
+                    .font(.system(size: 12))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(12)
+        .frame(width: 330, alignment: .leading)
+        // Popover content is its own window and inherits nothing, so the
+        // language has to be put back for the badges inside it.
+        .environment(\.lang, lang)
+    }
+}
+
 private struct DamageRow: View {
     let estimate: DamageEstimate
     @Environment(\.lang) private var lang
+    @State private var hovering = false
 
     /// Coloured by how much it hurts, on the same reading as the type matchups
     /// above it: red is the one that ends the turn badly.
@@ -422,6 +550,13 @@ private struct DamageRow: View {
             }
         }
         .frame(height: DamageSection.rowHeight)
+        // The whole row answers to the pointer, not just the name: it is
+        // already there, reading the number.
+        .contentShape(Rectangle())
+        .onHover { hovering = $0 }
+        .popover(isPresented: $hovering, arrowEdge: .bottom) {
+            MoveDetail(estimate: estimate, lang: lang)
+        }
     }
 }
 

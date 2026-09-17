@@ -82,6 +82,11 @@ ships with the app, and each Pokémon is refreshed from their API the first time
 it appears in a battle, so it keeps up with the meta. Without a connection the
 snapshot is used.
 
+Hover over a move for the rest: whether it is physical or special, its power,
+accuracy and PP, the damage in hit points against each target with the type
+multiplier, and what the move does besides damage - the recoil on Flare Blitz,
+the flinch on Fake Out, the burn chance on a Fire move.
+
 The numbers are deliberately a floor, not a prediction: they assume no Stat
 Points, a neutral nature, no held item and no ability or weather effects, so a
 real attacker hits at least this hard. Moves with no fixed base power, such as
