@@ -58,6 +58,22 @@ enum TypeIcons {
     private static var cache: [String: NSImage] = [:]
     private static let lock = NSLock()
 
+    /// Physical or special, as Champions draws it: a white starburst or white
+    /// rings. They already come on a transparent ground, so unlike the type
+    /// icons there is no background to key out.
+    static func category(_ name: String) -> NSImage? {
+        lock.lock()
+        defer { lock.unlock() }
+        let key = "category/" + name
+        if let hit = cache[key] { return hit }
+        guard let data = EmbeddedResources.data("categories/\(name).png"),
+              let image = NSImage(data: data)
+        else { return nil }
+        image.isTemplate = true
+        cache[key] = image
+        return image
+    }
+
     static func glyph(_ type: String) -> NSImage? {
         lock.lock()
         defer { lock.unlock() }

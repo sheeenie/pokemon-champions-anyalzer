@@ -27,7 +27,7 @@ enum L10n {
         case hideMirror, showMirror
         case damage, usageCredit, baseForm
         case physical, special, movePower, moveAccuracy, movePP, movePriority
-        case partnerLabel, noEffect, hitsOpponents, hitsEverything, always
+        case hitsOpponents, hitsEverything, always
     }
 
     private static let strings: [Key: (en: String, zh: String)] = [
@@ -49,8 +49,6 @@ enum L10n {
         .moveAccuracy: ("Accuracy", "命中"),
         .movePP: ("PP", "PP"),
         .movePriority: ("Priority", "優先度"),
-        .partnerLabel: ("your partner", "我方夥伴"),
-        .noEffect: ("no effect", "沒有效果"),
         .hitsOpponents: ("hits both opponents", "攻擊雙方對手"),
         .hitsEverything: ("hits everything on the field", "攻擊場上所有寶可夢"),
         .always: ("always hits", "必定命中"),

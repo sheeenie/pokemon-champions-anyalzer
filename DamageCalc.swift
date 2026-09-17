@@ -63,11 +63,6 @@ struct TargetDamage {
     /// Share of that Pokemon's HP, 0...1, at the lowest and highest roll.
     let minFraction: Double
     let maxFraction: Double
-    /// The same thing in hit points, for the hover panel: a card has room only
-    /// for the percentage, but the raw numbers are what a player counts in.
-    let minHP: Int
-    let maxHP: Int
-    let targetHP: Int
     /// 0 when it cannot be hit at all, which is shown rather than hidden: an
     /// Earthquake that misses one of the two is the point of the row.
     let effectiveness: Double
@@ -127,11 +122,10 @@ enum DamageCalc {
     private static func damage(_ data: MoveData, attacker: Species, defender: Species,
                                reduced: Bool) -> TargetDamage {
         let effectiveness = TypeChart.matchups(defending: defender.types)[data.type] ?? 1
-        let defenderHP = hp(base: defender.baseStats.hp, dex: defender.dex)
         guard effectiveness > 0 else {
-            return TargetDamage(species: defender, minFraction: 0, maxFraction: 0,
-                                minHP: 0, maxHP: 0, targetHP: defenderHP, effectiveness: 0)
+            return TargetDamage(species: defender, minFraction: 0, maxFraction: 0, effectiveness: 0)
         }
+        let defenderHP = hp(base: defender.baseStats.hp, dex: defender.dex)
 
         let attack = stat(base: data.isPhysical ? attacker.baseStats.atk : attacker.baseStats.spa)
         let defense = stat(base: data.isPhysical ? defender.baseStats.def : defender.baseStats.spd)
@@ -146,7 +140,6 @@ enum DamageCalc {
         return TargetDamage(species: defender,
                             minFraction: low / Double(defenderHP),
                             maxFraction: high / Double(defenderHP),
-                            minHP: Int(low), maxHP: Int(high), targetHP: defenderHP,
                             effectiveness: effectiveness)
     }
 

@@ -331,17 +331,51 @@ private struct TargetIcon: View {
     }
 }
 
-/// Everything a row has no room for: what kind of damage it is, the numbers in
-/// hit points rather than percentages, and what the move does besides damage.
+/// Physical or special, the way the game shows it: its own glyph, white on a
+/// coloured chip so it reads on a light popover as well as a dark one.
+private struct CategoryBadge: View {
+    let physical: Bool
+    let lang: Lang
+
+    private var label: String { L10n.text(physical ? .physical : .special, lang) }
+
+    var body: some View {
+        Group {
+            if let glyph = TypeIcons.category(physical ? "physical" : "special") {
+                Image(nsImage: glyph)
+                    .resizable()
+                    .renderingMode(.template)
+                    .aspectRatio(contentMode: .fit)
+                    .foregroundColor(.white)
+                    .frame(width: 20, height: 15)
+            } else {
+                Text(label)
+                    .font(.system(size: 9, weight: .heavy))
+                    .foregroundColor(.white)
+            }
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .background(physical ? Color(red: 0.91, green: 0.38, blue: 0.23)
+                             : Color(red: 0.31, green: 0.48, blue: 0.85))
+        .cornerRadius(4)
+        .accessibilityLabel(label)
+    }
+}
+
+/// What a move is, on hover: its type and category, the numbers on its card,
+/// and what it does besides damage. Not what it does to the Pokemon on the
+/// field - the row it opens from already says that.
 ///
 /// A popover rather than `.help`, for the same reasons as the ability chips:
 /// the system tooltip waits about a second and only appears while this app is
 /// frontmost, which during play it is not.
 private struct MoveDetail: View {
-    let estimate: DamageEstimate
+    let move: String
+    let data: MoveData
+    /// Whether "hits both" is worth saying: only with more than one target.
+    let spreadMatters: Bool
     let lang: Lang
-
-    private var data: MoveData { estimate.data }
 
     private func figure(_ label: L10n.Key, _ value: String) -> some View {
         HStack(spacing: 3) {
@@ -353,70 +387,14 @@ private struct MoveDetail: View {
         }
     }
 
-    private func multiplier(_ e: Double) -> String {
-        switch e {
-        case 4: return "×4"
-        case 2: return "×2"
-        case 0.5: return "×½"
-        case 0.25: return "×¼"
-        default: return String(format: "×%g", e)
-        }
-    }
-
-    @ViewBuilder
-    private func line(_ target: TargetDamage, partner: Bool) -> some View {
-        HStack(spacing: 7) {
-            TargetIcon(species: target.species, size: 16)
-            VStack(alignment: .leading, spacing: 0) {
-                Text(target.species.displayName(lang))
-                    .font(.system(size: 12, weight: .semibold))
-                    .lineLimit(1)
-                if partner {
-                    Text(L10n.text(.partnerLabel, lang))
-                        .font(.system(size: 9))
-                        .foregroundColor(Color(red: 0.85, green: 0.25, blue: 0.25))
-                }
-            }
-            Spacer(minLength: 8)
-            if target.effectiveness > 0 {
-                VStack(alignment: .trailing, spacing: 0) {
-                    Text("\(target.minHP)-\(target.maxHP) / \(target.targetHP)")
-                        .font(.system(size: 12, weight: .bold, design: .monospaced))
-                    HStack(spacing: 5) {
-                        if target.effectiveness != 1 {
-                            Text(multiplier(target.effectiveness))
-                                .font(.system(size: 10, weight: .heavy))
-                                .foregroundColor(target.effectiveness > 1
-                                                 ? Color(red: 0.85, green: 0.25, blue: 0.25)
-                                                 : .secondary)
-                        }
-                        Text(String(format: "%.0f-%.0f%%",
-                                    target.minFraction * 100, target.maxFraction * 100))
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundColor(.secondary)
-                    }
-                }
-            } else {
-                Text(L10n.text(.noEffect, lang))
-                    .font(.system(size: 11))
-                    .foregroundColor(.secondary)
-            }
-        }
-    }
-
     var body: some View {
         let effect = data.effect(lang)
         VStack(alignment: .leading, spacing: 9) {
             HStack(spacing: 6) {
-                Text(data.name(estimate.move, lang))
+                Text(data.name(move, lang))
                     .font(.system(size: 15, weight: .bold))
                 TypeNameBadge(type: data.type)
-                Text(L10n.text(data.isPhysical ? .physical : .special, lang))
-                    .font(.system(size: 9, weight: .heavy))
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 2)
-                    .background(Color.primary.opacity(0.10))
-                    .cornerRadius(3)
+                CategoryBadge(physical: data.isPhysical, lang: lang)
             }
 
             HStack(spacing: 12) {
@@ -428,19 +406,10 @@ private struct MoveDetail: View {
                 }
             }
 
-            // Only worth saying where there is more than one Pokemon to hit.
-            if data.reach.isSpread, !estimate.isSingleTarget {
+            if data.reach.isSpread, spreadMatters {
                 Text(L10n.text(data.reach.hitsAlly ? .hitsEverything : .hitsOpponents, lang))
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(.secondary)
-            }
-
-            Divider()
-            VStack(alignment: .leading, spacing: 6) {
-                ForEach(Array(estimate.targets.enumerated()), id: \.offset) { _, target in
-                    line(target, partner: false)
-                }
-                if let ally = estimate.ally { line(ally, partner: true) }
             }
 
             if !effect.isEmpty {
@@ -451,9 +420,9 @@ private struct MoveDetail: View {
             }
         }
         .padding(12)
-        .frame(width: 330, alignment: .leading)
+        .frame(width: 300, alignment: .leading)
         // Popover content is its own window and inherits nothing, so the
-        // language has to be put back for the badges inside it.
+        // language has to be put back for the type badge inside it.
         .environment(\.lang, lang)
     }
 }
@@ -555,7 +524,8 @@ private struct DamageRow: View {
         .contentShape(Rectangle())
         .onHover { hovering = $0 }
         .popover(isPresented: $hovering, arrowEdge: .bottom) {
-            MoveDetail(estimate: estimate, lang: lang)
+            MoveDetail(move: estimate.move, data: estimate.data,
+                       spreadMatters: !estimate.isSingleTarget, lang: lang)
         }
     }
 }

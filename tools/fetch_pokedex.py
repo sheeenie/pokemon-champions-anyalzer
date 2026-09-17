@@ -257,9 +257,21 @@ def fetch_type_icons():
     print(f"wrote {len(TYPES)} type icons")
 
 
+def fetch_category_icons():
+    """Champions' physical and special glyphs, white on transparent."""
+    out = os.path.join(ROOT, "Resources", "categories")
+    os.makedirs(out, exist_ok=True)
+    for name in ("Physical", "Special"):
+        data = get(BULBA_FILE + f"{name}IC_CP.png", binary=True)
+        with open(os.path.join(out, name.lower() + ".png"), "wb") as f:
+            f.write(data)
+    print("wrote 2 category icons")
+
+
 def main():
     os.makedirs(ICONS, exist_ok=True)
     fetch_type_icons()
+    fetch_category_icons()
     titles = (champions_files("Champions_menu_sprites")
               + champions_files("Champions_Shiny_menu_sprites"))
     print(f"Champions menu sprites (incl. shiny): {len(titles)}")
