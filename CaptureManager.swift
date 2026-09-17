@@ -43,7 +43,39 @@ class CaptureManager: ObservableObject {
         )
 
         configureVideoOutput()
+        start()
+    }
 
+    /// Starts capturing, but only once the camera permission that gates the
+    /// iPhone's screen is actually granted.
+    ///
+    /// Without it AVFoundation hands over no frames at all - no error, no black
+    /// frames, nothing - and the app used to start the session anyway and show
+    /// an empty mirror, which looks exactly like an unplugged phone. Nothing
+    /// asked for the permission either: the prompt only ever appeared as a side
+    /// effect of adding the input. That matters because rebuilding the app
+    /// changes its ad-hoc signature, and macOS stops honouring the grant given
+    /// to the previous build without saying so.
+    private func start() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            Diagnostics.log("[capture] camera access already granted")
+            run()
+        case .notDetermined:
+            Diagnostics.log("[capture] camera access not yet decided; asking")
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                Diagnostics.log("[capture] camera access \(granted ? "granted" : "refused")")
+                granted ? self?.run() : self?.reportDenied()
+            }
+        case .denied, .restricted:
+            Diagnostics.log("[capture] camera access denied: no frames will arrive")
+            reportDenied()
+        @unknown default:
+            run()
+        }
+    }
+
+    private func run() {
         DispatchQueue.global(qos: .userInitiated).async {
             self.session.startRunning()
         }
@@ -53,6 +85,14 @@ class CaptureManager: ObservableObject {
         devicesObservation = discoverySession.observe(\.devices, options: [.initial, .new]) { [weak self] _, change in
             guard let self, let devices = change.newValue else { return }
             self.reconcile(devices: devices)
+        }
+    }
+
+    /// Said out loud, because the alternative is a black rectangle that blames
+    /// the cable. Observation never starts, so nothing overwrites this.
+    private func reportDenied() {
+        DispatchQueue.main.async {
+            self.deviceName = "No camera access - allow it in System Settings, Privacy & Security, Camera"
         }
     }
 
@@ -69,7 +109,7 @@ class CaptureManager: ObservableObject {
         if session.canAddOutput(videoOutput) {
             session.addOutput(videoOutput)
         } else {
-            print("Failed to add video data output")
+            Diagnostics.log("[capture] could not add the analysis output")
         }
         session.commitConfiguration()
     }
@@ -100,9 +140,9 @@ class CaptureManager: ObservableObject {
             DispatchQueue.main.async {
                 self.deviceName = "Connected: \(device.localizedName)"
             }
-            print("Using capture device: \(device.localizedName) (ID: \(device.uniqueID))")
+            Diagnostics.log("[capture] attached \(device.localizedName)")
         } catch {
-            print("Failed to add input: \(error.localizedDescription)")
+            Diagnostics.log("[capture] could not attach \(device.localizedName): \(error.localizedDescription)")
         }
     }
 

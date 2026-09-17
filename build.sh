@@ -76,6 +76,7 @@ SOURCES=(
     TypeIcons.swift
     Localization.swift
     EmbeddedResources.swift
+    Diagnostics.swift
     DamageCalc.swift
     UsageStore.swift
 )

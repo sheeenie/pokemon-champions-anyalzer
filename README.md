@@ -252,6 +252,10 @@ guess at someone's spread would be.
 
 - **The mirror is black.** Unlock the iPhone and keep the game on screen. A
   sleeping iPhone sends only black frames.
+- **Nothing at all, and the label reads "No camera access".** Allow it in
+  System Settings → Privacy & Security → Camera. macOS ties that permission to
+  the app's signature, so rebuilding the app from source asks again; a release
+  build keeps its answer.
 - **"Waiting for iPhone…"** Check the cable, and that the iPhone trusts this Mac.
 - **Nothing gets identified.** Run `python3 tools/fetch_pokedex.py`, then
   `./build.sh`. Also check the game is in a battle and in landscape.

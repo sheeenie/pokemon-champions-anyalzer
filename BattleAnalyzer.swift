@@ -78,11 +78,7 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
     /// Read from UserDefaults rather than the environment because the app must be
     /// launched via `open` to retain its screen-capture permission; a binary run
     /// straight from a shell captures only black frames.
-    private let dumpDir: URL? = {
-        let raw = UserDefaults.standard.string(forKey: "dumpDir")
-            ?? ProcessInfo.processInfo.environment["PKMN_DUMP_DIR"]
-        return raw.map { URL(fileURLWithPath: ($0 as NSString).expandingTildeInPath) }
-    }()
+    private var dumpDir: URL? { Diagnostics.dumpDir }
     private let dumpInterval: TimeInterval = 3.0
     private let maxDumps = 20
     private var lastDump: TimeInterval = 0
@@ -126,20 +122,7 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
     /// Print, and also append to a file when dumping is on. The app has to be
     /// launched via `open` to keep its screen-capture permission, and that
     /// discards stdout, so a file is the only way to see diagnostics.
-    private func log(_ message: String) {
-        print(message)
-        guard let dir = dumpDir else { return }
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        let line = message + "\n"
-        let url = dir.appendingPathComponent("analyzer.log")
-        if let handle = try? FileHandle(forWritingTo: url) {
-            handle.seekToEndOfFile()
-            handle.write(Data(line.utf8))
-            try? handle.close()
-        } else {
-            try? line.write(to: url, atomically: true, encoding: .utf8)
-        }
-    }
+    private func log(_ message: String) { Diagnostics.log(message) }
 
     /// Identify each slot's occupant, skipping slots whose artwork is unchanged.
     private func identify(in pixelBuffer: CVPixelBuffer, size: CGSize) {
