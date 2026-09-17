@@ -77,6 +77,7 @@ SOURCES=(
     Localization.swift
     EmbeddedResources.swift
     Diagnostics.swift
+    HoverTip.swift
     DamageCalc.swift
     UsageStore.swift
 )

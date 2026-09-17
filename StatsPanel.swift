@@ -81,11 +81,11 @@ private struct ChipRow<Content: View>: View {
     }
 }
 
-/// One ability. Hovering opens a popover describing what it does.
+/// One ability. Resting the pointer on it shows what it does.
 ///
-/// A popover rather than `.help`: the system tooltip waits about a second,
-/// only appears while this app is frontmost - and during play the game has
-/// focus - and renders in small system text.
+/// A hover tip rather than `.help`: the system tooltip only appears while this
+/// app is frontmost - and during play the game has focus - and renders in small
+/// system text.
 private struct AbilityChip: View {
     let ability: Ability
     @Environment(\.lang) private var lang
@@ -109,12 +109,12 @@ private struct AbilityChip: View {
         .padding(.vertical, 3)
         .background(Color.white.opacity(hovering ? 0.24 : (ability.hidden ? 0.06 : 0.13)))
         .cornerRadius(4)
+        // The chip lights up at once, so it is clear what the pointer is on;
+        // the description waits until the pointer settles.
         .onHover { hovering = $0 && !description.isEmpty }
-        // Anchored below the chip so the popover never sits under the cursor;
-        // if it did, it would end the hover that opened it and flicker.
-        .popover(isPresented: $hovering, arrowEdge: .bottom) {
-            // Values passed explicitly: popover content is presented in its
-            // own window and should not rely on inheriting the environment.
+        .hoverTip(enabled: !description.isEmpty) {
+            // Values passed explicitly: the tip is its own window and inherits
+            // nothing from this one.
             AbilityDescription(name: ability.name(lang),
                                hiddenLabel: ability.hidden ? L10n.text(.hidden, lang) : nil,
                                description: description)
@@ -332,7 +332,7 @@ private struct TargetIcon: View {
 }
 
 /// Physical or special, the way the game shows it: its own glyph, white on a
-/// coloured chip so it reads on a light popover as well as a dark one.
+/// coloured chip so it reads on a light tip as well as a dark one.
 private struct CategoryBadge: View {
     let physical: Bool
     let lang: Lang
@@ -367,9 +367,9 @@ private struct CategoryBadge: View {
 /// and what it does besides damage. Not what it does to the Pokemon on the
 /// field - the row it opens from already says that.
 ///
-/// A popover rather than `.help`, for the same reasons as the ability chips:
-/// the system tooltip waits about a second and only appears while this app is
-/// frontmost, which during play it is not.
+/// A hover tip rather than `.help`, for the same reasons as the ability chips:
+/// the system tooltip only appears while this app is frontmost, which during
+/// play it is not.
 private struct MoveDetail: View {
     let move: String
     let data: MoveData
@@ -421,8 +421,8 @@ private struct MoveDetail: View {
         }
         .padding(12)
         .frame(width: 300, alignment: .leading)
-        // Popover content is its own window and inherits nothing, so the
-        // language has to be put back for the type badge inside it.
+        // The tip is its own window and inherits nothing, so the language has
+        // to be put back for the type badge inside it.
         .environment(\.lang, lang)
     }
 }
@@ -430,7 +430,6 @@ private struct MoveDetail: View {
 private struct DamageRow: View {
     let estimate: DamageEstimate
     @Environment(\.lang) private var lang
-    @State private var hovering = false
 
     /// Coloured by how much it hurts, on the same reading as the type matchups
     /// above it: red is the one that ends the turn badly.
@@ -522,8 +521,7 @@ private struct DamageRow: View {
         // The whole row answers to the pointer, not just the name: it is
         // already there, reading the number.
         .contentShape(Rectangle())
-        .onHover { hovering = $0 }
-        .popover(isPresented: $hovering, arrowEdge: .bottom) {
+        .hoverTip {
             MoveDetail(move: estimate.move, data: estimate.data,
                        spreadMatters: !estimate.isSingleTarget, lang: lang)
         }
