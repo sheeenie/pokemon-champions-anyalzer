@@ -67,6 +67,7 @@ SOURCES=(
     CaptureManager.swift
     CameraPreview.swift
     BattleGeometry.swift
+    CaptureProfile.swift
     BattleAnalyzer.swift
     BattleState.swift
     IconMatcher.swift

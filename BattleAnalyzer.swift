@@ -43,13 +43,18 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
     /// while the loading screen is black with a few bright pixels. Hence a
     /// count of bright pixels. Below a cut of 0.235 the fade's noise starts
     /// counting too, so that is the separating value rather than a free choice.
-    private static let loadingIconBox = CGRect(x: 0.70, y: 0.58, width: 0.29, height: 0.40)
+    /// Where to look is the device profile's `loadingIconBox`.
     private static let loadingIconLuma = 0.235
     private static let loadingIconCoverage = 0.008
 
     /// Fallback for a device or update whose loading icon this misses: a screen
     /// black this long is not a move animation, so end the battle anyway.
     private static let blackFramesToReset = 32   // ~8s at the analysis cadence
+
+    /// Where to look on this phone's screen, chosen from the frame's shape the
+    /// first time a landscape frame arrives, and again if that shape changes.
+    private var profile = CaptureProfile.iPhone17
+    private var profileFrameSize: CGSize = .zero
 
     private var blackFrames = 0
     /// One reset per black stretch, however long it lasts.
@@ -141,12 +146,19 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
             return
         }
 
+        if size != profileFrameSize {
+            profileFrameSize = size
+            profile = CaptureProfile.matching(size)
+            log("[analyzer] capture profile: \(profile.name), measured at "
+                + "\(Int(profile.frameSize.width))x\(Int(profile.frameSize.height))")
+        }
+
         guard let frame = makeCGImage(from: pixelBuffer) else { return }
 
         let brightness = meanBrightness(of: frame)
         if brightness < BattleAnalyzer.blackThreshold {
             blackFrames += 1
-            let coverage = litCoverage(of: frame, region: BattleAnalyzer.loadingIconBox)
+            let coverage = litCoverage(of: frame, region: profile.loadingIconBox)
             let loading = coverage >= BattleAnalyzer.loadingIconCoverage
             // The icon fades in a little after the screen goes black, so this
             // waits for it rather than deciding on the first black frame.
@@ -163,7 +175,7 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         armedThisStretch = false
 
         for slot in BattleSlot.allCases {
-            let rect = slot.spriteRect(in: size)
+            let rect = profile.spriteRect(slot, in: size)
             guard let crop = frame.cropping(to: rect),
                   let signature = IconMatcher.signature(crop)
             else { continue }
@@ -207,7 +219,7 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         write(frame, to: dir.appendingPathComponent("black\(index)-full.png"))
         let size = CGSize(width: frame.width, height: frame.height)
-        let box = BattleAnalyzer.loadingIconBox
+        let box = profile.loadingIconBox
         let rect = CGRect(x: box.minX * size.width, y: box.minY * size.height,
                           width: box.width * size.width, height: box.height * size.height)
         if let crop = frame.cropping(to: rect) {
@@ -300,8 +312,8 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
             return
         }
 
-        let plates = BattleSlot.allCases.map { ($0, $0.plateRect(in: size)) }
-        let icons = BattleSlot.allCases.map { ($0, $0.spriteRect(in: size)) }
+        let plates = BattleSlot.allCases.map { ($0, profile.plateRect($0, in: size)) }
+        let icons = BattleSlot.allCases.map { ($0, profile.spriteRect($0, in: size)) }
 
         if let annotated = annotate(full, rects: (plates + icons).map { $0.1 }) {
             write(annotated, to: dir.appendingPathComponent("frame\(index)-annotated.png"))
