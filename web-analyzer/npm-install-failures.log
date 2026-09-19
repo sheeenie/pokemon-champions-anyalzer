@@ -1,0 +1,84 @@
+npm install failure investigation log — web-analyzer
+Generated: 2026-08-30
+
+SUMMARY
+-------
+Root cause: npm 10.9.2 hit "Exit handler never called!" (known npm CLI bug)
+on every run. This crashes the install before it writes cached/downloaded
+packages into node_modules, even when nearly everything succeeded. Two
+things kept triggering it on this slow network connection:
+
+  1. npm's own security-audit check (POST to registry.npmjs.org/-/npm/v1/
+     security/audits/quick) timing out (ETIMEDOUT) on every run.
+  2. @rolldown/binding-darwin-arm64 (an OPTIONAL native binary for the
+     Rolldown bundler) consistently timing out after 7-8+ retries.
+
+REQUIRED packages that failed at least one download attempt but eventually
+cached successfully (safe — will install fine once the crash is avoided):
+  @napi-rs/canvas, @oxc-project/types, bmp-js, detect-libc, fdir,
+  idb-keyval, is-url, lightningcss, nanoid, opencollective-postinstall,
+  picomatch, postcss, regenerator-runtime, rolldown, tesseract.js,
+  tesseract.js-core, tinyglobby, typescript, vite, wasm-feature-detect,
+  zlibjs
+
+REQUIRED package still unresolved as of last check (not yet confirmed
+cached — needs to be watched on the next run):
+  @rolldown/pluginutils
+
+OPTIONAL package skipped intentionally (native binary, not needed for the
+app to run — Vite/Rolldown falls back without it):
+  @rolldown/binding-darwin-arm64
+  (plus all other-OS/arch @rolldown/binding-* and lightningcss-*/
+  @napi-rs/canvas-* variants, which were never attempted since they don't
+  match this machine's OS/arch)
+
+FIX APPLIED (INTERMEDIATE, superseded below)
+---------------------------------------------
+Re-running with: npm install --no-audit --omit=optional
+  --no-audit      -> stops npm from making the audit request that was
+                      timing out and contributing to the crash
+  --omit=optional -> skips @rolldown/binding-darwin-arm64 (and other
+                      optional native binaries) entirely instead of
+                      retrying it 10x, removing the other crash trigger
+
+This got further but @rolldown/pluginutils and @oxc-project/types still
+timed out consistently. Direct `curl` to the exact same URLs succeeded
+instantly (~1s), ruling out real network/registry problems.
+
+TRUE ROOT CAUSE (confirmed via node -e "fetch(...)" with full error.cause)
+----------------------------------------------------------------------
+This machine has NO working IPv6 route to registry.npmjs.org
+(curl -6 fails instantly with "no route"/EHOSTUNREACH). That alone is
+harmless -- curl's happy-eyeballs falls back to IPv4 immediately and
+succeeds every time.
+
+Node.js's own connection logic (`autoSelectFamily`, Node's Happy Eyeballs
+implementation used internally by npm's fetch/undici) races IPv6 and IPv4
+connection attempts across ALL resolved addresses (12 IPv4 + 12 IPv6
+Cloudflare anycast IPs for this domain). On this machine, that race
+somehow stalls/corrupts every single IPv4 attempt too (all 12 came back
+ETIMEDOUT from Node, while curl succeeded on every one individually).
+This produced the exact symptom pattern: whichever 1-2 packages npm
+happened to be fetching, with --maxsockets=2, would get stuck retrying
+forever, while everything fetched earlier (before this bug engaged) was
+already cached.
+
+FINAL FIX (confirmed working)
+------------------------------
+Set this env var before running npm/node commands in this project:
+
+  NODE_OPTIONS="--dns-result-order=ipv4first --no-network-family-autoselection"
+
+  --dns-result-order=ipv4first        -> prefer IPv4 addresses first
+  --no-network-family-autoselection   -> disable the Happy Eyeballs
+                                          race entirely; try one address
+                                          at a time like curl does
+
+With this set, a clean `rm -rf node_modules && npm install --no-audit
+--omit=optional` completed in 6 seconds (vs. never completing before).
+
+Baked into package.json's dev/build/preview/build-sprites scripts so
+`npm run dev` etc. always work. NOT yet persisted for plain `npm install`
+itself -- to fix that too, add this line to ~/.zshrc:
+
+  export NODE_OPTIONS="--dns-result-order=ipv4first --no-network-family-autoselection"
