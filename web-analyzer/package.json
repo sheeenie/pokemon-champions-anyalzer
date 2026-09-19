@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "build-sprites": "node scripts/build-sprite-db.js"
+    "dev": "NODE_OPTIONS=\"--dns-result-order=ipv4first --no-network-family-autoselection\" vite",
+    "build": "NODE_OPTIONS=\"--dns-result-order=ipv4first --no-network-family-autoselection\" vite build",
+    "preview": "NODE_OPTIONS=\"--dns-result-order=ipv4first --no-network-family-autoselection\" vite preview",
+    "build-sprites": "NODE_OPTIONS=\"--dns-result-order=ipv4first --no-network-family-autoselection\" node scripts/build-sprite-db.js"
   },
   "devDependencies": {
     "vite": "^8.2.0"
