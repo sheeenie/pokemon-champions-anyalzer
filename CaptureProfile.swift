@@ -76,6 +76,13 @@ extension CaptureProfile {
     ///
     /// Loading icon: measured on a recorded loading screen, where the Rotom
     /// icon and its progress bar sit well inside this corner.
+    ///
+    /// The iPhone 18 Pro captures at this same 2622x1206 and shares this
+    /// profile, which is not an assumption from the matching phone shape: on a
+    /// doubles battle from one, every slot's sharpest match was at the profile's
+    /// position exactly, over a 625-position search two pixels apart. A newer
+    /// iPhone changing nothing here is the expected case, so the name is the
+    /// phone this was measured on rather than a list.
     static let iPhone17 = CaptureProfile(
         name: "iPhone 17",
         frameSize: CGSize(width: 2622, height: 1206),
