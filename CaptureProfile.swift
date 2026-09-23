@@ -106,19 +106,19 @@ extension CaptureProfile {
     /// found Gengar at distance 0.021 on the opponent's plate and 0.023 on the
     /// player's, both 123px square.
     ///
-    /// Three slots are measured. opponent1 came from a doubles battle, where
-    /// Drampa sat at distance 0.050 and Toxicroak beside it at 0.051, giving a
-    /// spacing of 0.1650 between the two opponent slots.
+    /// All four slots are measured, each from a battle where that plate was on
+    /// screen: Gengar on both singles slots, Drampa at 0.050 and Toxicroak at
+    /// 0.051 on the two opponent slots, and Whimsicott at 0.026 on the
+    /// player's partner slot.
     ///
-    /// player2 is the one still inferred, from that measured spacing rather
-    /// than the iPhone's: the player's partner had fainted in the only doubles
-    /// frame captured so far, so its plate was not on screen.
-    ///
-    /// The first inferred opponent1 shows why this is worth measuring. It sat
-    /// 8px from the truth - under 0.3% of the frame - and that was enough to
-    /// lose the slot: the sprite is 123px, so the matcher's search window
-    /// straddled the real position and every probe landed misaligned enough to
-    /// be rejected.
+    /// Inference is not a substitute, and the two inner slots show both sides
+    /// of that. opponent1, placed from the iPhone's spacing, sat 8px from the
+    /// truth - under 0.3% of the frame - and lost the slot completely: the
+    /// sprite is 123px, so the matcher's search window straddled the real
+    /// position and every probe it tried landed far enough off to be rejected.
+    /// player2, placed from this phone's own measured opponent spacing of
+    /// 0.1650, landed within a pixel of where the search later found it. The
+    /// difference between the two guesses was whose spacing they used.
     ///
     /// The loading-screen corner is the iPhone's, deliberately generous and not
     /// yet confirmed against a Pixel loading screen.
@@ -131,7 +131,7 @@ extension CaptureProfile {
             .opponent1: CGRect(x: 0.5983, y: 0.0421, width: 0.0450, height: 0.0999),
             .opponent2: CGRect(x: 0.7633, y: 0.0421, width: 0.0450, height: 0.0999),
             .player1:   CGRect(x: 0.0768, y: 0.8916, width: 0.0450, height: 0.0999),
-            .player2:   CGRect(x: 0.2418, y: 0.8916, width: 0.0450, height: 0.0999),
+            .player2:   CGRect(x: 0.2422, y: 0.8916, width: 0.0450, height: 0.0999),
         ],
         plateBoxes: [:],
         loadingIconBox: CGRect(x: 0.70, y: 0.58, width: 0.29, height: 0.40)

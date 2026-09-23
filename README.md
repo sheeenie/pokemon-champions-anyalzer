@@ -300,9 +300,8 @@ guess at someone's spread would be.
   and a Pixel 7 mirrored at 2746×1236. Other models need their own profile, since
   the game anchors its name plates to the screen edges and a differently shaped
   screen puts them elsewhere.
-- The Pixel 7 profile measures only the two singles slots; the doubles slots are
-  inferred from the iPhone's spacing until a doubles battle is captured on it.
-  Its loading-screen corner is the iPhone's, not yet confirmed.
+- The Pixel 7 profile's loading-screen corner is still the iPhone's, not yet
+  confirmed against a Pixel loading screen.
 - A few abilities, and some rare form names such as Vivillon patterns, have no
   Traditional Chinese text in PokéAPI and show in English.
 
