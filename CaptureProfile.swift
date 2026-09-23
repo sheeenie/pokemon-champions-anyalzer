@@ -106,12 +106,19 @@ extension CaptureProfile {
     /// found Gengar at distance 0.021 on the opponent's plate and 0.023 on the
     /// player's, both 123px square.
     ///
-    /// Only the singles slots are measured; no doubles battle has been captured
-    /// on this phone yet. The inner two are placed by the spacing the iPhone
-    /// uses between slots, scaled by sprite size, which is how opponent1 was
-    /// first placed there too. The matcher searches a window around each box,
-    /// which is what keeps an inferred position from mattering until a doubles
-    /// frame can replace it.
+    /// Three slots are measured. opponent1 came from a doubles battle, where
+    /// Drampa sat at distance 0.050 and Toxicroak beside it at 0.051, giving a
+    /// spacing of 0.1650 between the two opponent slots.
+    ///
+    /// player2 is the one still inferred, from that measured spacing rather
+    /// than the iPhone's: the player's partner had fainted in the only doubles
+    /// frame captured so far, so its plate was not on screen.
+    ///
+    /// The first inferred opponent1 shows why this is worth measuring. It sat
+    /// 8px from the truth - under 0.3% of the frame - and that was enough to
+    /// lose the slot: the sprite is 123px, so the matcher's search window
+    /// straddled the real position and every probe landed misaligned enough to
+    /// be rejected.
     ///
     /// The loading-screen corner is the iPhone's, deliberately generous and not
     /// yet confirmed against a Pixel loading screen.
@@ -121,10 +128,10 @@ extension CaptureProfile {
         name: "Pixel 7",
         frameSize: CGSize(width: 2746, height: 1236),
         spriteBoxes: [
-            .opponent1: CGRect(x: 0.5954, y: 0.0421, width: 0.0450, height: 0.0999),
+            .opponent1: CGRect(x: 0.5983, y: 0.0421, width: 0.0450, height: 0.0999),
             .opponent2: CGRect(x: 0.7633, y: 0.0421, width: 0.0450, height: 0.0999),
             .player1:   CGRect(x: 0.0768, y: 0.8916, width: 0.0450, height: 0.0999),
-            .player2:   CGRect(x: 0.2447, y: 0.8916, width: 0.0450, height: 0.0999),
+            .player2:   CGRect(x: 0.2418, y: 0.8916, width: 0.0450, height: 0.0999),
         ],
         plateBoxes: [:],
         loadingIconBox: CGRect(x: 0.70, y: 0.58, width: 0.29, height: 0.40)
