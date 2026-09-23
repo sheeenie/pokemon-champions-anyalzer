@@ -34,3 +34,25 @@ struct CameraPreview: NSViewRepresentable {
         nsView.previewLayer.session = session
     }
 }
+
+
+/// Shows a layer someone else keeps filled. The Android path has no capture
+/// session to hang a preview layer off, only frames, so the mirror draws the
+/// same layer those frames land on.
+struct LayerPreview: NSViewRepresentable {
+    let layer: CALayer
+
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        view.wantsLayer = true
+        view.layer?.addSublayer(layer)
+        return view
+    }
+
+    func updateNSView(_ view: NSView, context: Context) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        layer.frame = view.bounds
+        CATransaction.commit()
+    }
+}

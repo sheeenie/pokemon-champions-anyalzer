@@ -14,7 +14,8 @@ struct CaptureProfile {
     let frameSize: CGSize
     /// Where each slot's species artwork is drawn: the identification target.
     let spriteBoxes: [BattleSlot: CGRect]
-    /// Name plate bounds. Only used to annotate calibration dumps.
+    /// Name plate bounds. Only used to annotate calibration dumps, so a profile
+    /// may leave them out rather than invent them.
     let plateBoxes: [BattleSlot: CGRect]
     /// The loading screen's bottom-right corner, where its Rotom icon appears.
     let loadingIconBox: CGRect
@@ -25,8 +26,8 @@ struct CaptureProfile {
         pixels(spriteBoxes[slot]!, in: size)
     }
 
-    func plateRect(_ slot: BattleSlot, in size: CGSize) -> CGRect {
-        pixels(plateBoxes[slot]!, in: size)
+    func plateRect(_ slot: BattleSlot, in size: CGSize) -> CGRect? {
+        plateBoxes[slot].map { pixels($0, in: size) }
     }
 
     private func pixels(_ box: CGRect, in size: CGSize) -> CGRect {
@@ -40,7 +41,7 @@ struct CaptureProfile {
 extension CaptureProfile {
 
     /// Every profile the app knows. Add a device here.
-    static let all: [CaptureProfile] = [.iPhone17]
+    static let all: [CaptureProfile] = [.iPhone17, .pixel7]
 
     /// The profile measured on the screen shape closest to this frame's.
     ///
@@ -90,6 +91,42 @@ extension CaptureProfile {
             .player1:   CGRect(x: 0.081, y: 0.790, width: 0.177, height: 0.170),
             .player2:   CGRect(x: 0.264, y: 0.790, width: 0.177, height: 0.170),
         ],
+        loadingIconBox: CGRect(x: 0.70, y: 0.58, width: 0.29, height: 0.40)
+    )
+}
+
+extension CaptureProfile {
+
+    /// Pixel 7, mirrored by scrcpy and captured at 2746x1236.
+    ///
+    /// The game anchors its plates to the screen edges, so a 2.222 screen is not
+    /// a 2.174 screen with different numbers in the same places: the player's
+    /// sprite sits at y 0.8916 here against 0.8425 on the iPhone. Measured the
+    /// same way - searching a captured battle for a known reference icon, which
+    /// found Gengar at distance 0.021 on the opponent's plate and 0.023 on the
+    /// player's, both 123px square.
+    ///
+    /// Only the singles slots are measured; no doubles battle has been captured
+    /// on this phone yet. The inner two are placed by the spacing the iPhone
+    /// uses between slots, scaled by sprite size, which is how opponent1 was
+    /// first placed there too. The matcher searches a window around each box,
+    /// which is what keeps an inferred position from mattering until a doubles
+    /// frame can replace it.
+    ///
+    /// The loading-screen corner is the iPhone's, deliberately generous and not
+    /// yet confirmed against a Pixel loading screen.
+    ///
+    /// Plates are not measured here: they only annotate calibration dumps.
+    static let pixel7 = CaptureProfile(
+        name: "Pixel 7",
+        frameSize: CGSize(width: 2746, height: 1236),
+        spriteBoxes: [
+            .opponent1: CGRect(x: 0.5954, y: 0.0421, width: 0.0450, height: 0.0999),
+            .opponent2: CGRect(x: 0.7633, y: 0.0421, width: 0.0450, height: 0.0999),
+            .player1:   CGRect(x: 0.0768, y: 0.8916, width: 0.0450, height: 0.0999),
+            .player2:   CGRect(x: 0.2447, y: 0.8916, width: 0.0450, height: 0.0999),
+        ],
+        plateBoxes: [:],
         loadingIconBox: CGRect(x: 0.70, y: 0.58, width: 0.29, height: 0.40)
     )
 }

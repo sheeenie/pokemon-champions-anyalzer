@@ -11,6 +11,17 @@ class CaptureManager: ObservableObject {
     private var currentInput: AVCaptureDeviceInput?
     private var currentDeviceID: String?
 
+    /// The Android source: a scrcpy window, read with ScreenCaptureKit.
+    let android = AndroidCapture()
+    /// True while frames are coming from Android rather than an iPhone.
+    @Published var usingAndroid = false
+    /// Screen recording has not been granted, so Android cannot be read yet.
+    @Published var needsScreenRecording = false
+    /// The shape of the phone on screen, so the mirror is not letterboxed.
+    @Published var mirrorAspect: CGFloat = 2622.0 / 1206.0
+
+    private var attachedName: String?
+
     /// What the analyzer currently believes is on the field.
     let battle: BattleStateTracker
     private let analyzer: BattleAnalyzer
@@ -80,6 +91,26 @@ class CaptureManager: ObservableObject {
             self.session.startRunning()
         }
 
+        // An iPhone wins when both are there, so Android frames are ignored
+        // while one is attached rather than racing it into the analyzer.
+        android.onFrame = { [weak self] pixelBuffer in
+            guard let self, self.currentInput == nil else { return }
+            self.analyzer.analyze(pixelBuffer)
+        }
+        android.onAvailability = { [weak self] size in
+            guard let self else { return }
+            self.usingAndroid = size != nil && self.currentInput == nil
+            if let size, size.height > 0 { self.mirrorAspect = size.width / size.height }
+            self.refreshStatus()
+        }
+        android.onPermissionNeeded = { [weak self] in
+            self?.needsScreenRecording = true
+            self?.refreshStatus()
+        }
+        // Only looks; it does not ask. An iPhone user should never meet a
+        // prompt for a permission they have no use for.
+        android.start()
+
         // React any time the set of available devices changes, so plugging
         // in the iPhone after the app is already running still connects.
         devicesObservation = discoverySession.observe(\.devices, options: [.initial, .new]) { [weak self] _, change in
@@ -138,8 +169,13 @@ class CaptureManager: ObservableObject {
             session.commitConfiguration()
 
             DispatchQueue.main.async {
-                self.deviceName = "Connected: \(device.localizedName)"
+                self.attachedName = device.localizedName
+                self.usingAndroid = false
+                self.mirrorAspect = 2622.0 / 1206.0
+                self.refreshStatus()
             }
+            // One source at a time: the analyzer's state is not synchronised.
+            android.isEnabled = false
             Diagnostics.log("[capture] attached \(device.localizedName)")
         } catch {
             Diagnostics.log("[capture] could not attach \(device.localizedName): \(error.localizedDescription)")
@@ -153,9 +189,24 @@ class CaptureManager: ObservableObject {
         session.commitConfiguration()
         currentInput = nil
         currentDeviceID = nil
+        android.isEnabled = true
 
         DispatchQueue.main.async {
-            self.deviceName = "Waiting for iPhone..."
+            self.attachedName = nil
+            self.refreshStatus()
+        }
+    }
+
+    /// One place decides what the label says, since three things can change it.
+    private func refreshStatus() {
+        if let attachedName {
+            deviceName = "Connected: \(attachedName)"
+        } else if usingAndroid {
+            deviceName = "Connected: Android via scrcpy"
+        } else if needsScreenRecording {
+            deviceName = "Waiting for a phone"
+        } else {
+            deviceName = "Waiting for a phone..."
         }
     }
 }

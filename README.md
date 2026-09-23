@@ -117,7 +117,8 @@ Switch the whole panel between English and 繁體中文 at any time.
 - macOS 13 or later, on Apple Silicon or Intel. The app is built for both, but
   so far it has only been tested on macOS 26.6 with Apple Silicon.
 - An iPhone with Pokémon Champions, a USB cable, and the iPhone set to trust
-  this Mac.
+  this Mac; or an Android phone mirrored with [scrcpy](https://github.com/Genymobile/scrcpy)
+  (see below).
 
 ## Download
 
@@ -140,6 +141,34 @@ in Terminal once, then open the app:
 ```bash
 xattr -dr com.apple.quarantine "/Applications/Pokémon Champions Analyzer.app"
 ```
+
+## Android
+
+An iPhone offers its screen to macOS as a capture device, which is what this app
+opens. Android offers nothing of the kind, so it goes through
+[scrcpy](https://github.com/Genymobile/scrcpy), which mirrors the phone over adb
+into an ordinary window; the app reads that window.
+
+```bash
+brew install scrcpy
+brew install --cask android-platform-tools
+scrcpy --window-borderless --no-audio --no-control
+```
+
+On the phone, turn on **Developer options → USB debugging**, plug it in, and
+tap **Allow** when it asks about this computer. Use `--window-borderless`, or the
+window's title bar becomes part of the picture and every region is off by its
+height.
+
+The first time, the app needs macOS's **Screen Recording** permission to read
+another app's window: press **Use Android (scrcpy)** in the corner of the mirror,
+allow it, and reopen the app. An iPhone is preferred whenever one is attached, so
+the Android source only runs when it is not.
+
+Google Cast is not an option: a Mac cannot act as a Cast receiver.
+
+Screen positions are measured per device, so a phone needs a profile in
+`CaptureProfile.swift`. Two ship: iPhone 17 and Pixel 7.
 
 ## Build from source
 
@@ -230,7 +259,9 @@ guess at someone's spread would be.
 |---|---|
 | `CaptureManager.swift` | iPhone detection and the capture session |
 | `BattleAnalyzer.swift` | Frame analysis, black-screen detection, debug logging |
-| `BattleGeometry.swift` | Calibrated name-plate and sprite positions |
+| `BattleGeometry.swift` | What a battle slot is |
+| `CaptureProfile.swift` | Where the regions sit, per device |
+| `AndroidCapture.swift` | Reads a scrcpy window with ScreenCaptureKit |
 | `IconMatcher.swift` | Sprite matching against the reference library |
 | `BattleState.swift` | Card, speed list and reset state |
 | `PokedexStore.swift` | Loads generated Pokédex data and sprites |
@@ -265,8 +296,13 @@ guess at someone's spread would be.
 
 ## Known limitations
 
-- Screen positions were calibrated on an iPhone that captures at 2622×1206. Other
-  iPhone models are untested.
+- Screen positions are calibrated per device: an iPhone capturing at 2622×1206,
+  and a Pixel 7 mirrored at 2746×1236. Other models need their own profile, since
+  the game anchors its name plates to the screen edges and a differently shaped
+  screen puts them elsewhere.
+- The Pixel 7 profile measures only the two singles slots; the doubles slots are
+  inferred from the iPhone's spacing until a doubles battle is captured on it.
+  Its loading-screen corner is the iPhone's, not yet confirmed.
 - A few abilities, and some rare form names such as Vivillon patterns, have no
   Traditional Chinese text in PokéAPI and show in English.
 

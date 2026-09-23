@@ -95,7 +95,13 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
                        didOutput sampleBuffer: CMSampleBuffer,
                        from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        analyze(pixelBuffer)
+    }
 
+    /// One frame, from whichever source is connected: an iPhone's capture
+    /// session, or an Android phone's mirrored window. Call from one queue at a
+    /// time - the slot state below is not synchronised.
+    func analyze(_ pixelBuffer: CVPixelBuffer) {
         let now = CACurrentMediaTime()
         guard now - lastAnalysis >= analysisInterval else { return }
         lastAnalysis = now
@@ -312,7 +318,9 @@ final class BattleAnalyzer: NSObject, AVCaptureVideoDataOutputSampleBufferDelega
             return
         }
 
-        let plates = BattleSlot.allCases.map { ($0, profile.plateRect($0, in: size)) }
+        let plates = BattleSlot.allCases.compactMap { slot in
+            profile.plateRect(slot, in: size).map { (slot, $0) }
+        }
         let icons = BattleSlot.allCases.map { ($0, profile.spriteRect($0, in: size)) }
 
         if let annotated = annotate(full, rects: (plates + icons).map { $0.1 }) {

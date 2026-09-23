@@ -30,7 +30,6 @@ struct ContentView: View {
     /// The mirror is a reference, not the point of the app - the stats are.
     /// It floats small in the corner so the panel gets the whole window.
     private static let mirrorWidth: CGFloat = 200
-    private static let mirrorAspect: CGFloat = 2622.0 / 1206.0
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -46,9 +45,17 @@ struct ContentView: View {
                             .font(.system(size: 9))
                             .foregroundColor(.white.opacity(0.45))
 
-                        CameraPreview(session: captureManager.session)
+                        // An iPhone hands over a capture session to preview;
+                        // Android hands over frames, which land on a layer.
+                        Group {
+                            if captureManager.usingAndroid {
+                                LayerPreview(layer: captureManager.android.previewLayer)
+                            } else {
+                                CameraPreview(session: captureManager.session)
+                            }
+                        }
                             .frame(width: ContentView.mirrorWidth,
-                                   height: ContentView.mirrorWidth / ContentView.mirrorAspect)
+                                   height: ContentView.mirrorWidth / captureManager.mirrorAspect)
                             .background(Color.black)
                             .cornerRadius(7)
                             .overlay(
@@ -57,6 +64,25 @@ struct ContentView: View {
                             )
                             .shadow(color: .black.opacity(0.5), radius: 8, y: 3)
                     }
+                }
+
+                // Only when it is the thing standing in the way: an Android
+                // phone is mirrored on screen but macOS will not let the app
+                // read the window yet.
+                if captureManager.needsScreenRecording, !captureManager.usingAndroid {
+                    Button {
+                        captureManager.android.requestPermission()
+                    } label: {
+                        Label("Use Android (scrcpy)", systemImage: "rectangle.on.rectangle")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.horizontal, 9)
+                            .padding(.vertical, 5)
+                            .background(Color.white.opacity(0.12))
+                            .cornerRadius(6)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Allow screen recording so the app can read the scrcpy window")
                 }
 
                 Button {
