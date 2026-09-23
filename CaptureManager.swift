@@ -11,12 +11,13 @@ class CaptureManager: ObservableObject {
     private var currentInput: AVCaptureDeviceInput?
     private var currentDeviceID: String?
 
-    /// The Android source: a scrcpy window, read with ScreenCaptureKit.
-    let android = AndroidCapture()
+    /// The Android source: the phone's screen, read over adb.
+    let android = AndroidDirect()
     /// True while frames are coming from Android rather than an iPhone.
     @Published var usingAndroid = false
-    /// Screen recording has not been granted, so Android cannot be read yet.
-    @Published var needsScreenRecording = false
+    /// Anything about the Android path worth putting on screen: no adb
+    /// installed, or debugging not allowed on the phone yet.
+    @Published var androidStatus: String?
     /// The shape of the phone on screen, so the mirror is not letterboxed.
     @Published var mirrorAspect: CGFloat = 2622.0 / 1206.0
 
@@ -103,12 +104,10 @@ class CaptureManager: ObservableObject {
             if let size, size.height > 0 { self.mirrorAspect = size.width / size.height }
             self.refreshStatus()
         }
-        android.onPermissionNeeded = { [weak self] in
-            self?.needsScreenRecording = true
+        android.onStatus = { [weak self] text in
+            self?.androidStatus = text
             self?.refreshStatus()
         }
-        // Only looks; it does not ask. An iPhone user should never meet a
-        // prompt for a permission they have no use for.
         android.start()
 
         // React any time the set of available devices changes, so plugging
@@ -202,9 +201,9 @@ class CaptureManager: ObservableObject {
         if let attachedName {
             deviceName = "Connected: \(attachedName)"
         } else if usingAndroid {
-            deviceName = "Connected: Android via scrcpy"
-        } else if needsScreenRecording {
-            deviceName = "Waiting for a phone"
+            deviceName = "Connected: Android"
+        } else if let androidStatus {
+            deviceName = androidStatus
         } else {
             deviceName = "Waiting for a phone..."
         }

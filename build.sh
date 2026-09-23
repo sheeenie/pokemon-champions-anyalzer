@@ -68,7 +68,8 @@ SOURCES=(
     CameraPreview.swift
     BattleGeometry.swift
     CaptureProfile.swift
-    AndroidCapture.swift
+    AndroidDirect.swift
+    H264Decoder.swift
     BattleAnalyzer.swift
     BattleState.swift
     IconMatcher.swift

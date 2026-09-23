@@ -66,25 +66,6 @@ struct ContentView: View {
                     }
                 }
 
-                // Only when it is the thing standing in the way: an Android
-                // phone is mirrored on screen but macOS will not let the app
-                // read the window yet.
-                if captureManager.needsScreenRecording, !captureManager.usingAndroid {
-                    Button {
-                        captureManager.android.requestPermission()
-                    } label: {
-                        Label("Use Android (scrcpy)", systemImage: "rectangle.on.rectangle")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundColor(.white.opacity(0.8))
-                            .padding(.horizontal, 9)
-                            .padding(.vertical, 5)
-                            .background(Color.white.opacity(0.12))
-                            .cornerRadius(6)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Allow screen recording so the app can read the scrcpy window")
-                }
-
                 Button {
                     showMirror.toggle()
                 } label: {

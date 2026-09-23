@@ -36,23 +36,47 @@ struct CameraPreview: NSViewRepresentable {
 }
 
 
+/// Hosts a layer someone else keeps filled, and keeps it the size of the view.
+///
+/// The resizing has to happen in `layout`, as the capture preview above does
+/// it. Doing it from `updateNSView` looks equivalent and is not: SwiftUI calls
+/// that when its state changes, not when the view is laid out, so the layer
+/// kept whatever size it had when the view was built - zero - and the mirror
+/// stayed black however many frames arrived.
+class HostedLayerView: NSView {
+    private let hosted: CALayer
+
+    init(layer: CALayer) {
+        hosted = layer
+        super.init(frame: .zero)
+        wantsLayer = true
+        self.layer?.addSublayer(hosted)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layout() {
+        super.layout()
+        // Without this the layer animates every resize, which on a mirror that
+        // is redrawn ten times a second reads as a smear.
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        hosted.frame = bounds
+        CATransaction.commit()
+    }
+}
+
 /// Shows a layer someone else keeps filled. The Android path has no capture
 /// session to hang a preview layer off, only frames, so the mirror draws the
 /// same layer those frames land on.
 struct LayerPreview: NSViewRepresentable {
     let layer: CALayer
 
-    func makeNSView(context: Context) -> NSView {
-        let view = NSView()
-        view.wantsLayer = true
-        view.layer?.addSublayer(layer)
-        return view
-    }
+    func makeNSView(context: Context) -> HostedLayerView { HostedLayerView(layer: layer) }
 
-    func updateNSView(_ view: NSView, context: Context) {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        layer.frame = view.bounds
-        CATransaction.commit()
+    func updateNSView(_ view: HostedLayerView, context: Context) {
+        view.needsLayout = true
     }
 }

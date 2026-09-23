@@ -145,27 +145,25 @@ xattr -dr com.apple.quarantine "/Applications/Pokémon Champions Analyzer.app"
 ## Android
 
 An iPhone offers its screen to macOS as a capture device, which is what this app
-opens. Android offers nothing of the kind, so it goes through
-[scrcpy](https://github.com/Genymobile/scrcpy), which mirrors the phone over adb
-into an ordinary window; the app reads that window.
+opens. Android offers nothing of the kind, so the app does what
+[scrcpy](https://github.com/Genymobile/scrcpy) does: it pushes scrcpy's server
+onto the phone over adb, starts it, and reads the H.264 stream that comes back
+through a forwarded socket. There is no window to keep open and no screen
+recording permission to grant.
 
 ```bash
-brew install scrcpy
 brew install --cask android-platform-tools
-scrcpy --window-borderless --no-audio --no-control
 ```
 
-On the phone, turn on **Developer options → USB debugging**, plug it in, and
-tap **Allow** when it asks about this computer. Use `--window-borderless`, or the
-window's title bar becomes part of the picture and every region is off by its
-height.
+On the phone, turn on **Developer options → USB debugging**, plug it in, and tap
+**Allow** when it asks about this computer. That is the whole setup: the app
+finds adb, starts the phone's screen, and shows it in the mirror. An iPhone is
+preferred whenever one is attached, so the Android path only runs when there is
+none.
 
-The first time, the app needs macOS's **Screen Recording** permission to read
-another app's window: press **Use Android (scrcpy)** in the corner of the mirror,
-allow it, and reopen the app. An iPhone is preferred whenever one is attached, so
-the Android source only runs when it is not.
-
-Google Cast is not an option: a Mac cannot act as a Cast receiver.
+scrcpy's server ships inside the app, so its version always matches the protocol
+the app speaks and scrcpy itself need not be installed. Google Cast is not an
+option: a Mac cannot act as a Cast receiver.
 
 Screen positions are measured per device, so a phone needs a profile in
 `CaptureProfile.swift`. Two ship: iPhone 17 and Pixel 7.
@@ -261,7 +259,8 @@ guess at someone's spread would be.
 | `BattleAnalyzer.swift` | Frame analysis, black-screen detection, debug logging |
 | `BattleGeometry.swift` | What a battle slot is |
 | `CaptureProfile.swift` | Where the regions sit, per device |
-| `AndroidCapture.swift` | Reads a scrcpy window with ScreenCaptureKit |
+| `AndroidDirect.swift` | Reads an Android phone's screen over adb |
+| `H264Decoder.swift` | Turns the phone's video stream into frames |
 | `IconMatcher.swift` | Sprite matching against the reference library |
 | `BattleState.swift` | Card, speed list and reset state |
 | `PokedexStore.swift` | Loads generated Pokédex data and sprites |
@@ -314,6 +313,9 @@ guess at someone's spread would be.
 - Stats, abilities, move data and names: [PokéAPI](https://pokeapi.co/).
 - Move usage: [championsbattledata.com](https://championsbattledata.com).
 - Type colours: [52poke wiki](https://wiki.52poke.com/).
+- Android screen capture: [scrcpy](https://github.com/Genymobile/scrcpy) by
+  Genymobile, Apache License 2.0. Its device server is bundled in
+  `Resources/scrcpy-server` and pushed to the phone at runtime.
 
 This is an unofficial fan project. It is not affiliated with or endorsed by
 Nintendo, Creatures Inc., GAME FREAK inc. or The Pokémon Company. Pokémon and
