@@ -225,8 +225,16 @@ final class AndroidDirect {
 
     /// A GUI app inherits none of a shell's PATH, so adb is looked for where it
     /// actually installs.
+    /// The copy in the bundle first, then wherever the machine keeps one.
+    ///
+    /// Carrying adb is what makes an Android phone work with nothing installed
+    /// on the Mac. The other paths remain for a build made without one to
+    /// bundle, which still runs against an adb the user installed themselves.
     private static func adbPath() -> String? {
-        let candidates = ["/opt/homebrew/bin/adb",
+        let bundled = Bundle.main.bundleURL
+            .appendingPathComponent("Contents/Helpers/adb").path
+        let candidates = [bundled,
+                          "/opt/homebrew/bin/adb",
                           "/usr/local/bin/adb",
                           NSHomeDirectory() + "/Library/Android/sdk/platform-tools/adb"]
         return candidates.first { FileManager.default.isExecutableFile(atPath: $0) }

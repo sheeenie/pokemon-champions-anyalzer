@@ -16,6 +16,14 @@ fi
 
 VERSION="$VERSION" ./build.sh
 
+# build.sh copies adb from the build machine, so a machine without one produces
+# a release that silently makes every Android user install it themselves - the
+# app still runs, which is exactly why this would go unnoticed.
+if [ ! -x "Pokémon Champions Analyzer.app/Contents/Helpers/adb" ]; then
+    echo "No adb in the bundle - install it with: brew install --cask android-platform-tools"
+    exit 1
+fi
+
 APP="Pokémon Champions Analyzer.app"
 BIN="$APP/Contents/MacOS/PokemonChampionsAnalyzer"
 codesign --verify --strict "$APP"

@@ -151,18 +151,18 @@ onto the phone over adb, starts it, and reads the H.264 stream that comes back
 through a forwarded socket. There is no window to keep open and no screen
 recording permission to grant.
 
-```bash
-brew install --cask android-platform-tools
-```
-
 On the phone, turn on **Developer options → USB debugging**, plug it in, and tap
-**Allow** when it asks about this computer. That is the whole setup: the app
-finds adb, starts the phone's screen, and shows it in the mirror. An iPhone is
-preferred whenever one is attached, so the Android path only runs when there is
-none.
+**Allow** when it asks about this computer. That is the whole setup: nothing to
+install on the Mac. The app starts the phone's screen and shows it in the
+mirror. An iPhone is preferred whenever one is attached, so the Android path
+only runs when there is none.
 
-scrcpy's server ships inside the app, so its version always matches the protocol
-the app speaks and scrcpy itself need not be installed. Google Cast is not an
+Both halves ship inside the app - adb in `Contents/Helpers`, scrcpy's server in
+`Resources/scrcpy-server` - so their versions always match the protocol the app
+speaks. `build.sh` copies adb from whichever one the build machine has
+(Homebrew's `android-platform-tools`, or an Android SDK). Build without one and
+the app falls back to searching for an installed adb at runtime, as it used to;
+`tools/make_release.sh` refuses to package a release that way. Google Cast is not an
 option: a Mac cannot act as a Cast receiver.
 
 Screen positions are measured per device, so a phone needs a profile in
@@ -316,6 +316,8 @@ guess at someone's spread would be.
 - Android screen capture: [scrcpy](https://github.com/Genymobile/scrcpy) by
   Genymobile, Apache License 2.0. Its device server is bundled in
   `Resources/scrcpy-server` and pushed to the phone at runtime.
+- adb, from the Android SDK platform-tools, Apache License 2.0. Copied into
+  `Contents/Helpers/adb` at build time.
 
 This is an unofficial fan project. It is not affiliated with or endorsed by
 Nintendo, Creatures Inc., GAME FREAK inc. or The Pokémon Company. Pokémon and

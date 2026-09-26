@@ -97,6 +97,24 @@ for ARCH in arm64 x86_64; do
 done
 lipo -create "build/$APP_NAME-arm64" "build/$APP_NAME-x86_64" -output "$MACOS_DIR/$APP_NAME"
 
+# Carry adb, so an Android phone needs nothing installed on the Mac. Copied
+# from whichever adb this machine has; without one the app falls back to
+# searching the usual paths at runtime, exactly as it did before. A release
+# must not be built that way - tools/make_release.sh refuses to.
+HELPERS_DIR="$APP_DIR/Contents/Helpers"
+rm -rf "$HELPERS_DIR"
+for CANDIDATE in /opt/homebrew/bin/adb /usr/local/bin/adb "$HOME/Library/Android/sdk/platform-tools/adb"; do
+    if [ -x "$CANDIDATE" ]; then
+        mkdir -p "$HELPERS_DIR"
+        cp "$(readlink -f "$CANDIDATE" 2>/dev/null || echo "$CANDIDATE")" "$HELPERS_DIR/adb"
+        # Nested code signs first; sealing the bundle afterwards covers it.
+        codesign --force --sign - "$HELPERS_DIR/adb"
+        echo "Bundled adb from $CANDIDATE ($(du -h "$HELPERS_DIR/adb" | cut -f1))."
+        break
+    fi
+done
+[ -d "$HELPERS_DIR" ] || echo "No adb found to bundle; Android capture will look for one at runtime."
+
 # Ad-hoc sign the whole bundle so its contents are sealed together. Apple
 # Silicon won't run unsigned code, and macOS only offers "Open Anyway" for a
 # downloaded app that is signed. This isn't a Developer ID signature, so it
