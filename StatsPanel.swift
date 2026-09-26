@@ -1074,6 +1074,10 @@ struct StatsPanel: View {
     /// One rule covers both formats. In singles the partner slot is simply
     /// empty, so `ally` comes back nil and the opposing side yields a single
     /// foe; in doubles both are filled and the card shows a number for each.
+    /// Kept clear on the right of the scrolling cards. Wide enough for an
+    /// overlay scroll bar, which is about 11pt, plus a little daylight.
+    private static let scrollBarGutter: CGFloat = 14
+
     private func opposition(for slot: BattleSlot) -> (foes: [Species], ally: Species?) {
         func shown(_ s: BattleSlot) -> Species? {
             guard let occupant = battle.slots[s] else { return nil }
@@ -1144,6 +1148,10 @@ struct StatsPanel: View {
                                format: battle.format,
                                megaPreview: $megaPreview)
                 }
+                // Room for the scroll bar. macOS draws it over the content
+                // rather than beside it, so without this it sits on top of the
+                // rightmost card's damage numbers whenever it is showing.
+                .padding(.trailing, StatsPanel.scrollBarGutter)
             }
         }
         .environment(\.lang, lang)
