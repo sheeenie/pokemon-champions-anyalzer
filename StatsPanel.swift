@@ -821,6 +821,10 @@ private struct SideColumn: View {
     /// choice survives this view being rebuilt on every frame's update.
     @Binding var megaPreview: [BattleSlot: FormChoice]
 
+    /// Between two cards of the same side in doubles. Named because the panel
+    /// adds it up to work out how narrow it can get before it has to scroll.
+    static let cardSpacing: CGFloat = 10
+
     /// In singles only the outer slot is used, so an inner slot with no
     /// occupant is hidden rather than shown as unidentified.
     private var visible: [BattleSlot] {
@@ -840,7 +844,7 @@ private struct SideColumn: View {
             if sideBySide {
                 // Every slot keeps its column, empty or not, in the same
                 // left-to-right order as the name plates in the game.
-                HStack(alignment: .top, spacing: 10) {
+                HStack(alignment: .top, spacing: SideColumn.cardSpacing) {
                     ForEach(slots, id: \.self) { slot in
                         card(for: slot)
                             .frame(maxWidth: .infinity, alignment: .top)
@@ -1086,6 +1090,26 @@ struct StatsPanel: View {
         return (opposing.compactMap(shown), shown(slot.partner))
     }
 
+    /// Gaps the panel itself owns, kept here because `minContentWidth` has to
+    /// add them up.
+    private static let padding: CGFloat = 14
+    private static let columnSpacing: CGFloat = 14
+
+    /// How narrow a card may get before the panel scrolls sideways instead of
+    /// squeezing it further. Below roughly this, move names start truncating
+    /// and the damage columns crowd the names they belong to.
+    private static let cardMinWidth: CGFloat = 250
+
+    /// The width the cards on screen actually need. Doubles puts four of them
+    /// side by side and singles two, so this follows the format rather than
+    /// being one number that is wrong for one of them.
+    private var minContentWidth: CGFloat {
+        let doubles = battle.format == .doubles
+        let cards: CGFloat = doubles ? 4 : 2
+        let betweenCards: CGFloat = doubles ? 2 * SideColumn.cardSpacing : 0
+        return cards * StatsPanel.cardMinWidth + betweenCards + StatsPanel.columnSpacing
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -1110,33 +1134,53 @@ struct StatsPanel: View {
                 .fixedSize()
             }
 
-            SpeedList(seen: battle.seen,
-                      onField: Set(battle.slots.map { speedID($0.key.side, $0.value.species) }))
+            // The cards are a fixed layout in a resizable window, so whatever
+            // the window is too small for used to be simply unreachable -
+            // clipped off the bottom in singles, off the side in doubles, with
+            // nothing to say it was there. Scrolling both ways makes a small
+            // window cramped instead of lossy.
+            //
+            // The header above stays outside this, so the language picker
+            // cannot scroll off. The damage lists inside keep their own
+            // scrolling: they are the one part that is meant to stay a fixed
+            // number of rows however much room there is.
+            GeometryReader { geo in
+                ScrollView([.vertical, .horizontal]) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        SpeedList(seen: battle.seen,
+                                  onField: Set(battle.slots.map { speedID($0.key.side, $0.value.species) }))
 
-            HStack(alignment: .top, spacing: 14) {
-                SideColumn(title: L10n.text(.opponent, lang),
-                           accent: sideAccent(.opponent),
-                           slots: [.opponent1, .opponent2],
-                           occupants: battle.slots,
-                           megaUsed: megaUsed.contains(.opponent),
-                           sideBySide: battle.format == .doubles,
-                           opposition: opposition(for:),
-                           format: battle.format,
-                           megaPreview: $megaPreview)
-                SideColumn(title: L10n.text(.yourSide, lang),
-                           accent: sideAccent(.player),
-                           slots: [.player1, .player2],
-                           occupants: battle.slots,
-                           megaUsed: megaUsed.contains(.player),
-                           sideBySide: battle.format == .doubles,
-                           opposition: opposition(for:),
-                           format: battle.format,
-                           megaPreview: $megaPreview)
+                        HStack(alignment: .top, spacing: StatsPanel.columnSpacing) {
+                            SideColumn(title: L10n.text(.opponent, lang),
+                                       accent: sideAccent(.opponent),
+                                       slots: [.opponent1, .opponent2],
+                                       occupants: battle.slots,
+                                       megaUsed: megaUsed.contains(.opponent),
+                                       sideBySide: battle.format == .doubles,
+                                       opposition: opposition(for:),
+                                       format: battle.format,
+                                       megaPreview: $megaPreview)
+                            SideColumn(title: L10n.text(.yourSide, lang),
+                                       accent: sideAccent(.player),
+                                       slots: [.player1, .player2],
+                                       occupants: battle.slots,
+                                       megaUsed: megaUsed.contains(.player),
+                                       sideBySide: battle.format == .doubles,
+                                       opposition: opposition(for:),
+                                       format: battle.format,
+                                       megaPreview: $megaPreview)
+                        }
+                    }
+                    // Fills the window when there is room and holds its ground
+                    // when there is not, which is what decides whether the
+                    // scroll view scrolls sideways at all.
+                    .frame(width: max(geo.size.width, minContentWidth),
+                           alignment: .topLeading)
+                }
             }
-            Spacer(minLength: 0)
         }
         .environment(\.lang, lang)
-        .padding(14)
+        .padding(StatsPanel.padding)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(red: 0.07, green: 0.07, blue: 0.09))
     }
