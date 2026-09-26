@@ -1113,27 +1113,38 @@ struct StatsPanel: View {
             SpeedList(seen: battle.seen,
                       onField: Set(battle.slots.map { speedID($0.key.side, $0.value.species) }))
 
-            HStack(alignment: .top, spacing: 14) {
-                SideColumn(title: L10n.text(.opponent, lang),
-                           accent: sideAccent(.opponent),
-                           slots: [.opponent1, .opponent2],
-                           occupants: battle.slots,
-                           megaUsed: megaUsed.contains(.opponent),
-                           sideBySide: battle.format == .doubles,
-                           opposition: opposition(for:),
-                           format: battle.format,
-                           megaPreview: $megaPreview)
-                SideColumn(title: L10n.text(.yourSide, lang),
-                           accent: sideAccent(.player),
-                           slots: [.player1, .player2],
-                           occupants: battle.slots,
-                           megaUsed: megaUsed.contains(.player),
-                           sideBySide: battle.format == .doubles,
-                           opposition: opposition(for:),
-                           format: battle.format,
-                           megaPreview: $megaPreview)
+            // Only the cards scroll. They are the part with no ceiling - a
+            // card carrying Mega previews and a full damage list is taller than
+            // the window on its own - and while they shared one fixed layout
+            // with everything else, the room they wanted came out of the speed
+            // list and the header, which are the two things worth keeping in
+            // view at all times.
+            //
+            // Vertical only, and no minimum width: the cards go on sizing
+            // themselves to the window exactly as before, so nothing about the
+            // layout changes until it would otherwise have been cut off.
+            ScrollView(.vertical) {
+                HStack(alignment: .top, spacing: 14) {
+                    SideColumn(title: L10n.text(.opponent, lang),
+                               accent: sideAccent(.opponent),
+                               slots: [.opponent1, .opponent2],
+                               occupants: battle.slots,
+                               megaUsed: megaUsed.contains(.opponent),
+                               sideBySide: battle.format == .doubles,
+                               opposition: opposition(for:),
+                               format: battle.format,
+                               megaPreview: $megaPreview)
+                    SideColumn(title: L10n.text(.yourSide, lang),
+                               accent: sideAccent(.player),
+                               slots: [.player1, .player2],
+                               occupants: battle.slots,
+                               megaUsed: megaUsed.contains(.player),
+                               sideBySide: battle.format == .doubles,
+                               opposition: opposition(for:),
+                               format: battle.format,
+                               megaPreview: $megaPreview)
+                }
             }
-            Spacer(minLength: 0)
         }
         .environment(\.lang, lang)
         .padding(14)
