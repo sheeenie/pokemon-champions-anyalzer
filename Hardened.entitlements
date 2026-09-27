@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- The hardened runtime, which notarization requires, denies the camera
+         outright unless the app asks for it here. Not the sandbox: this is the
+         runtime's resource-access list.
+
+         Without it macOS does not even prompt. AVFoundation reports the
+         permission as undecided, the request comes straight back refused, no
+         dialog is ever shown, and the app sits there with a black mirror - the
+         same symptom as a user having said no, with no way to say yes.
+
+         The iPhone's screen arrives as a capture device, so this is what covers
+         reading it. -->
+    <key>com.apple.security.device.camera</key>
+    <true/>
+</dict>
+</plist>

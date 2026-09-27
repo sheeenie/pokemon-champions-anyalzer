@@ -116,11 +116,14 @@ SIGN_ID="${SIGN_ID-$(security find-identity -v -p codesigning 2>/dev/null \
     | grep "Developer ID Application" | head -1 | sed -E 's/.*"(.*)"/\1/')}"
 if [ -n "$SIGN_ID" ]; then
     SIGN_ARGS=(--options runtime --timestamp --sign "$SIGN_ID")
+    # Only the app itself: adb needs the hardened runtime but no camera.
+    APP_SIGN_ARGS=(--entitlements Hardened.entitlements)
     echo "Signing as: $SIGN_ID"
 else
     # Apple Silicon won't run unsigned code at all, so even an unsigned build
     # has to be sealed somehow.
     SIGN_ARGS=(--sign -)
+    APP_SIGN_ARGS=()
 fi
 
 HELPERS_DIR="$APP_DIR/Contents/Helpers"
@@ -141,6 +144,6 @@ done
 [ -d "$HELPERS_DIR" ] || echo "No adb found to bundle; Android capture will look for one at runtime."
 
 # Seal the whole bundle, nested code included.
-codesign --force "${SIGN_ARGS[@]}" "$APP_DIR"
+codesign --force "${SIGN_ARGS[@]}" "${APP_SIGN_ARGS[@]}" "$APP_DIR"
 
 echo "Build complete! $APP_DIR $VERSION ($(lipo -archs "$MACOS_DIR/$APP_NAME"), macOS $MIN_MACOS+)"
