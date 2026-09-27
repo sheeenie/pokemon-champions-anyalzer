@@ -30,6 +30,23 @@ codesign --verify --strict "$APP"
 ARCHS=$(lipo -archs "$BIN")
 [[ "$ARCHS" == *arm64* && "$ARCHS" == *x86_64* ]] || { echo "Not universal: $ARCHS"; exit 1; }
 
+# Notarize when the app carries a Developer ID. Signing alone does not stop
+# macOS blocking the download - Apple has to have seen the build - so a signed
+# but un-notarized release would look finished and behave exactly like an
+# unsigned one for whoever downloads it. Better to stop here than ship that.
+NOTARIZE=""
+if codesign -dvv "$APP" 2>&1 | grep -q "Authority=Developer ID Application"; then
+    NOTARIZE=1
+    NOTARY_PROFILE="${NOTARY_PROFILE:-notary}"
+    if ! xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>&1; then
+        echo "Signed with a Developer ID but no notary credentials named '$NOTARY_PROFILE'."
+        echo "Create them once with:"
+        echo "  xcrun notarytool store-credentials $NOTARY_PROFILE \\"
+        echo "      --apple-id <your Apple ID> --team-id <your team id> --password <app-specific password>"
+        exit 1
+    fi
+fi
+
 mkdir -p dist
 ZIP="dist/PokemonChampionsAnalyzer-$VERSION.zip"
 rm -f "$ZIP"
@@ -46,6 +63,23 @@ rm -f "$ZIP"
 # the zip from Finder handles either form, but a junk folder is a much smaller
 # problem than an app that will not open.
 ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
+
+if [ -n "$NOTARIZE" ]; then
+    # Apple scans the zip, but the ticket is stapled to the app inside it, so
+    # the app has to be re-zipped afterwards. Without stapling the app still
+    # passes - macOS asks Apple at first launch - but only with a network
+    # connection, which is not a thing to depend on.
+    echo "Notarizing (a few minutes)..."
+    xcrun notarytool submit "$ZIP" --keychain-profile "$NOTARY_PROFILE" --wait
+    xcrun stapler staple "$APP"
+    rm -f "$ZIP"
+    ditto -c -k --sequesterRsrc --keepParent "$APP" "$ZIP"
+
+    # The verdict that matters: this is what Gatekeeper will say on the
+    # machine that downloads it.
+    xcrun stapler validate "$APP"
+    spctl -a -vv "$APP"
+fi
 
 echo
 echo "Release file: $ZIP ($(du -h "$ZIP" | cut -f1))"

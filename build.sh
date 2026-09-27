@@ -101,6 +101,24 @@ lipo -create "build/$APP_NAME-arm64" "build/$APP_NAME-x86_64" -output "$MACOS_DI
 # from whichever adb this machine has; without one the app falls back to
 # searching the usual paths at runtime, exactly as it did before. A release
 # must not be built that way - tools/make_release.sh refuses to.
+# Sign with a Developer ID when the machine has one, and ad-hoc otherwise.
+#
+# A Developer ID signature is only half of what removes the "Apple could not
+# verify" block: the app also has to be notarized, which tools/make_release.sh
+# does. Notarization in turn requires the hardened runtime, and requires every
+# nested executable - adb, here - to carry the same team's signature, which is
+# why adb is re-signed below rather than left as it came.
+SIGN_ID="${SIGN_ID:-$(security find-identity -v -p codesigning 2>/dev/null \
+    | grep "Developer ID Application" | head -1 | sed -E 's/.*"(.*)"/\1/')}"
+if [ -n "$SIGN_ID" ]; then
+    SIGN_ARGS=(--options runtime --timestamp --sign "$SIGN_ID")
+    echo "Signing as: $SIGN_ID"
+else
+    # Apple Silicon won't run unsigned code at all, so even an unsigned build
+    # has to be sealed somehow.
+    SIGN_ARGS=(--sign -)
+fi
+
 HELPERS_DIR="$APP_DIR/Contents/Helpers"
 rm -rf "$HELPERS_DIR"
 for CANDIDATE in /opt/homebrew/bin/adb /usr/local/bin/adb "$HOME/Library/Android/sdk/platform-tools/adb"; do
@@ -108,17 +126,17 @@ for CANDIDATE in /opt/homebrew/bin/adb /usr/local/bin/adb "$HOME/Library/Android
         mkdir -p "$HELPERS_DIR"
         cp "$(readlink -f "$CANDIDATE" 2>/dev/null || echo "$CANDIDATE")" "$HELPERS_DIR/adb"
         # Nested code signs first; sealing the bundle afterwards covers it.
-        codesign --force --sign - "$HELPERS_DIR/adb"
+        # adb arrives signed by Google, which notarization rejects inside
+        # someone else's app, so this replaces that signature rather than
+        # adding to it.
+        codesign --force "${SIGN_ARGS[@]}" "$HELPERS_DIR/adb"
         echo "Bundled adb from $CANDIDATE ($(du -h "$HELPERS_DIR/adb" | cut -f1))."
         break
     fi
 done
 [ -d "$HELPERS_DIR" ] || echo "No adb found to bundle; Android capture will look for one at runtime."
 
-# Ad-hoc sign the whole bundle so its contents are sealed together. Apple
-# Silicon won't run unsigned code, and macOS only offers "Open Anyway" for a
-# downloaded app that is signed. This isn't a Developer ID signature, so it
-# doesn't avoid that prompt.
-codesign --force --sign - "$APP_DIR"
+# Seal the whole bundle, nested code included.
+codesign --force "${SIGN_ARGS[@]}" "$APP_DIR"
 
 echo "Build complete! $APP_DIR $VERSION ($(lipo -archs "$MACOS_DIR/$APP_NAME"), macOS $MIN_MACOS+)"
