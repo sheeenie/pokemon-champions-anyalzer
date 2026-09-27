@@ -126,21 +126,15 @@ Switch the whole panel between English and 繁體中文 at any time.
    [latest release](https://github.com/sheeenie/pokemon-champions-anyalzer/releases/latest),
    then double-click it to unzip.
 2. Move `Pokémon Champions Analyzer.app` to your Applications folder.
-3. Open it. The first time, macOS blocks it because the app isn't signed with an
-   Apple Developer ID. Click **Done**, not **Move to Trash**.
-4. Open **System Settings → Privacy & Security**, scroll down to the message
-   about Pokémon Champions Analyzer, click **Open Anyway**, then confirm. You
-   only need to do this once.
-5. When asked, allow camera access: macOS treats the iPhone's screen as a camera.
+3. Open it. The first time, macOS asks whether you are sure about an app
+   downloaded from the internet. Click **Open**.
+4. When asked, allow camera access: macOS treats the iPhone's screen as a camera.
 
 Nothing else needs installing: the sprites and Pokédex data are inside the app.
 
-If macOS says the app "is damaged", or you'd rather skip steps 3 and 4, run this
-in Terminal once, then open the app:
-
-```bash
-xattr -dr com.apple.quarantine "/Applications/Pokémon Champions Analyzer.app"
-```
+From 1.2.1 the app is signed with an Apple Developer ID and notarized by Apple,
+so there is no "unidentified developer" block and nothing to approve in System
+Settings. Earlier versions were neither, and do need that.
 
 ## Android
 

@@ -54,7 +54,7 @@ fi
 cat >> "$NOTES" <<EOF
 Download **PokemonChampionsAnalyzer-$VERSION.zip** below (not the "Source code" files), unzip it, and move **Pokémon Champions Analyzer.app** to Applications.
 
-The app isn't signed with an Apple Developer ID, so macOS blocks it the first time you open it. Approve it once in **System Settings → Privacy & Security → Open Anyway**. The [README](https://github.com/sheeenie/pokemon-champions-anyalzer#download) has the details.
+Signed with an Apple Developer ID and notarized by Apple, so macOS opens it normally - the first launch just asks whether you are sure about an app downloaded from the internet.
 
 - macOS 13 or later, on Apple Silicon or Intel
 - The sprites and Pokédex data are built into the app; nothing else to install
