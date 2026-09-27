@@ -108,7 +108,11 @@ lipo -create "build/$APP_NAME-arm64" "build/$APP_NAME-x86_64" -output "$MACOS_DI
 # does. Notarization in turn requires the hardened runtime, and requires every
 # nested executable - adb, here - to carry the same team's signature, which is
 # why adb is re-signed below rather than left as it came.
-SIGN_ID="${SIGN_ID:-$(security find-identity -v -p codesigning 2>/dev/null \
+# No colon in the default: setting SIGN_ID to empty deliberately opts out and
+# builds ad-hoc. That matters because a Developer ID signature without
+# notarization is worse than none - macOS refuses to launch it even locally -
+# so there has to be a way back that does not mean deleting the certificate.
+SIGN_ID="${SIGN_ID-$(security find-identity -v -p codesigning 2>/dev/null \
     | grep "Developer ID Application" | head -1 | sed -E 's/.*"(.*)"/\1/')}"
 if [ -n "$SIGN_ID" ]; then
     SIGN_ARGS=(--options runtime --timestamp --sign "$SIGN_ID")
